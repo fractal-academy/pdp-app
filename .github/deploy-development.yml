@@ -1,0 +1,51 @@
+name: Build and Deploy to Firebase with development environment
+
+on:
+  push:
+    branches:
+      - dev
+
+jobs:
+  build:
+    environment: firebase-development
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v2
+      - name: Setup env
+        env:
+          FIREBASE_CONFIG: ${{ secrets.FIREBASE_DEVELOPMENT_CONFIG }}
+        shell: bash
+        run: |
+          touch .env.development
+          echo "$FIREBASE_CONFIG" >> .env.development
+      - name: Install dependencies
+        run: npm install
+      - name: Build
+        run: CI=false npm run build:development
+      - name: Archive Development Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: build
+          path: build
+
+  deploy:
+    name: Deploy
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v2
+      - name: Download Development Artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: build
+          path: ${{ github.workspace }}/build
+
+      - name: Deploy to Firebase
+        uses: w9jds/firebase-action@master
+        with:
+          args: deploy --only hosting -P development
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}

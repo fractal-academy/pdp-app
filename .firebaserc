@@ -1,0 +1,6 @@
+{
+  "projects": {
+    "development": "pdp-app-development",
+    "default": "pdp-app-development"
+  }
+}
