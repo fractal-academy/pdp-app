@@ -19,5 +19,5 @@ In the project directory, you can run:
 7. `deploy:prod:host` - run to deploy project to **production** firebase host  
 
 
-Open [http://localhost:3000](http://localhost:3000) to view application in the browser.
+Open [http://localhost:3000](http://localhost:3000) to view application in the browser.  
 Open [http://localhost:6006](http://localhost:6006) to view storybook in the browser.
