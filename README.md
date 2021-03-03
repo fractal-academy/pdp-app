@@ -4,9 +4,9 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 ## Assets
 
-Open <a href="https://www.figma.com/file/NaLaFQacfJMTYSXDqB3ZLw/Fractal?node-id=0%3A1" target="_blank">**Figma**</a> to view mockups  
-Open <a href="https://dribbble.com/Ginger_Boy14/collections/4500346-PDP-dashboards" target="_blank">**Dashboards**</a>, <a href="https://dribbble.com/Ginger_Boy14/collections/4497528-dashboards" target="_blank">**more Dashboards**</a> to view some design examples  
-Open <a href="https://docs.google.com/spreadsheets/d/130NFMfLbXZj0JaM27hUTP21Px7LizG05cDDEPYyQLh4/edit#gid=669039851" target="_blank">**Google Sheets**</a> to view project planning
+Open [**Figma**](https://www.figma.com/file/NaLaFQacfJMTYSXDqB3ZLw/Fractal?node-id=0%3A1) to view mockups  
+Open [**Dashboards**](https://dribbble.com/Ginger_Boy14/collections/4500346-PDP-dashboards), [**more Dashboards**](https://dribbble.com/Ginger_Boy14/collections/4497528-dashboards) to view some design examples  
+Open [**Google Sheets**](https://docs.google.com/spreadsheets/d/130NFMfLbXZj0JaM27hUTP21Px7LizG05cDDEPYyQLh4/edit#gid=669039851) to view project planning
 
 ## Available Scripts
 
