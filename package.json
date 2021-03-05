@@ -8,13 +8,16 @@
     "@testing-library/react": "^11.2.5",
     "@testing-library/user-event": "^12.8.0",
     "antd": "^4.13.0",
+    "antd-styled": "^1.1.56",
     "env-cmd": "^10.1.0",
     "eslint": "^7.21.0",
     "firebase": "^8.2.9",
+    "prop-types": "^15.7.2",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-firebase-hooks": "^2.2.0",
     "react-scripts": "4.0.3",
+    "styled-components": "^5.2.1",
     "web-vitals": "^1.1.0"
   },
   "scripts": {
