@@ -1,5 +1,5 @@
-import ROUTES, { ROUTES_VALUE, ROUTES_KEY } from './routes'
+import ROUTES, { ROUTES_VALUES, ROUTES_KEYS } from './routes'
 import { ROUTE_PATHS } from './routePaths'
 import * as COLLECTIONS from './collections'
 
-export { ROUTES, ROUTES_VALUE, ROUTES_KEY, ROUTE_PATHS, COLLECTIONS }
+export { ROUTES, ROUTES_VALUES, ROUTES_KEYS, ROUTE_PATHS, COLLECTIONS }

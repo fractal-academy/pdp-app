@@ -13,8 +13,8 @@ const ROUTES = {
   }
 }
 
-const ROUTES_VALUE = Object.values(ROUTES)
-const ROUTES_KEY = Object.keys(ROUTES)
+const ROUTES_VALUES = Object.values(ROUTES)
+const ROUTES_KEYS = Object.keys(ROUTES)
 
 export default ROUTES
-export { ROUTES_VALUE, ROUTES_KEY }
+export { ROUTES_VALUES, ROUTES_KEYS }
