@@ -7,6 +7,8 @@ const metadata = {
 }
 export default metadata
 
-export const RoleSimpleViewStory = (args) => <RoleSimpleView {...args} />
+export const RoleSimpleViewStory = (args) => (
+  <RoleSimpleView role="admin" {...args} />
+)
 
 RoleSimpleViewStory.args = {}
