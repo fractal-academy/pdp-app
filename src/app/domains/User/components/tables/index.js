@@ -1,2 +1,3 @@
 import { UserSimpleTable } from './UserSimpleTable'
-export { UserSimpleTable }
+import { UserAdvancedTable } from './UserAdvancedTable'
+export { UserSimpleTable, UserAdvancedTable }

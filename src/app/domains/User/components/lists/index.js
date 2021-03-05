@@ -1,2 +1,3 @@
 import { UserSimpleList } from './UserSimpleList'
-export { UserSimpleList }
+import { UserAdvancedList } from './UserAdvancedList'
+export { UserSimpleList, UserAdvancedList }
