@@ -58,7 +58,7 @@ UserSimpleView.propTypes = {
   avatarURL: PropTypes.string,
   firstName: PropTypes.string,
   secondName: PropTypes.string,
-  email: PropTypes.string,
+  email: PropTypes.string.isRequired,
   role: PropTypes.string
 }
 
