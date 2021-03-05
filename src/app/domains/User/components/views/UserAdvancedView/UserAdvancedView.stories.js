@@ -10,6 +10,7 @@ export default metadata
 export const UserAdvancedViewStory = (args) => (
   <UserAdvancedView
     avatarLeft
+    role="admin"
     firstName="Fractal"
     secondName="Band"
     email="fractal@gmail.com"

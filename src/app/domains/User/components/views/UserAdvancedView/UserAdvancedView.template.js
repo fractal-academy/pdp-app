@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types'
-import { Avatar, Typography, Col } from 'antd'
-import { Row } from 'antd-styled'
+import { Avatar, Typography } from 'antd'
+import { Row, Col, Box } from 'antd-styled'
 import { RoleSimpleView } from 'domains/Role/components/views/RoleSimpleView'
 const { Title } = Typography
 
@@ -32,13 +32,21 @@ const UserAdvancedView = (props) => {
 
   // [TEMPLATE]
   return (
-    <Row gutter={[16, 0]} flexDirection={!avatarLeft && 'row-reverse'}>
+    <Row
+      gutter={[16, 16]}
+      flexDirection={!avatarLeft && 'row-reverse'}
+      display="inline-flex">
       <Col>
         <Avatar src={avatarURL} size={64} />
       </Col>
-      <Col>
+      <Col
+        display="flex"
+        flexDirection="column"
+        alignItems={!avatarLeft && 'flex-end'}>
         <Title level={4}>{userDisplayName}</Title>
-        <RoleSimpleView role={role} />
+        <Box display="inline-flex">
+          <RoleSimpleView role={role} />
+        </Box>
       </Col>
     </Row>
   )
