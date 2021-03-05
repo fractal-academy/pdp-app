@@ -17,7 +17,7 @@ import {
 import { LevelEdit } from 'domains/Level/routes'
 import { SkillCreate } from 'domains/Skill/routes'
 import { SpecialityCreate } from 'domains/Speciality/routes'
-import { PlanShow, PlanEdit, PlanCreate } from 'domains/Plan/routes'
+import { PlanShow, PlanEdit, PlanCreate, PlanAll } from 'domains/Plan/routes'
 import { MaterialCreate } from 'domains/Material/routes'
 import { TodoCreate } from 'domains/Todo/routes'
 import {
@@ -118,7 +118,7 @@ const ROUTES = {
     path: ROUTE_PATHS.SPECIALITY_CREATE
   },
   PLAN_ALL: {
-    //  component: PlanAll,
+    component: PlanAll,
     path: ROUTE_PATHS.PLAN_ALL,
     exact: true
   },
