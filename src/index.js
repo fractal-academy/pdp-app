@@ -6,9 +6,7 @@ import 'antd/dist/antd.css'
 
 ReactDOM.render(
   <Router>
-    <React.StrictMode>
-      <App />
-    </React.StrictMode>
+    <App />
   </Router>,
   document.getElementById('root')
 )

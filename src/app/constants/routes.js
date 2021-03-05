@@ -1,4 +1,4 @@
-import ROUTE_PATHS from './routePaths'
+import * as ROUTE_PATHS from './routePaths'
 import { SessionLogin, SessionRegister } from 'domains/Session/routes'
 import { UserAll, UserShow } from 'domains/User/routes'
 import { CompanyAll, CompanyShow } from 'domains/Company/routes'
@@ -26,7 +26,7 @@ import {
   InterviewCreate
 } from 'domains/Interview/routes'
 import { NotificationAll } from 'domains/Notification/routes'
-import { NotFoundPath } from 'components'
+import { NotFoundPath } from '../../components'
 
 const ROUTES = {
   SESSION_LOGIN: {
@@ -120,7 +120,7 @@ const ROUTES = {
   },
   PLAN_ALL: {
     component: PlanAll,
-    path: ROUTE_PATHS.PLAN_ALL,
+    path: ROUTE_PATHS.PLANS_ALL,
     exact: true
   },
   PLAN_SHOW: {
