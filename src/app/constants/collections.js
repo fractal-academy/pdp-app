@@ -1,0 +1,2 @@
+const COLLECTIONS = {}
+export { COLLECTIONS }

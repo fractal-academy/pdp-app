@@ -1,0 +1,2 @@
+const CONTEXT = {}
+export { CONTEXT }
