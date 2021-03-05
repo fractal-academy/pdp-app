@@ -1,5 +1,2 @@
-const ROUTE_PATHS = {
-  CHATS_ALL: '/chats',
-  CHAT_SHOW: '/chats/:id'
-}
-export { ROUTE_PATHS }
+export const CHATS_ALL = '/chats'
+export const CHAT_SHOW = '/chats/:id'
