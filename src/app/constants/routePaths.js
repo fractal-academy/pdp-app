@@ -4,7 +4,7 @@ export const SESSION_REGISTRATION = '/registration'
 
 // User route path
 export const USERS_ALL = '/users'
-export const USER_SHOW = 'users/:id'
+export const USER_SHOW = '/users/:id'
 
 // Companies route path
 export const COMPANIES_ALL = '/companies'
