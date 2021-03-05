@@ -1,5 +1,5 @@
-import { Typography, Button } from 'antd'
-import { Box } from 'antd-styled'
+import { Switch, Route, Redirect } from 'react-router-dom'
+import { ROUTES_VALUE, ROUTE_PATHS } from 'app/constants'
 
 /**
  * @info App (05 Mar 2021) // CREATION DATE
@@ -14,10 +14,12 @@ import { Box } from 'antd-styled'
 const App = () => {
   // [TEMPLATE]
   return (
-    <Box>
-      <Typography.Title>App</Typography.Title>
-      <Button type="primary">Example</Button>
-    </Box>
+    <Switch>
+      {ROUTES_VALUE.map((route) => (
+        <Route key={route.path} {...route} />
+      ))}
+      <Redirect to={ROUTE_PATHS.NOT_FOUND_PATH} />
+    </Switch>
   )
 }
 

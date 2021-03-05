@@ -53,3 +53,6 @@ export const INTERVIEW_CREATE = '/interview/create'
 
 // Notification block
 export const NOTIFICATIONS_ALL = '/notifications'
+
+// NotFoundPath block
+export const NOT_FOUND_PATH = '/404'
