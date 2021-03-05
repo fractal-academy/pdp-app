@@ -1,2 +1,31 @@
-const ROUTE_PATHS = {}
+const ROUTE_PATHS = {
+  SESSION_LOGIN: '/login',
+  SESSION_REGISTRATION: '/registration',
+  USERS_ALL: '/users',
+  USER_SHOW: 'users/:id',
+  COMPANIES_ALL: '/companies',
+  COMPANY_SHOW: '/companies/:id',
+  PROJECTS_ALL: '/projects',
+  PROJECT_SHOW: '/projects/:id',
+  TECHNOLOGIES_ALL: '/technologies',
+  TECHNOLOGY_SHOW: '/technologies/:id',
+  TECHNOLOGY_CREATE: '/technologies/create',
+  COMPETENCES_ALL: '/competences',
+  COMPETENCE_SHOW: '/competences/:id',
+  COMPETENCE_EDIT: '/competences/:id/edit',
+  COMPETENCE_CREATE: '/competences/create',
+  LEVEL_EDIT: '/level/:id/edit',
+  SKILL_CREATE: '/skill/create',
+  SPECIALITY_CREATE: '/speciality/create',
+  PLANS_ALL: '/plans',
+  PLAN_SHOW: '/plans/:id/show',
+  PLAN_CREATE: '/plans/create',
+  PLAN_EDIT: '/plans/:id/edit',
+  MATERIAL_CREATE: '/material/create',
+  TODO_CREATE: '/todo/create',
+  INTERVIEW_SHOW: '/interviews/:id/show',
+  INTERVIEW_EDIT: '/interviews/:id/edit',
+  INTERVIEW_CREATE: '/interviews/create',
+  NOTIFICATIONS_ALL: '/notifications'
+}
 export { ROUTE_PATHS }
