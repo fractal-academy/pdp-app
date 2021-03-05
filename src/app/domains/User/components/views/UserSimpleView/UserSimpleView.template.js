@@ -1,4 +1,5 @@
 import PropTypes from 'prop-types'
+import { Avatar, Row, Typography, Col } from 'antd'
 
 /**
  * @info UserSimpleView (05 Mar 2021) // CREATION DATE
@@ -12,10 +13,8 @@ import PropTypes from 'prop-types'
 
 const UserSimpleView = (props) => {
   // [INTERFACES]
-  /*
-  code sample: 
-  const { data } = props
-  */
+  const { avatarURL, firstName, secondName, email, role } = props
+  const { Title, Text } = Typography
 
   // [ADDITIONAL_HOOKS]
   /*
@@ -33,18 +32,45 @@ const UserSimpleView = (props) => {
   // [HELPER_FUNCTIONS]
 
   // [COMPUTED_PROPERTIES]
-  /* 
-    code sample: 
-    const userDisplayName = user.firstName + user.lastName
-  */
+  const userDisplayName =
+    firstName && secondName ? `${firstName} ${secondName}` : email
 
   // [USE_EFFECTS]
 
   // [TEMPLATE]
-  return <div>UserSimpleView</div>
+  return (
+    <>
+      {role ? (
+        <Row gutter={[16, 0]}>
+          <Col>
+            <Avatar src={avatarURL} size={64} />
+          </Col>
+          <Col>
+            <Title level={4}>{userDisplayName}</Title>
+            <Text type="secondary">{role}</Text>
+          </Col>
+        </Row>
+      ) : (
+        <Row gutter={[16, 0]} align="middle">
+          <Col>
+            <Avatar src={avatarURL} size={'large'} />
+          </Col>
+          <Col>
+            <Title level={5}>{userDisplayName}</Title>
+          </Col>
+        </Row>
+      )}
+    </>
+  )
 }
 
 // [PROPTYPES]
-UserSimpleView.propTypes = {}
+UserSimpleView.propTypes = {
+  avatarURL: PropTypes.string,
+  firstName: PropTypes.string,
+  secondName: PropTypes.string,
+  email: PropTypes.string,
+  role: PropTypes.string
+}
 
 export default UserSimpleView
