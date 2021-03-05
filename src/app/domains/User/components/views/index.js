@@ -1,2 +1,4 @@
 import { UserSimpleView } from './UserSimpleView'
-export { UserSimpleView }
+import { UserAdvancedView } from './UserAdvancedView'
+
+export { UserSimpleView, UserAdvancedView }
