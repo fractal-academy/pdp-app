@@ -1,12 +1,13 @@
 import PropTypes from 'prop-types'
 import { Avatar, Row, Typography, Col } from 'antd'
+const { Title, Text } = Typography
 
 /**
  * @info UserSimpleView (05 Mar 2021) // CREATION DATE
  *
  * @comment UserSimpleView - React component.
  *
- * @since 05 Mar 2021 ( v.0.0.1 ) // LAST-EDIT DATE
+ * @since 05 Mar 2021 ( v.0.0.2 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
@@ -14,7 +15,6 @@ import { Avatar, Row, Typography, Col } from 'antd'
 const UserSimpleView = (props) => {
   // [INTERFACES]
   const { avatarURL, firstName, secondName, email, role } = props
-  const { Title, Text } = Typography
 
   // [ADDITIONAL_HOOKS]
   /*
@@ -33,7 +33,13 @@ const UserSimpleView = (props) => {
 
   // [COMPUTED_PROPERTIES]
   const userDisplayName =
-    firstName && secondName ? `${firstName} ${secondName}` : email
+    firstName && secondName
+      ? `${firstName} ${secondName}`
+      : firstName
+      ? firstName
+      : secondName
+      ? secondName
+      : email
 
   // [USE_EFFECTS]
 
