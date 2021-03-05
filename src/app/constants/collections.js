@@ -25,7 +25,7 @@ export const LEVELS = 'levels'
 export const SUB_LEVELS = 'subLevels'
 
 // Templates block
-export const TECHNOLOGY_TEMPLATES = 'technologies'
+export const TECHNOLOGY_TEMPLATES = 'technologyTemplates'
 export const MATERIAL_TEMPLATES = 'materialTemplates'
 export const TODO_TEMPLATES = 'todoTemplates'
 export const INTERVIEW_TEMPLATES = 'interviewTemplates'
