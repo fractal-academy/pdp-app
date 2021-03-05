@@ -16,21 +16,6 @@ const UserSimpleView = (props) => {
   // [INTERFACES]
   const { avatarURL, firstName, secondName, email, role } = props
 
-  // [ADDITIONAL_HOOKS]
-  /*
-  code sample: 
-  const firestore = useFirestore()
-  */
-
-  // [COMPONENT_STATE_HOOKS]
-  /*
-  code sample:
-  const singleton = useRef(true) // references also put here
-  const [state, setState] = useState({})
-  */
-
-  // [HELPER_FUNCTIONS]
-
   // [COMPUTED_PROPERTIES]
   const userDisplayName =
     firstName && secondName
@@ -40,8 +25,6 @@ const UserSimpleView = (props) => {
       : secondName
       ? secondName
       : email
-
-  // [USE_EFFECTS]
 
   // [TEMPLATE]
   return (
