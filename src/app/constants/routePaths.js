@@ -18,14 +18,14 @@ const ROUTE_PATHS = {
   SKILL_CREATE: '/skill/create',
   SPECIALITY_CREATE: '/speciality/create',
   PLANS_ALL: '/plans',
-  PLAN_SHOW: '/plans/:id/show',
+  PLAN_SHOW: '/plans/:id',
   PLAN_CREATE: '/plans/create',
   PLAN_EDIT: '/plans/:id/edit',
   MATERIAL_CREATE: '/material/create',
   TODO_CREATE: '/todo/create',
-  INTERVIEW_SHOW: '/interviews/:id/show',
-  INTERVIEW_EDIT: '/interviews/:id/edit',
-  INTERVIEW_CREATE: '/interviews/create',
+  INTERVIEW_SHOW: '/interview/:id',
+  INTERVIEW_EDIT: '/interview/:id/edit',
+  INTERVIEW_CREATE: '/interview/create',
   NOTIFICATIONS_ALL: '/notifications'
 }
 export { ROUTE_PATHS }
