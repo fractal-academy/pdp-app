@@ -91,7 +91,8 @@ const ROUTES = {
   },
   COMPETENCE_SHOW: {
     component: CompetenceShow,
-    path: ROUTE_PATHS.COMPETENCE_SHOW
+    path: ROUTE_PATHS.COMPETENCE_SHOW,
+    exact: true
   },
   COMPETENCE_EDIT: {
     // protect: ['admin'],
@@ -125,7 +126,8 @@ const ROUTES = {
   },
   PLAN_SHOW: {
     component: PlanShow,
-    path: ROUTE_PATHS.PLAN_SHOW
+    path: ROUTE_PATHS.PLAN_SHOW,
+    exact: true
   },
   PLAN_CREATE: {
     component: PlanCreate,
@@ -153,7 +155,8 @@ const ROUTES = {
   INTERVIEW_EDIT: {
     // protect: ['admin', 'mentor'],
     component: InterviewEdit,
-    path: ROUTE_PATHS.INTERVIEW_EDIT
+    path: ROUTE_PATHS.INTERVIEW_EDIT,
+    exact: true
   },
   INTERVIEW_CREATE: {
     // protect: ['mentor'],
