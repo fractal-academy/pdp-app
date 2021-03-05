@@ -3,9 +3,14 @@
       "baseUrl": "src/",
       "paths": {
         "app": ["./app/*"],
-        "components/*": ["./app/components/*"],
+        "hooks": ["./hooks"],
+        "assets": ["./assets"],
+        "services/*": ["./services/*"],
+        "domains/*": ["./app/domains/*"],
+        "contexts/*": ["./app/contexts/*"],
         "components": ["./app/components"],
-        "domains/*": ["./app/domains/*"]
+        "components/*": ["./app/components/*"],
+        "chat-module/*": ["./module/chat-module/*"]
       }
     }
   }
