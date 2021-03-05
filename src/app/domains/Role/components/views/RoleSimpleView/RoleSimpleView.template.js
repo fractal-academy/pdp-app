@@ -1,4 +1,6 @@
 import PropTypes from 'prop-types'
+import { Typography } from 'antd'
+const { Text } = Typography
 
 /**
  * @info RoleSimpleView (05 Mar 2021) // CREATION DATE
@@ -12,39 +14,15 @@ import PropTypes from 'prop-types'
 
 const RoleSimpleView = (props) => {
   // [INTERFACES]
-  /*
-  code sample: 
-  const { data } = props
-  */
-
-  // [ADDITIONAL_HOOKS]
-  /*
-  code sample: 
-  const firestore = useFirestore()
-  */
-
-  // [COMPONENT_STATE_HOOKS]
-  /*
-  code sample:
-  const singleton = useRef(true) // references also put here
-  const [state, setState] = useState({})
-  */
-
-  // [HELPER_FUNCTIONS]
-
-  // [COMPUTED_PROPERTIES]
-  /* 
-    code sample: 
-    const userDisplayName = user.firstName + user.lastName
-  */
-
-  // [USE_EFFECTS]
+  const { role } = props
 
   // [TEMPLATE]
-  return <div>RoleSimpleView</div>
+  return <Text type="secondary">{role}</Text>
 }
 
 // [PROPTYPES]
-RoleSimpleView.propTypes = {}
+RoleSimpleView.propTypes = {
+  role: PropTypes.string
+}
 
 export default RoleSimpleView
