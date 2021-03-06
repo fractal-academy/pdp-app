@@ -35,7 +35,7 @@ const data = [
 ]
 
 export const UserSimpleTableStory = (args) => (
-  <UserSimpleTable data={data} filter={ROLES.MENTOR} {...args} />
+  <UserSimpleTable data={data} viewFor={ROLES.STUDENT} {...args} />
 )
 
 UserSimpleTableStory.args = {}
