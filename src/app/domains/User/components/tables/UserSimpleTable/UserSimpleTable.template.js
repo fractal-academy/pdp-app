@@ -50,10 +50,10 @@ let columns = [
 
 const UserSimpleTable = (props) => {
   // [INTERFACES]
-  const { data, filter } = props
+  const { data, viewFor } = props
 
   //[COMPUTED_PROPERTIES]
-  filter !== ROLES.STUDENT &&
+  viewFor !== ROLES.STUDENT &&
     columns.push({
       title: 'Speciality',
       key: 'speciality',
@@ -70,7 +70,7 @@ const UserSimpleTable = (props) => {
 // [PROPTYPES]
 UserSimpleTable.propTypes = {
   data: PropTypes.array.isRequired,
-  filter: PropTypes.string
+  viewFor: PropTypes.string
 }
 
 export default UserSimpleTable
