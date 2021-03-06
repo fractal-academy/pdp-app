@@ -1,10 +1,12 @@
 import React from 'react'
 import UserSimpleTable from './UserSimpleTable.template'
+import { ROLES } from '~/constants'
 
 const metadata = {
   title: 'app/domains/User/components/tables/UserSimpleTable',
   component: UserSimpleTable
 }
+
 export default metadata
 const data = [
   {
@@ -14,7 +16,7 @@ const data = [
     firstName: 'Fractal',
     secondName: 'Band2',
     email: 'email@gmail.com',
-    role: 'admin',
+    role: 'student',
     companyId: '123',
     specialityId: '456'
   },
@@ -33,7 +35,7 @@ const data = [
 ]
 
 export const UserSimpleTableStory = (args) => (
-  <UserSimpleTable data={data} {...args} />
+  <UserSimpleTable data={data} filter={ROLES.MENTOR} {...args} />
 )
 
 UserSimpleTableStory.args = {}

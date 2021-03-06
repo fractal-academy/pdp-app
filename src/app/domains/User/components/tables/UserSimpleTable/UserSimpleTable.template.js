@@ -4,6 +4,7 @@ import { UserSimpleView } from 'domains/User/components/views'
 import { CompanySimpleView } from 'domains/Company/components/views'
 import { RoleSimpleView } from 'domains/Role/components/views'
 import { SpecialitySimpleView } from 'domains/Speciality/components/views'
+import { ROLES } from '~/constants'
 const { Text } = Typography
 /**
  * @info UserSimpleTable (05 Mar 2021) // CREATION DATE
@@ -14,7 +15,7 @@ const { Text } = Typography
  *
  * @return {ReactComponent}
  */
-const columns = [
+let columns = [
   {
     title: 'User',
     key: 'user',
@@ -44,19 +45,24 @@ const columns = [
     key: 'company',
     dataIndex: 'companyId',
     render: (companyId) => <CompanySimpleView companyId={companyId} />
-  },
-  {
-    title: 'Speciality',
-    key: 'speciality',
-    dataIndex: 'specialityId',
-    render: (specialityId) => (
-      <SpecialitySimpleView specialityId={specialityId} />
-    )
   }
 ]
+
 const UserSimpleTable = (props) => {
   // [INTERFACES]
-  const { data } = props
+  const { data, filter } = props
+  console.log(filter)
+
+  //[COMPUTED_PROPERTIES]
+  filter !== ROLES.STUDENT &&
+    columns.push({
+      title: 'Speciality',
+      key: 'speciality',
+      dataIndex: 'specialityId',
+      render: (specialityId) => (
+        <SpecialitySimpleView specialityId={specialityId} />
+      )
+    })
 
   // [TEMPLATE]
   return <Table columns={columns} dataSource={data} pagination={false} />
@@ -65,7 +71,7 @@ const UserSimpleTable = (props) => {
 // [PROPTYPES]
 UserSimpleTable.propTypes = {
   data: PropTypes.array.isRequired,
-  columns: PropTypes.array.isRequired
+  filter: PropTypes.string
 }
 
 export default UserSimpleTable
