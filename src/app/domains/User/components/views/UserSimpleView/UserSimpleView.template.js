@@ -7,7 +7,7 @@ const { Title } = Typography
  *
  * @comment UserSimpleView - React component.
  *
- * @since 05 Mar 2021 ( v.0.0.2 ) // LAST-EDIT DATE
+ * @since 06 Mar 2021 ( v.0.0.3 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
