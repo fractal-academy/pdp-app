@@ -7,6 +7,8 @@ const metadata = {
 }
 export default metadata
 
-export const CompanySimpleViewStory = (args) => <CompanySimpleView {...args} />
+export const CompanySimpleViewStory = (args) => (
+  <CompanySimpleView companyId="123" {...args} />
+)
 
 CompanySimpleViewStory.args = {}
