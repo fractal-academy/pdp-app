@@ -51,7 +51,6 @@ let columns = [
 const UserSimpleTable = (props) => {
   // [INTERFACES]
   const { data, filter } = props
-  console.log(filter)
 
   //[COMPUTED_PROPERTIES]
   filter !== ROLES.STUDENT &&
