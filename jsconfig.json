@@ -1,16 +1,15 @@
 {
-    "compilerOptions": {
-      "baseUrl": "src/",
-      "paths": {
-        "app": ["./app/*"],
-        "hooks": ["./hooks"],
-        "assets": ["./assets"],
-        "services/*": ["./services/*"],
-        "domains/*": ["./app/domains/*"],
-        "contexts/*": ["./app/contexts/*"],
-        "components": ["./app/components"],
-        "components/*": ["./app/components/*"],
-        "chat-module/*": ["./module/chat-module/*"]
-      }
+  "compilerOptions": {
+    "baseUrl": "src/",
+    "paths": {
+      "~/*": ["./*"],
+      "app": ["./app/*"],
+      "domains/*": ["./app/domains/*"],
+      "contexts/*": ["./app/contexts/*"],
+      "components": ["./app/components"],
+      "components/*": ["./app/components/*"],
+      "chat-module/*": ["./modules/chat-module/*"],
+      "chat-module": ["./modules/chat-module"]
     }
   }
+}
