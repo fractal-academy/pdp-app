@@ -2,6 +2,8 @@ import PropTypes from 'prop-types'
 import { Avatar, Typography } from 'antd'
 import { Row, Col, Box } from 'antd-styled'
 import { RoleSimpleView } from 'domains/Role/components/views/RoleSimpleView'
+import { UserOutlined } from '@ant-design/icons'
+
 const { Title } = Typography
 
 /**
@@ -9,7 +11,7 @@ const { Title } = Typography
  *
  * @comment UserAdvancedView - React component.
  *
- * @since 05 Mar 2021 ( v.0.0.2 ) // LAST-EDIT DATE
+ * @since 06 Mar 2021 ( v.0.0.3 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
@@ -28,8 +30,6 @@ const UserAdvancedView = (props) => {
       ? secondName
       : email
 
-  // [USE_EFFECTS]
-
   // [TEMPLATE]
   return (
     <Row
@@ -37,7 +37,7 @@ const UserAdvancedView = (props) => {
       flexDirection={!avatarLeft && 'row-reverse'}
       display="inline-flex">
       <Col>
-        <Avatar src={avatarURL} size={64} />
+        <Avatar src={avatarURL} size={64} icon={<UserOutlined />} />
       </Col>
       <Col
         display="flex"
