@@ -1,50 +1,28 @@
 import PropTypes from 'prop-types'
+import { Table } from 'antd'
 
 /**
  * @info UserSimpleTable (05 Mar 2021) // CREATION DATE
  *
  * @comment UserSimpleTable - React component.
  *
- * @since 05 Mar 2021 ( v.0.0.1 ) // LAST-EDIT DATE
+ * @since 06 Mar 2021 ( v.0.0.2 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
 
 const UserSimpleTable = (props) => {
   // [INTERFACES]
-  /*
-  code sample: 
-  const { data } = props
-  */
-
-  // [ADDITIONAL_HOOKS]
-  /*
-  code sample: 
-  const firestore = useFirestore()
-  */
-
-  // [COMPONENT_STATE_HOOKS]
-  /*
-  code sample:
-  const singleton = useRef(true) // references also put here
-  const [state, setState] = useState({})
-  */
-
-  // [HELPER_FUNCTIONS]
-
-  // [COMPUTED_PROPERTIES]
-  /* 
-    code sample: 
-    const userDisplayName = user.firstName + user.lastName
-  */
-
-  // [USE_EFFECTS]
+  const { data, columns } = props
 
   // [TEMPLATE]
-  return <div>UserSimpleTable</div>
+  return <Table columns={columns} dataSource={data} pagination={false} />
 }
 
 // [PROPTYPES]
-UserSimpleTable.propTypes = {}
+UserSimpleTable.propTypes = {
+  data: PropTypes.array.isRequired,
+  columns: PropTypes.array.isRequired
+}
 
 export default UserSimpleTable
