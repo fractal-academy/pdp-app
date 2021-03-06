@@ -1,11 +1,5 @@
 import React from 'react'
 import UserSimpleTable from './UserSimpleTable.template'
-import { UserSimpleView } from 'domains/User/components/views'
-import { CompanySimpleView } from 'domains/Company/components/views'
-import { RoleSimpleView } from 'domains/Role/components/views'
-import { SpecialitySimpleView } from 'domains/Speciality/components/views'
-import { Typography } from 'antd'
-const { Text } = Typography
 
 const metadata = {
   title: 'app/domains/User/components/tables/UserSimpleTable',
@@ -38,48 +32,8 @@ const data = [
   }
 ]
 
-const columns = [
-  {
-    title: 'User',
-    key: 'user',
-    render: (text, data) => (
-      <UserSimpleView
-        avatarURL={data.avatarURL}
-        firstName={data.firstName}
-        secondName={data.secondName}
-        email={data.email}
-      />
-    )
-  },
-  {
-    title: 'Email',
-    dataIndex: 'email',
-    key: 'email',
-    render: (email) => <Text type="secondary">{email}</Text>
-  },
-  {
-    title: 'Role',
-    dataIndex: 'role',
-    key: 'role',
-    render: (role) => <RoleSimpleView role={role} />
-  },
-  {
-    title: 'Company',
-    key: 'company',
-    dataIndex: 'companyId',
-    render: (companyId) => <CompanySimpleView companyId={companyId} />
-  },
-  {
-    title: 'Speciality',
-    key: 'speciality',
-    dataIndex: 'specialityId',
-    render: (specialityId) => (
-      <SpecialitySimpleView specialityId={specialityId} />
-    )
-  }
-]
 export const UserSimpleTableStory = (args) => (
-  <UserSimpleTable data={data} columns={columns} {...args} />
+  <UserSimpleTable data={data} {...args} />
 )
 
 UserSimpleTableStory.args = {}
