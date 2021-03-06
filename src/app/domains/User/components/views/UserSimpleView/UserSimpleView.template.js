@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types'
 import { Avatar, Row, Typography, Col } from 'antd'
+import { UserOutlined } from '@ant-design/icons'
 const { Title } = Typography
 /**
  * @info UserSimpleView (05 Mar 2021) // CREATION DATE
@@ -29,7 +30,7 @@ const UserSimpleView = (props) => {
   return (
     <Row gutter={[16, 0]} align="middle">
       <Col>
-        <Avatar src={avatarURL} size={'large'} />
+        <Avatar src={avatarURL} size={'large'} icon={<UserOutlined />} />
       </Col>
       <Col>
         <Title level={5}>{userDisplayName}</Title>
