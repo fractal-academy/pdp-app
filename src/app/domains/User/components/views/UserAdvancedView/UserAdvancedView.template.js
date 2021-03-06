@@ -3,7 +3,6 @@ import { Avatar, Typography } from 'antd'
 import { Row, Col, Box } from 'antd-styled'
 import { RoleSimpleView } from 'domains/Role/components/views/RoleSimpleView'
 import { UserOutlined } from '@ant-design/icons'
-
 const { Title } = Typography
 
 /**
