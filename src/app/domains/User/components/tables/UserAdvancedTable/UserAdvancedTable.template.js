@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types'
 import { UserSimpleTable } from '../'
+import { ROLES } from '~/constants'
 import { Tabs } from 'antd'
 const { TabPane } = Tabs
 /**
@@ -12,28 +13,29 @@ const { TabPane } = Tabs
  * @return {ReactComponent}
  */
 
+const TABS = [
+  {
+    tab: 'All',
+    viewFor: ''
+  },
+  {
+    tab: 'Mentors',
+    viewFor: ROLES.MENTOR
+  },
+  {
+    tab: 'Students',
+    viewFor: ROLES.STUDENT
+  }
+]
+
 const UserAdvancedTable = (props) => {
   // [INTERFACES]
   const { data } = props
-  const tabs = [
-    {
-      tab: 'all',
-      viewFor: ''
-    },
-    {
-      tab: 'mentor',
-      viewFor: 'mentor'
-    },
-    {
-      tab: 'student',
-      viewFor: 'student'
-    }
-  ]
 
   // [TEMPLATE]
   return (
-    <Tabs defaultActiveKey={tabs[0].tab}>
-      {tabs.map((item) => (
+    <Tabs defaultActiveKey={TABS[0].tab}>
+      {TABS.map((item) => (
         <TabPane tab={item.tab} key={item.tab}>
           <UserSimpleTable viewFor={item.viewFor} data={data} />
         </TabPane>
