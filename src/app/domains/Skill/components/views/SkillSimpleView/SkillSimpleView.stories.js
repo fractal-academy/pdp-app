@@ -7,6 +7,8 @@ const metadata = {
 }
 export default metadata
 
-export const SkillSimpleViewStory = (args) => <SkillSimpleView {...args} />
+export const SkillSimpleViewStory = (args) => (
+  <SkillSimpleView skillId="789" {...args} />
+)
 
 SkillSimpleViewStory.args = {}
