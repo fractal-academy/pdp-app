@@ -1,10 +1,10 @@
-import ROUTE_PATHS from './routePaths'
+import * as ROUTE_PATHS from './routePaths'
 import { ChatAll, ChatShow } from 'chat-module/domains/Chat/routes'
 
 const ROUTES = {
   CHAT_ALL: {
     component: ChatAll,
-    path: ROUTE_PATHS.CHAT_ALL,
+    path: ROUTE_PATHS.CHATS_ALL,
     exact: true
   },
   CHAT_SHOW: {
