@@ -7,6 +7,8 @@ const metadata = {
 }
 export default metadata
 
-export const LevelSimpleViewStory = (args) => <LevelSimpleView {...args} />
+export const LevelSimpleViewStory = (args) => (
+  <LevelSimpleView levelId="XnJ2ktAUqJGpsWi5N5p3" {...args} />
+)
 
 LevelSimpleViewStory.args = {}

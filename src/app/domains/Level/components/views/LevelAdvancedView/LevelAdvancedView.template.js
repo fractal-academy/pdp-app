@@ -1,5 +1,10 @@
 import PropTypes from 'prop-types'
-
+import { LevelSimpleView } from '../'
+import { Typography } from 'antd'
+import firestore from '~/services/Firebase/firestore/index'
+import { useDocumentData } from 'react-firebase-hooks/firestore'
+import { COLLECTIONS } from 'app/constants'
+const { Text } = Typography
 /**
  * @info LevelAdvancedView (05 Mar 2021) // CREATION DATE
  *
@@ -12,39 +17,30 @@ import PropTypes from 'prop-types'
 
 const LevelAdvancedView = (props) => {
   // [INTERFACES]
-  /*
-  code sample: 
-  const { data } = props
-  */
+  const { levelId, subLevelId } = props
 
   // [ADDITIONAL_HOOKS]
-  /*
-  code sample: 
-  const firestore = useFirestore()
-  */
-
-  // [COMPONENT_STATE_HOOKS]
-  /*
-  code sample:
-  const singleton = useRef(true) // references also put here
-  const [state, setState] = useState({})
-  */
-
-  // [HELPER_FUNCTIONS]
-
-  // [COMPUTED_PROPERTIES]
-  /* 
-    code sample: 
-    const userDisplayName = user.firstName + user.lastName
-  */
-
-  // [USE_EFFECTS]
+  const [subLevel, loading] = useDocumentData(
+    firestore.collection(COLLECTIONS.SUB_LEVELS).doc(subLevelId)
+  )
 
   // [TEMPLATE]
-  return <div>LevelAdvancedView</div>
+  if (loading) return <Text type="secondary">loading...</Text>
+
+  return (
+    <>
+      <LevelSimpleView levelId={levelId} />
+      <Text strong type="secondary">
+        {` lvl•${subLevel.name}`}
+      </Text>
+    </>
+  )
 }
 
 // [PROPTYPES]
-LevelAdvancedView.propTypes = {}
+LevelAdvancedView.propTypes = {
+  levelId: PropTypes.string.isRequired,
+  subLevelId: PropTypes.string.isRequired
+}
 
 export default LevelAdvancedView
