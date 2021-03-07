@@ -1,4 +1,6 @@
 import { Switch, Route, Redirect } from 'react-router-dom'
+import { Layout, Content } from 'antd-styled'
+import { Navigation } from '~/components'
 import { ROUTES_VALUES, ROUTE_PATHS } from 'app/constants'
 
 /**
@@ -6,7 +8,7 @@ import { ROUTES_VALUES, ROUTE_PATHS } from 'app/constants'
  *
  * @comment App - React component.
  *
- * @since 05 Mar 2021 ( v.0.0.2 ) // LAST-EDIT DATE
+ * @since 07 Mar 2021 ( v.0.0.3 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
@@ -14,12 +16,21 @@ import { ROUTES_VALUES, ROUTE_PATHS } from 'app/constants'
 const App = () => {
   // [TEMPLATE]
   return (
-    <Switch>
-      {ROUTES_VALUES.map((route) => (
-        <Route key={route.path} {...route} />
-      ))}
-      <Redirect to={ROUTE_PATHS.NOT_FOUND_PATH} />
-    </Switch>
+    <Layout>
+      <Navigation />
+      <Content bg="#ffffff">
+        <Switch>
+          {ROUTES_VALUES.map((route) =>
+            route.Component ? (
+              <route.Component key={route.Component.name} />
+            ) : (
+              <Route key={route.path} {...route} />
+            )
+          )}
+          <Redirect to={ROUTE_PATHS.NOT_FOUND_PATH} />
+        </Switch>
+      </Content>
+    </Layout>
   )
 }
 
