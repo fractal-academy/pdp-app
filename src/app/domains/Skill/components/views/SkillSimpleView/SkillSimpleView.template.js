@@ -1,50 +1,37 @@
 import PropTypes from 'prop-types'
+import firestore from '~/services/Firebase/firestore/index'
+import { Text } from 'antd-styled'
+import { useDocumentData } from 'react-firebase-hooks/firestore'
+import { COLLECTIONS } from 'app/constants'
 
 /**
  * @info SkillSimpleView (05 Mar 2021) // CREATION DATE
  *
  * @comment SkillSimpleView - React component.
  *
- * @since 05 Mar 2021 ( v.0.0.1 ) // LAST-EDIT DATE
+ * @since 07 Mar 2021 ( v.0.0.2 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
 
 const SkillSimpleView = (props) => {
   // [INTERFACES]
-  /*
-  code sample: 
-  const { data } = props
-  */
+  const { skillId } = props
 
   // [ADDITIONAL_HOOKS]
-  /*
-  code sample: 
-  const firestore = useFirestore()
-  */
-
-  // [COMPONENT_STATE_HOOKS]
-  /*
-  code sample:
-  const singleton = useRef(true) // references also put here
-  const [state, setState] = useState({})
-  */
-
-  // [HELPER_FUNCTIONS]
-
-  // [COMPUTED_PROPERTIES]
-  /* 
-    code sample: 
-    const userDisplayName = user.firstName + user.lastName
-  */
-
-  // [USE_EFFECTS]
+  const [skill, loading] = useDocumentData(
+    firestore.collection(COLLECTIONS.SKILLS).doc(skillId)
+  )
 
   // [TEMPLATE]
-  return <div>SkillSimpleView</div>
+  if (loading) return <Text type="secondary">loading...</Text>
+
+  return <Text strong>{skill.name}</Text>
 }
 
 // [PROPTYPES]
-SkillSimpleView.propTypes = {}
+SkillSimpleView.propTypes = {
+  skillId: PropTypes.string.isRequired
+}
 
 export default SkillSimpleView
