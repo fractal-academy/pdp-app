@@ -1,2 +1,4 @@
 import { CompetenceAdvancedView } from './CompetenceAdvancedView'
-export { CompetenceAdvancedView }
+import { CompetenceSimpleView } from './CompetenceSimpleView'
+
+export { CompetenceAdvancedView, CompetenceSimpleView }
