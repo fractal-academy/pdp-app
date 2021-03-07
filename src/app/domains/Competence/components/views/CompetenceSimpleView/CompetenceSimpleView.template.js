@@ -1,5 +1,9 @@
 import PropTypes from 'prop-types'
-
+import { Tag, Typography } from 'antd'
+import firestore from '~/services/Firebase/firestore/index'
+import { useDocumentData } from 'react-firebase-hooks/firestore'
+import { COLLECTIONS } from 'app/constants'
+const { Text } = Typography
 /**
  * @info CompetenceSimpleView (07 Mar 2021) // CREATION DATE
  *
@@ -12,41 +16,22 @@ import PropTypes from 'prop-types'
 
 const CompetenceSimpleView = (props) => {
   // [INTERFACES]
-  /*
-  code sample: 
-  const { data } = props
-  */
+  const { competenceId } = props
 
   // [ADDITIONAL_HOOKS]
-  /*
-  code sample: 
-  const firestore = useFirestore()
-  */
-
-  // [COMPONENT_STATE_HOOKS]
-  /*
-  code sample:
-  const singleton = useRef(true) // references also put here
-  const [state, setState] = useState({})
-  */
-
-  // [HELPER_FUNCTIONS]
-
-  // [COMPUTED_PROPERTIES]
-  /* 
-    code sample: 
-    const userDisplayName = user.firstName + user.lastName
-  */
-
-  // [USE_EFFECTS]
+  const [competence, loading] = useDocumentData(
+    firestore.collection(COLLECTIONS.COMPETENCES).doc(competenceId)
+  )
 
   // [TEMPLATE]
-  return <div>CompetenceSimpleView</div>
+  if (loading) return <Text type="secondary">loading...</Text>
+
+  return <Tag color={competence.color}>{competence.name}</Tag>
 }
 
 // [PROPTYPES]
 CompetenceSimpleView.propTypes = {
-  props: PropTypes.object
+  competenceId: PropTypes.string.isRequired
 }
 
 export default CompetenceSimpleView
