@@ -1,6 +1,7 @@
 import * as ROUTE_PATHS from './routePaths'
 import { SessionLogin, SessionRegister } from 'domains/Session/routes'
 import { UserAll, UserShow } from 'domains/User/routes'
+import { StudentAll } from 'domains/Student/routes'
 import { CompanyAll, CompanyShow } from 'domains/Company/routes'
 import { ProjectAll, ProjectShow } from 'domains/Project/routes'
 import {
@@ -25,10 +26,10 @@ import {
   InterviewEdit,
   InterviewCreate
 } from 'domains/Interview/routes'
+
 import { NotificationAll } from 'domains/Notification/routes'
 
 import ChatModuleRoutes from 'chat-module'
-
 import { NotFoundPath } from '~/components'
 
 const ROUTES = {
@@ -49,6 +50,12 @@ const ROUTES = {
   USER_SHOW: {
     component: UserShow,
     path: ROUTE_PATHS.USER_SHOW
+  },
+  STUDENTS_ALL: {
+    // protect: ['admin', 'mentor'],
+    component: StudentAll,
+    path: ROUTE_PATHS.STUDENTS_ALL,
+    exact: true
   },
   COMPANIES_ALL: {
     //protect: ['admin'],
@@ -89,7 +96,7 @@ const ROUTES = {
   },
   COMPETENCES_ALL: {
     component: CompetenceAll,
-    path: ROUTE_PATHS.COMPANIES_ALL,
+    path: ROUTE_PATHS.COMPETENCES_ALL,
     exact: true
   },
   COMPETENCE_SHOW: {

@@ -22,14 +22,17 @@ const RoleProvider = (props) => {
   const history = useHistory()
 
   // [COMPONENT_STATE_HOOKS]
-  const [currentRole, setCurrentRole] = useState()
+  const [currentRole, setCurrentRole] = useState(session.role)
 
   // [USE_EFFECTS]
   useEffect(() => setCurrentRole(session.role), [session.role])
+
+  //FIXME bug: on every page refresh push to role start page
   useEffect(() => history.push(ROUTE_PATHS.START_PAGE_MAP[session.role]), [
     session.role,
     history
   ])
+
   // [TEMPLATE]
   return (
     <roleContext.Provider

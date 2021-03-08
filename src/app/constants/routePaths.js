@@ -7,6 +7,7 @@ export const SESSION_REGISTRATION = '/registration'
 // User route path
 export const USERS_ALL = '/users'
 export const USER_SHOW = '/users/:id'
+export const STUDENTS_ALL = '/students'
 
 // Companies route path
 export const COMPANIES_ALL = '/companies'
@@ -62,6 +63,6 @@ export const NOT_FOUND_PATH = '/404'
 // Start page for roles
 export const START_PAGE_MAP = {
   [ROLES.ADMIN]: USERS_ALL,
-  [ROLES.MENTOR]: USERS_ALL,
+  [ROLES.MENTOR]: STUDENTS_ALL,
   [ROLES.STUDENT]: PLANS_ALL
 }

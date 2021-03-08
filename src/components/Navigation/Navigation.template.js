@@ -29,7 +29,7 @@ const MENU_ITEMS = {
     },
     COMPETENCES: {
       title: 'Competences',
-      route: ROUTE_PATHS.COMPANIES_ALL
+      route: ROUTE_PATHS.COMPETENCES_ALL
     },
     TECHNOLOGIES: {
       title: 'Technologies',
