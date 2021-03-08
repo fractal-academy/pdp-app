@@ -1,9 +1,9 @@
 import PropTypes from 'prop-types'
-import { Avatar, Select, Typography } from 'antd'
+import { Avatar, Typography } from 'antd'
 import { Row, Col, Box } from 'antd-styled'
 import { RoleSimpleView } from 'domains/Role/components/views/RoleSimpleView'
+import { RoleSingleSelect } from 'domains/Role/components/selects'
 import { UserOutlined } from '@ant-design/icons'
-import { ROLES_VALUES } from '~/constants'
 const { Title } = Typography
 
 /**
@@ -11,7 +11,7 @@ const { Title } = Typography
  *
  * @comment UserAdvancedView - React component.
  *
- * @since 06 Mar 2021 ( v.0.0.3 ) // LAST-EDIT DATE
+ * @since 08 Mar 2021 ( v.0.0.4 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
@@ -60,15 +60,7 @@ const UserAdvancedView = (props) => {
         <Title level={4}>{userDisplayName}</Title>
 
         {withRoleSelect ? (
-          <Select
-            defaultValue={role}
-            onChange={withRoleSelect}
-            size="small"
-            bordered={false}>
-            {ROLES_VALUES.map((role) => (
-              <Select.Option value={role}>{role}</Select.Option>
-            ))}
-          </Select>
+          <RoleSingleSelect role={role} onRoleSelect={withRoleSelect} />
         ) : (
           <Box display="inline-flex">
             <RoleSimpleView role={role} />
