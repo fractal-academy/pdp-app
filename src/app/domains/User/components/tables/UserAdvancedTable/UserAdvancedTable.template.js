@@ -30,11 +30,11 @@ const TABS = [
 
 const UserAdvancedTable = (props) => {
   // [INTERFACES]
-  const { data } = props
+  const { data, ...rest } = props
 
   // [TEMPLATE]
   return (
-    <Tabs defaultActiveKey={TABS[0].tab}>
+    <Tabs defaultActiveKey={TABS[0].tab} size="large" {...rest}>
       {TABS.map((item) => (
         <TabPane tab={item.tab} key={item.tab}>
           <UserSimpleTable viewFor={item.viewFor} data={data} />

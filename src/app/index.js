@@ -18,7 +18,7 @@ const App = () => {
   return (
     <Layout>
       <Navigation />
-      <Content bg="#ffffff">
+      <Content bg="#ffffff" paddingTop={4} paddingX={4}>
         <Switch>
           {ROUTES_VALUES.map((route) =>
             route.Component ? (

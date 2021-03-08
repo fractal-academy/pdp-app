@@ -1,4 +1,5 @@
-import PropTypes from 'prop-types'
+import { UserAdvancedTable } from 'domains/User/components/tables'
+import { Button } from 'antd'
 
 /**
  * @info UserAll (05 Mar 2021) // CREATION DATE
@@ -10,38 +11,43 @@ import PropTypes from 'prop-types'
  * @return {ReactComponent}
  */
 
-const UserAll = (props) => {
-  // [INTERFACES]
-  /*
-  code sample: 
-  const { data } = props
-  */
+const MOCK_DATA = [
+  {
+    key: '1',
+    idUser: 8,
+    avatarURL: '',
+    firstName: 'Fractal',
+    secondName: 'Band2',
+    email: 'email@gmail.com',
+    role: 'student',
+    companyId: '123',
+    specialityId: '456'
+  },
+  {
+    key: '2',
+    idUser: 8,
+    avatarURL:
+      'https://firebasestorage.googleapis.com/v0/b/expenses-senseteq.appspot.com/o/photo_2020-11-27_19-32-45.jpg?alt=media&token=75958d4d-46ab-458f-b413-e81696c8c16d',
+    firstName: 'Fractal',
+    secondName: 'Band2',
+    email: 'email@gmail.com',
+    role: 'admin',
+    companyId: '123',
+    specialityId: '456'
+  }
+]
 
-  // [ADDITIONAL_HOOKS]
-  /*
-  code sample: 
-  const firestore = useFirestore()
-  */
-
-  // [COMPONENT_STATE_HOOKS]
-  /*
-  code sample:
-  const singleton = useRef(true) // references also put here
-  const [state, setState] = useState({})
-  */
-
-  // [HELPER_FUNCTIONS]
-
-  // [COMPUTED_PROPERTIES]
-  /* 
-    code sample: 
-    const userDisplayName = user.firstName + user.lastName
-  */
-
-  // [USE_EFFECTS]
-
+const UserAll = () => {
   // [TEMPLATE]
-  return <div>UserAll</div>
+
+  const AddButton = <Button type="primary">Add user</Button>
+
+  return (
+    <UserAdvancedTable
+      data={MOCK_DATA}
+      tabBarExtraContent={{ right: AddButton }}
+    />
+  )
 }
 
 // [PROPTYPES]
