@@ -1,13 +1,13 @@
-import { UserAdvancedTable } from 'domains/User/components/tables'
-import { Button, Typography } from 'antd'
+import { Typography } from 'antd'
+import { StudentSimpleTable } from 'domains/Student/components/tables'
 const { Title } = Typography
 
 /**
- * @info UserAll (05 Mar 2021) // CREATION DATE
+ * @info StudentAll (08 Mar 2021) // CREATION DATE
  *
- * @comment UserAll - React component.
+ * @comment StudentAll - React component.
  *
- * @since 05 Mar 2021 ( v.0.0.1 ) // LAST-EDIT DATE
+ * @since 08 Mar 2021 ( v.0.0.1 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
@@ -38,23 +38,17 @@ const MOCK_DATA = [
   }
 ]
 
-const UserAll = () => {
+const StudentAll = () => {
   // [TEMPLATE]
-
-  const AddButton = <Button type="primary">Add user</Button>
-
   return (
     <>
-      <Title>Users</Title>
-      <UserAdvancedTable
-        data={MOCK_DATA}
-        tabBarExtraContent={{ right: AddButton }}
-      />
+      <Title>Students</Title>
+      <StudentSimpleTable data={MOCK_DATA} />
     </>
   )
 }
 
 // [PROPTYPES]
-UserAll.propTypes = {}
+StudentAll.propTypes = {}
 
-export default UserAll
+export default StudentAll
