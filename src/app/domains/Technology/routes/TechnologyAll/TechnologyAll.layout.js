@@ -1,6 +1,7 @@
 import { Typography } from 'antd'
 import { TechnologySimpleList } from 'domains/Technology/components/lists'
 const { Title } = Typography
+
 /**
  * @info TechnologyAll (05 Mar 2021) // CREATION DATE
  *
@@ -27,8 +28,5 @@ const TechnologyAll = () => {
     </>
   )
 }
-
-// [PROPTYPES]
-TechnologyAll.propTypes = {}
 
 export default TechnologyAll
