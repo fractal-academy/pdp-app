@@ -1,50 +1,48 @@
 import PropTypes from 'prop-types'
-
+import { List, Card } from 'antd'
+import { TechnologyAdvancedView } from '../../views'
+import { Box, Edit, Remove } from 'antd-styled'
 /**
  * @info TechnologySimpleList (05 Mar 2021) // CREATION DATE
  *
  * @comment TechnologySimpleList - React component.
  *
- * @since 05 Mar 2021 ( v.0.0.1 ) // LAST-EDIT DATE
+ * @since 08 Mar 2021 ( v.0.0.2 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
 
 const TechnologySimpleList = (props) => {
   // [INTERFACES]
-  /*
-  code sample: 
   const { data } = props
-  */
-
-  // [ADDITIONAL_HOOKS]
-  /*
-  code sample: 
-  const firestore = useFirestore()
-  */
-
-  // [COMPONENT_STATE_HOOKS]
-  /*
-  code sample:
-  const singleton = useRef(true) // references also put here
-  const [state, setState] = useState({})
-  */
-
-  // [HELPER_FUNCTIONS]
-
-  // [COMPUTED_PROPERTIES]
-  /* 
-    code sample: 
-    const userDisplayName = user.firstName + user.lastName
-  */
-
-  // [USE_EFFECTS]
 
   // [TEMPLATE]
-  return <div>TechnologySimpleList</div>
+  return (
+    <List
+      grid={{ gutter: 10, column: 3 }}
+      dataSource={data}
+      renderItem={(item) => (
+        <List.Item>
+          <Card>
+            <TechnologyAdvancedView {...item} />
+            <Box display="flex" justifyContent="flex-end">
+              <Box mr={2}>
+                <Edit text="edit" mr={2} />
+              </Box>
+              <Box>
+                <Remove text="remove" />
+              </Box>
+            </Box>
+          </Card>
+        </List.Item>
+      )}
+    />
+  )
 }
 
 // [PROPTYPES]
-TechnologySimpleList.propTypes = {}
+TechnologySimpleList.propTypes = {
+  data: PropTypes.array.isRequired
+}
 
 export default TechnologySimpleList
