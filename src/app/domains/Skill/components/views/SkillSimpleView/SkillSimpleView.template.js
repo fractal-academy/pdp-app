@@ -26,7 +26,7 @@ const SkillSimpleView = (props) => {
   // [TEMPLATE]
   if (loading) return <Text type="secondary">loading...</Text>
 
-  return <Text strong>{skill.name}</Text>
+  return <Text>{skill.name}</Text>
 }
 
 // [PROPTYPES]
