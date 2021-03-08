@@ -1,50 +1,46 @@
 import PropTypes from 'prop-types'
+import { Select } from 'antd'
+import { SKILLS_VALUES } from '~/constants'
+import * as styles from './SkillSingleSelect.style'
 
 /**
  * @info SkillSingleSelect (05 Mar 2021) // CREATION DATE
  *
  * @comment SkillSingleSelect - React component.
  *
- * @since 05 Mar 2021 ( v.0.0.1 ) // LAST-EDIT DATE
+ * @since 08 Mar 2021 ( v.0.0.2 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
 
 const SkillSingleSelect = (props) => {
   // [INTERFACES]
-  /*
-  code sample: 
-  const { data } = props
-  */
-
-  // [ADDITIONAL_HOOKS]
-  /*
-  code sample: 
-  const firestore = useFirestore()
-  */
-
-  // [COMPONENT_STATE_HOOKS]
-  /*
-  code sample:
-  const singleton = useRef(true) // references also put here
-  const [state, setState] = useState({})
-  */
+  const { skill, onSkillSelect } = props
 
   // [HELPER_FUNCTIONS]
-
-  // [COMPUTED_PROPERTIES]
-  /* 
-    code sample: 
-    const userDisplayName = user.firstName + user.lastName
-  */
-
-  // [USE_EFFECTS]
+  const handleSkillSelect = (value) => {
+    onSkillSelect && onSkillSelect(value)
+  }
 
   // [TEMPLATE]
-  return <div>SkillSingleSelect</div>
+  return (
+    <Select
+      style={styles.skillSelectWidth}
+      defaultValue={skill || SKILLS_VALUES[0]}
+      onChange={handleSkillSelect}
+      size="large"
+      bordered={false}>
+      {SKILLS_VALUES.map((skill) => (
+        <Select.Option value={skill}>{skill}</Select.Option>
+      ))}
+    </Select>
+  )
 }
 
 // [PROPTYPES]
-SkillSingleSelect.propTypes = {}
+SkillSingleSelect.propTypes = {
+  skill: PropTypes.string,
+  onSkillSelect: PropTypes.func
+}
 
 export default SkillSingleSelect
