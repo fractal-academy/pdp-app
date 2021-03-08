@@ -1,4 +1,9 @@
 import PropTypes from 'prop-types'
+import { TechnologySimpleView } from '../'
+import { SkillSimpleView } from 'domains/Skill/components/views'
+import { Typography } from 'antd'
+import { Box } from 'antd-styled'
+const { Text } = Typography
 
 /**
  * @info TechnologyAdvancedView (05 Mar 2021) // CREATION DATE
@@ -12,39 +17,25 @@ import PropTypes from 'prop-types'
 
 const TechnologyAdvancedView = (props) => {
   // [INTERFACES]
-  /*
-  code sample: 
-  const { data } = props
-  */
-
-  // [ADDITIONAL_HOOKS]
-  /*
-  code sample: 
-  const firestore = useFirestore()
-  */
-
-  // [COMPONENT_STATE_HOOKS]
-  /*
-  code sample:
-  const singleton = useRef(true) // references also put here
-  const [state, setState] = useState({})
-  */
-
-  // [HELPER_FUNCTIONS]
-
-  // [COMPUTED_PROPERTIES]
-  /* 
-    code sample: 
-    const userDisplayName = user.firstName + user.lastName
-  */
-
-  // [USE_EFFECTS]
+  const { technologyId, skillId } = props
 
   // [TEMPLATE]
-  return <div>TechnologyAdvancedView</div>
+  return (
+    <>
+      <TechnologySimpleView technologyId={technologyId} />
+      <TechnologySimpleView technologyId={technologyId} withHashTag />
+      <Box>
+        <SkillSimpleView skillId={skillId} />
+        <Text>{` skill`}</Text>
+      </Box>
+    </>
+  )
 }
 
 // [PROPTYPES]
-TechnologyAdvancedView.propTypes = {}
+TechnologyAdvancedView.propTypes = {
+  technologyId: PropTypes.string.isRequired,
+  skillId: PropTypes.string.isRequired
+}
 
 export default TechnologyAdvancedView
