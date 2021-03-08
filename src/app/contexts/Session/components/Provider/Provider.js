@@ -18,9 +18,11 @@ import { ROUTE_PATHS } from 'app/constants'
  * @return {ReactComponent}
  */
 
+const MOCK_SESSION_DATA = { role: ROLES.ADMIN, id: 'qwe' }
+
 const SessionProvider = (props) => {
   // [INTERFACES]
-  const { session = { role: ROLES.ADMIN }, children, ...rest } = props
+  const { session = MOCK_SESSION_DATA, children, ...rest } = props
 
   // [ADDITIONAL_HOOKS]
   const history = useHistory()

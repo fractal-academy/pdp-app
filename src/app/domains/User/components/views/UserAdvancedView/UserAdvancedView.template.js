@@ -1,8 +1,9 @@
 import PropTypes from 'prop-types'
-import { Avatar, Typography } from 'antd'
+import { Avatar, Select, Typography } from 'antd'
 import { Row, Col, Box } from 'antd-styled'
 import { RoleSimpleView } from 'domains/Role/components/views/RoleSimpleView'
 import { UserOutlined } from '@ant-design/icons'
+import { ROLES_VALUES } from '~/constants'
 const { Title } = Typography
 
 /**
@@ -17,7 +18,16 @@ const { Title } = Typography
 
 const UserAdvancedView = (props) => {
   // [INTERFACES]
-  const { avatarURL, firstName, secondName, email, role, avatarLeft } = props
+  const {
+    avatarURL,
+    firstName,
+    secondName,
+    email,
+    role,
+    withRoleSelect,
+    onAvatarClick,
+    avatarLeft
+  } = props
 
   // [COMPUTED_PROPERTIES]
   const userDisplayName =
@@ -35,17 +45,35 @@ const UserAdvancedView = (props) => {
       gutter={[16, 16]}
       flexDirection={!avatarLeft && 'row-reverse'}
       display="inline-flex">
-      <Col>
-        <Avatar src={avatarURL} size={64} icon={<UserOutlined />} />
+      <Col cursor="pointer">
+        <Avatar
+          src={avatarURL}
+          size={64}
+          onClick={onAvatarClick}
+          icon={<UserOutlined />}
+        />
       </Col>
       <Col
         display="flex"
         flexDirection="column"
         alignItems={!avatarLeft && 'flex-end'}>
         <Title level={4}>{userDisplayName}</Title>
-        <Box display="inline-flex">
-          <RoleSimpleView role={role} />
-        </Box>
+
+        {withRoleSelect ? (
+          <Select
+            defaultValue={role}
+            onChange={withRoleSelect}
+            size="small"
+            bordered={false}>
+            {ROLES_VALUES.map((role) => (
+              <Select.Option value={role}>{role}</Select.Option>
+            ))}
+          </Select>
+        ) : (
+          <Box display="inline-flex">
+            <RoleSimpleView role={role} />
+          </Box>
+        )}
       </Col>
     </Row>
   )
@@ -58,7 +86,9 @@ UserAdvancedView.propTypes = {
   secondName: PropTypes.string,
   email: PropTypes.string.isRequired,
   role: PropTypes.string.isRequired,
-  avatarLeft: PropTypes.bool
+  avatarLeft: PropTypes.bool,
+  withRoleSelect: PropTypes.func,
+  onAvatarClick: PropTypes.func
 }
 
 export default UserAdvancedView
