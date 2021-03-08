@@ -1,50 +1,32 @@
-import PropTypes from 'prop-types'
+import { Typography } from 'antd'
+import { TechnologySimpleList } from 'domains/Technology/components/lists'
+const { Title } = Typography
 
 /**
  * @info TechnologyAll (05 Mar 2021) // CREATION DATE
  *
  * @comment TechnologyAll - React component.
  *
- * @since 05 Mar 2021 ( v.0.0.1 ) // LAST-EDIT DATE
+ * @since 08 Mar 2021 ( v.0.0.2 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
 
-const TechnologyAll = (props) => {
-  // [INTERFACES]
-  /*
-  code sample: 
-  const { data } = props
-  */
+const MOCK_DATA = [
+  { technologyId: 'boGRir9DiSNxCIuBeBNi', skillId: '789' },
+  { technologyId: 'D5MeBdtiMGLHB6svJSs9', skillId: '789' },
+  { technologyId: 'XgNXGIY5Xo1pKJaUusNr', skillId: '789' },
+  { technologyId: 'zi4sSBkfJZs1wlLOOPpJ', skillId: '789' }
+]
 
-  // [ADDITIONAL_HOOKS]
-  /*
-  code sample: 
-  const firestore = useFirestore()
-  */
-
-  // [COMPONENT_STATE_HOOKS]
-  /*
-  code sample:
-  const singleton = useRef(true) // references also put here
-  const [state, setState] = useState({})
-  */
-
-  // [HELPER_FUNCTIONS]
-
-  // [COMPUTED_PROPERTIES]
-  /* 
-    code sample: 
-    const userDisplayName = user.firstName + user.lastName
-  */
-
-  // [USE_EFFECTS]
-
+const TechnologyAll = () => {
   // [TEMPLATE]
-  return <div>TechnologyAll</div>
+  return (
+    <>
+      <Title>Technologies</Title>
+      <TechnologySimpleList data={MOCK_DATA} />
+    </>
+  )
 }
-
-// [PROPTYPES]
-TechnologyAll.propTypes = {}
 
 export default TechnologyAll
