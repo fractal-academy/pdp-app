@@ -1,50 +1,42 @@
 import PropTypes from 'prop-types'
-
+import { Typography } from 'antd'
+import firestore from '~/services/Firebase/firestore/index'
+import { useDocumentData } from 'react-firebase-hooks/firestore'
+import { COLLECTIONS } from 'app/constants'
+const { Text, Title } = Typography
 /**
  * @info TechnologySimpleView (05 Mar 2021) // CREATION DATE
  *
  * @comment TechnologySimpleView - React component.
  *
- * @since 05 Mar 2021 ( v.0.0.1 ) // LAST-EDIT DATE
+ * @since 08 Mar 2021 ( v.0.0.2 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
 
 const TechnologySimpleView = (props) => {
   // [INTERFACES]
-  /*
-  code sample: 
-  const { data } = props
-  */
+  const { technologyId, withHashTag } = props
 
   // [ADDITIONAL_HOOKS]
-  /*
-  code sample: 
-  const firestore = useFirestore()
-  */
-
-  // [COMPONENT_STATE_HOOKS]
-  /*
-  code sample:
-  const singleton = useRef(true) // references also put here
-  const [state, setState] = useState({})
-  */
-
-  // [HELPER_FUNCTIONS]
-
-  // [COMPUTED_PROPERTIES]
-  /* 
-    code sample: 
-    const userDisplayName = user.firstName + user.lastName
-  */
-
-  // [USE_EFFECTS]
+  const [technology, loading] = useDocumentData(
+    firestore.collection(COLLECTIONS.TECHNOLOGIES).doc(technologyId)
+  )
 
   // [TEMPLATE]
-  return <div>TechnologySimpleView</div>
+  if (loading) return <Text type="secondary">loading...</Text>
+
+  return (
+    <Title level={withHashTag ? 5 : 3}>
+      {withHashTag ? `#${technology.name}` : `${technology.name}`}
+    </Title>
+  )
 }
 
 // [PROPTYPES]
-TechnologySimpleView.propTypes = {}
+TechnologySimpleView.propTypes = {
+  technologyId: PropTypes.string.isRequired,
+  withHashTag: PropTypes.bool
+}
 
 export default TechnologySimpleView
