@@ -7,8 +7,8 @@ import { UserAdvancedView } from 'domains/User/components/views'
 import { ROLES } from '~/constants'
 import * as ROUTE_PATHS from 'app/constants/routePaths'
 import { ROUTE_PATHS as CHAT_ROUTE_PATHS } from 'chat-module/constants'
-import { types } from 'contexts/Session/constants'
-import { useSession, useSessionDispatch } from 'contexts/Session/hooks'
+import { useSession } from 'contexts/Session/hooks'
+import { useRole } from 'contexts/Role/hooks'
 import * as styles from './Navigation.style'
 
 /**
@@ -16,7 +16,7 @@ import * as styles from './Navigation.style'
  *
  * @comment Navigation - React component.
  *
- * @since 07 Mar 2021 ( v.0.0.4 ) // LAST-EDIT DATE
+ * @since 08 Mar 2021 ( v.0.0.5 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
@@ -72,11 +72,11 @@ const Navigation = () => {
   // [ADDITIONAL_HOOKS]
   const history = useHistory()
   const session = useSession()
-  const sessionDispatch = useSessionDispatch()
+  const { role, setRole } = useRole()
 
   // [COMPONENT_STATE_HOOKS]
   const [selectedMenuItem, setSelectedMenuItem] = useState(
-    ROUTE_PATHS.START_PAGE_MAP[session.role]
+    ROUTE_PATHS.START_PAGE_MAP[role]
   )
 
   // [HELPER_FUNCTIONS]
@@ -84,13 +84,10 @@ const Navigation = () => {
     history.push(generatePath(ROUTE_PATHS.USER_SHOW, { id: session.id }))
 
   // [COMPUTED_PROPERTIES]
-  const roleMenu = Object.values(MENU_ITEMS[session.role])
+  const roleMenu = Object.values(MENU_ITEMS[role])
 
   // [USE_EFFECTS]
-  useEffect(
-    () => setSelectedMenuItem(ROUTE_PATHS.START_PAGE_MAP[session.role]),
-    [session.role]
-  )
+  useEffect(() => setSelectedMenuItem(ROUTE_PATHS.START_PAGE_MAP[role]), [role])
 
   // [TEMPLATE]
   return (
@@ -107,7 +104,7 @@ const Navigation = () => {
             onAvatarClick={goToProfile}
             role={session.role}
             withRoleSelect={(value) => {
-              sessionDispatch({ type: types.CHANGE_ROLE, payload: value })
+              setRole(value)
               history.push(ROUTE_PATHS.START_PAGE_MAP[value])
             }}
             avatarLeft
