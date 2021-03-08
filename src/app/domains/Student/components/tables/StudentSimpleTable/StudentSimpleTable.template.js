@@ -1,4 +1,9 @@
 import PropTypes from 'prop-types'
+import { Table, Typography } from 'antd'
+import { UserSimpleView } from 'domains/User/components/views'
+import { CompanySimpleView } from 'domains/Company/components/views'
+
+const { Text } = Typography
 
 /**
  * @info StudentSimpleTable (08 Mar 2021) // CREATION DATE
@@ -10,43 +15,44 @@ import PropTypes from 'prop-types'
  * @return {ReactComponent}
  */
 
+let columns = [
+  {
+    title: 'Student',
+    key: 'student',
+    render: (text, data) => (
+      <UserSimpleView
+        avatarURL={data.avatarURL}
+        firstName={data.firstName}
+        secondName={data.secondName}
+        email={data.email}
+      />
+    )
+  },
+  {
+    title: 'Email',
+    dataIndex: 'email',
+    key: 'email',
+    render: (email) => <Text type="secondary">{email}</Text>
+  },
+  {
+    title: 'Company',
+    key: 'company',
+    dataIndex: 'companyId',
+    render: (companyId) => <CompanySimpleView companyId={companyId} />
+  }
+]
+
 const StudentSimpleTable = (props) => {
   // [INTERFACES]
-  /*
-  code sample: 
   const { data } = props
-  */
-
-  // [ADDITIONAL_HOOKS]
-  /*
-  code sample: 
-  const firestore = useFirestore()
-  */
-
-  // [COMPONENT_STATE_HOOKS]
-  /*
-  code sample:
-  const singleton = useRef(true) // references also put here
-  const [state, setState] = useState({})
-  */
-
-  // [HELPER_FUNCTIONS]
-
-  // [COMPUTED_PROPERTIES]
-  /* 
-    code sample: 
-    const userDisplayName = user.firstName + user.lastName
-  */
-
-  // [USE_EFFECTS]
 
   // [TEMPLATE]
-  return <div>StudentSimpleTable</div>
+  return <Table columns={columns} dataSource={data} pagination={false} />
 }
 
 // [PROPTYPES]
 StudentSimpleTable.propTypes = {
-  props: PropTypes.object
+  data: PropTypes.array.isRequired
 }
 
 export default StudentSimpleTable

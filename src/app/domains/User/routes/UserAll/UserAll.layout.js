@@ -1,5 +1,6 @@
 import { UserAdvancedTable } from 'domains/User/components/tables'
-import { Button } from 'antd'
+import { Button, Typography } from 'antd'
+const { Title } = Typography
 
 /**
  * @info UserAll (05 Mar 2021) // CREATION DATE
@@ -43,10 +44,13 @@ const UserAll = () => {
   const AddButton = <Button type="primary">Add user</Button>
 
   return (
-    <UserAdvancedTable
-      data={MOCK_DATA}
-      tabBarExtraContent={{ right: AddButton }}
-    />
+    <>
+      <Title>Users</Title>
+      <UserAdvancedTable
+        data={MOCK_DATA}
+        tabBarExtraContent={{ right: AddButton }}
+      />
+    </>
   )
 }
 
