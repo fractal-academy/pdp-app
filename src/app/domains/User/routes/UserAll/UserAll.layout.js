@@ -1,4 +1,5 @@
 import { UserAdvancedTable } from 'domains/User/components/tables'
+import { Button } from 'antd'
 
 /**
  * @info UserAll (05 Mar 2021) // CREATION DATE
@@ -38,7 +39,15 @@ const MOCK_DATA = [
 
 const UserAll = () => {
   // [TEMPLATE]
-  return <UserAdvancedTable data={MOCK_DATA} />
+
+  const AddButton = <Button type="primary">Add user</Button>
+
+  return (
+    <UserAdvancedTable
+      data={MOCK_DATA}
+      tabBarExtraContent={{ right: AddButton }}
+    />
+  )
 }
 
 // [PROPTYPES]
