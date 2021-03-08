@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react'
 import { Box, Sider } from 'antd-styled'
-import { Menu, Select } from 'antd'
+import { Menu } from 'antd'
 import { useHistory } from 'react-router-dom'
 import { LogoutOutlined } from '@ant-design/icons'
 import { UserAdvancedView } from 'domains/User/components/views'
-import { ROLES, ROLES_VALUES } from '~/constants'
+import { ROLES } from '~/constants'
 import * as ROUTE_PATHS from 'app/constants/routePaths'
 import { ROUTE_PATHS as CHAT_ROUTE_PATHS } from 'chat-module/constants'
 import { types } from 'contexts/Session/constants'
@@ -98,7 +98,15 @@ const Navigation = () => {
       paddingTop={4}>
       <Box display="flex" flexDirection="column" height="100%">
         <Box paddingX={4} marginBottom={4}>
-          <UserAdvancedView {...MOCK_USER} role={session.role} avatarLeft />
+          <UserAdvancedView
+            {...MOCK_USER}
+            role={session.role}
+            withRoleSelect={(value) => {
+              sessionDispatch({ type: types.CHANGE_ROLE, payload: value })
+              history.push(ROUTE_PATHS.START_PAGE_MAP[value])
+            }}
+            avatarLeft
+          />
         </Box>
         <Menu
           selectedKeys={[selectedMenuItem]}
@@ -112,19 +120,7 @@ const Navigation = () => {
             </styles.MenuItem>
           ))}
         </Menu>
-        <Box width="100%" paddingX={4}>
-          <Select
-            defaultValue={session.role}
-            onChange={(value) => {
-              sessionDispatch({ type: types.CHANGE_ROLE, payload: value })
-              history.push(ROUTE_PATHS.START_PAGE_MAP[value])
-            }}
-            bordered={false}>
-            {ROLES_VALUES.map((role) => (
-              <Select.Option value={role}>{role}</Select.Option>
-            ))}
-          </Select>
-        </Box>
+
         <Box display="flex" flex={1}>
           <Box alignSelf="flex-end" width="100%">
             <Menu style={styles.menuStyle} selectable={false}>

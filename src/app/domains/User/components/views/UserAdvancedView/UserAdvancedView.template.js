@@ -1,8 +1,9 @@
 import PropTypes from 'prop-types'
-import { Avatar, Typography } from 'antd'
+import { Avatar, Select, Typography } from 'antd'
 import { Row, Col, Box } from 'antd-styled'
 import { RoleSimpleView } from 'domains/Role/components/views/RoleSimpleView'
 import { UserOutlined } from '@ant-design/icons'
+import { ROLES_VALUES } from '~/constants'
 const { Title } = Typography
 
 /**
@@ -17,7 +18,15 @@ const { Title } = Typography
 
 const UserAdvancedView = (props) => {
   // [INTERFACES]
-  const { avatarURL, firstName, secondName, email, role, avatarLeft } = props
+  const {
+    avatarURL,
+    firstName,
+    secondName,
+    email,
+    role,
+    withRoleSelect,
+    avatarLeft
+  } = props
 
   // [COMPUTED_PROPERTIES]
   const userDisplayName =
@@ -43,9 +52,22 @@ const UserAdvancedView = (props) => {
         flexDirection="column"
         alignItems={!avatarLeft && 'flex-end'}>
         <Title level={4}>{userDisplayName}</Title>
-        <Box display="inline-flex">
-          <RoleSimpleView role={role} />
-        </Box>
+
+        {withRoleSelect ? (
+          <Select
+            defaultValue={role}
+            onChange={withRoleSelect}
+            size="small"
+            bordered={false}>
+            {ROLES_VALUES.map((role) => (
+              <Select.Option value={role}>{role}</Select.Option>
+            ))}
+          </Select>
+        ) : (
+          <Box display="inline-flex">
+            <RoleSimpleView role={role} />
+          </Box>
+        )}
       </Col>
     </Row>
   )
