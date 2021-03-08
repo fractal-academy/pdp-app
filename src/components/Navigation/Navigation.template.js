@@ -72,7 +72,7 @@ const Navigation = () => {
   // [ADDITIONAL_HOOKS]
   const history = useHistory()
   const session = useSession()
-  const { role, setRole } = useRole()
+  const { role } = useRole()
 
   // [COMPONENT_STATE_HOOKS]
   const [selectedMenuItem, setSelectedMenuItem] = useState(
@@ -102,9 +102,8 @@ const Navigation = () => {
           <UserAdvancedView
             {...MOCK_USER}
             onAvatarClick={goToProfile}
-            role={session.role}
+            role={role}
             withRoleSelect={(value) => {
-              setRole(value)
               history.push(ROUTE_PATHS.START_PAGE_MAP[value])
             }}
             avatarLeft
