@@ -6,7 +6,8 @@ const metadata = {
   component: SkillSingleSelect
 }
 export default metadata
-
-export const SkillSingleSelectStory = (args) => <SkillSingleSelect {...args} />
+export const SkillSingleSelectStory = (args) => (
+  <SkillSingleSelect onSkillSelect={(value) => console.log(value)} {...args} />
+)
 
 SkillSingleSelectStory.args = {}
