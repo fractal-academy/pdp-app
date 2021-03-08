@@ -8,7 +8,11 @@ const metadata = {
 export default metadata
 
 export const TechnologySimpleViewStory = (args) => (
-  <TechnologySimpleView {...args} />
+  <TechnologySimpleView
+    technologyId="boGRir9DiSNxCIuBeBNi"
+    withHashTag
+    {...args}
+  />
 )
 
 TechnologySimpleViewStory.args = {}
