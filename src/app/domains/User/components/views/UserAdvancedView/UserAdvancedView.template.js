@@ -25,6 +25,7 @@ const UserAdvancedView = (props) => {
     email,
     role,
     withRoleSelect,
+    onAvatarClick,
     avatarLeft
   } = props
 
@@ -44,8 +45,13 @@ const UserAdvancedView = (props) => {
       gutter={[16, 16]}
       flexDirection={!avatarLeft && 'row-reverse'}
       display="inline-flex">
-      <Col>
-        <Avatar src={avatarURL} size={64} icon={<UserOutlined />} />
+      <Col cursor="pointer">
+        <Avatar
+          src={avatarURL}
+          size={64}
+          onClick={onAvatarClick}
+          icon={<UserOutlined />}
+        />
       </Col>
       <Col
         display="flex"
@@ -80,7 +86,9 @@ UserAdvancedView.propTypes = {
   secondName: PropTypes.string,
   email: PropTypes.string.isRequired,
   role: PropTypes.string.isRequired,
-  avatarLeft: PropTypes.bool
+  avatarLeft: PropTypes.bool,
+  withRoleSelect: PropTypes.func,
+  onAvatarClick: PropTypes.func
 }
 
 export default UserAdvancedView

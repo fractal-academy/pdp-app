@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Box, Sider } from 'antd-styled'
 import { Menu } from 'antd'
-import { useHistory } from 'react-router-dom'
+import { useHistory, generatePath } from 'react-router-dom'
 import { LogoutOutlined } from '@ant-design/icons'
 import { UserAdvancedView } from 'domains/User/components/views'
 import { ROLES } from '~/constants'
@@ -79,6 +79,10 @@ const Navigation = () => {
     ROUTE_PATHS.START_PAGE_MAP[session.role]
   )
 
+  // [HELPER_FUNCTIONS]
+  const goToProfile = () =>
+    history.push(generatePath(ROUTE_PATHS.USER_SHOW, { id: session.id }))
+
   // [COMPUTED_PROPERTIES]
   const roleMenu = Object.values(MENU_ITEMS[session.role])
 
@@ -100,6 +104,7 @@ const Navigation = () => {
         <Box paddingX={4} marginBottom={4}>
           <UserAdvancedView
             {...MOCK_USER}
+            onAvatarClick={goToProfile}
             role={session.role}
             withRoleSelect={(value) => {
               sessionDispatch({ type: types.CHANGE_ROLE, payload: value })
