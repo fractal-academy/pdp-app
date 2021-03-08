@@ -9,7 +9,7 @@ import { COLLECTIONS } from 'app/constants'
  *
  * @comment SkillSimpleView - React component.
  *
- * @since 07 Mar 2021 ( v.0.0.2 ) // LAST-EDIT DATE
+ * @since 08 Mar 2021 ( v.0.0.3 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
@@ -26,7 +26,7 @@ const SkillSimpleView = (props) => {
   // [TEMPLATE]
   if (loading) return <Text type="secondary">loading...</Text>
 
-  return <Text strong>{skill.name}</Text>
+  return <Text>{skill.name}</Text>
 }
 
 // [PROPTYPES]

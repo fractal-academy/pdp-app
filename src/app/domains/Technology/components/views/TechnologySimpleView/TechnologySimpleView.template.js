@@ -1,15 +1,15 @@
 import PropTypes from 'prop-types'
-import { Typography } from 'antd'
 import firestore from '~/services/Firebase/firestore/index'
 import { useDocumentData } from 'react-firebase-hooks/firestore'
 import { COLLECTIONS } from 'app/constants'
-const { Text, Title } = Typography
+import { Title, Text } from 'antd-styled'
+
 /**
  * @info TechnologySimpleView (05 Mar 2021) // CREATION DATE
  *
  * @comment TechnologySimpleView - React component.
  *
- * @since 08 Mar 2021 ( v.0.0.2 ) // LAST-EDIT DATE
+ * @since 08 Mar 2021 ( v.0.0.3 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
@@ -27,9 +27,15 @@ const TechnologySimpleView = (props) => {
   if (loading) return <Text type="secondary">loading...</Text>
 
   return (
-    <Title level={withHashTag ? 5 : 3}>
-      {withHashTag ? `#${technology.name}` : `${technology.name}`}
-    </Title>
+    <>
+      {withHashTag ? (
+        <Text strong color={technology.color}>
+          {`#${technology.name}`}
+        </Text>
+      ) : (
+        <Title level={3}>{technology.name}</Title>
+      )}
+    </>
   )
 }
 

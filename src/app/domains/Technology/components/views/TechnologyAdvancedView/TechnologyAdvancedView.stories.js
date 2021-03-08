@@ -8,7 +8,11 @@ const metadata = {
 export default metadata
 
 export const TechnologyAdvancedViewStory = (args) => (
-  <TechnologyAdvancedView {...args} />
+  <TechnologyAdvancedView
+    technologyId="boGRir9DiSNxCIuBeBNi"
+    skillId="789"
+    {...args}
+  />
 )
 
 TechnologyAdvancedViewStory.args = {}
