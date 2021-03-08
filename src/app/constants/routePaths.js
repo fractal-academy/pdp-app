@@ -1,3 +1,5 @@
+import { ROLES } from '~/constants'
+
 // Session route path
 export const SESSION_LOGIN = '/login'
 export const SESSION_REGISTRATION = '/registration'
@@ -56,3 +58,10 @@ export const NOTIFICATIONS_ALL = '/notifications'
 
 // NotFoundPath route path
 export const NOT_FOUND_PATH = '/404'
+
+// Start page for roles
+export const START_PAGE_MAP = {
+  [ROLES.ADMIN]: USERS_ALL,
+  [ROLES.MENTOR]: USERS_ALL,
+  [ROLES.STUDENT]: PLANS_ALL
+}

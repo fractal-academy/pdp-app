@@ -26,7 +26,10 @@ import {
   InterviewCreate
 } from 'domains/Interview/routes'
 import { NotificationAll } from 'domains/Notification/routes'
-import { NotFoundPath } from '../../components'
+
+import ChatModuleRoutes from 'chat-module'
+
+import { NotFoundPath } from '~/components'
 
 const ROUTES = {
   SESSION_LOGIN: {
@@ -170,6 +173,9 @@ const ROUTES = {
   NOT_FOUND_PATH: {
     component: NotFoundPath,
     path: ROUTE_PATHS.NOT_FOUND_PATH
+  },
+  CHAT_MODULE: {
+    Component: ChatModuleRoutes
   }
 }
 

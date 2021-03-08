@@ -3,7 +3,7 @@
     "baseUrl": "src/",
     "paths": {
       "~/*": ["./*"],
-      "app": ["./app/*"],
+      "app/*": ["./app/*"],
       "domains/*": ["./app/domains/*"],
       "contexts/*": ["./app/contexts/*"],
       "components": ["./app/components"],
