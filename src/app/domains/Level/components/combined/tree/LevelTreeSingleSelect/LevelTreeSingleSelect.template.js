@@ -4,7 +4,7 @@ import { TreeSelect, Typography } from 'antd'
 import firestore from '~/services/Firebase/firestore/index'
 import { useDocumentData } from 'react-firebase-hooks/firestore'
 import { COLLECTIONS } from 'app/constants'
-import { LevelSimpleView } from '../../../views'
+import { LevelSimpleView } from 'domains/Level/components/views'
 import * as styles from './LevelTreeSingleSelect.style'
 const { Text } = Typography
 const { TreeNode } = TreeSelect
@@ -14,7 +14,7 @@ const { TreeNode } = TreeSelect
  *
  * @comment LevelTreeSingleSelect - React component.
  *
- * @since 09 Mar 2021 ( v.0.0.1 ) // LAST-EDIT DATE
+ * @since 09 Mar 2021 ( v.0.0.2 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
@@ -39,7 +39,6 @@ const LevelTreeSingleSelect = (props) => {
   // [TEMPLATE]
   if (loading) return <Text type="secondary">loading...</Text>
 
-  const { levelIds } = technology
   return (
     <TreeSelect
       showSearch
@@ -49,10 +48,10 @@ const LevelTreeSingleSelect = (props) => {
       allowClear
       treeDefaultExpandAll
       onChange={onChange}>
-      {levelIds &&
-        Object.keys(levelIds).map((level) => (
+      {technology.levelIds &&
+        Object.keys(technology.levelIds).map((level) => (
           <TreeNode value={level} title={<LevelSimpleView levelId={level} />}>
-            {levelIds[level].map((sublevel) => (
+            {technology.levelIds[level].map((sublevel) => (
               <TreeNode
                 value={sublevel}
                 title={
