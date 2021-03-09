@@ -43,8 +43,7 @@ const MENU_ITEMS = {
     },
     CHATS: {
       title: 'Chats',
-      hide: [ROLES.ADMIN],
-      route: CHAT_ROUTE_PATHS.CHATS_ALL
+      route: generatePath(CHAT_ROUTE_PATHS.CHATS_ALL, { role: ROLES.MENTOR })
     }
   },
   [ROLES.STUDENT]: {
@@ -54,8 +53,7 @@ const MENU_ITEMS = {
     },
     CHATS: {
       title: 'Chats',
-      hide: [ROLES.ADMIN],
-      route: CHAT_ROUTE_PATHS.CHATS_ALL
+      route: generatePath(CHAT_ROUTE_PATHS.CHATS_ALL, { role: ROLES.STUDENT })
     }
   }
 }
@@ -76,7 +74,7 @@ const Navigation = () => {
 
   // [COMPONENT_STATE_HOOKS]
   const [selectedMenuItem, setSelectedMenuItem] = useState(
-    ROUTE_PATHS.START_PAGE_MAP[role]
+    history.location.pathname || ROUTE_PATHS.START_PAGE_MAP[role]
   )
 
   // [HELPER_FUNCTIONS]
@@ -87,8 +85,14 @@ const Navigation = () => {
   const roleMenu = Object.values(MENU_ITEMS[role])
 
   // [USE_EFFECTS]
-  useEffect(() => setSelectedMenuItem(ROUTE_PATHS.START_PAGE_MAP[role]), [role])
-
+  useEffect(
+    () =>
+      setSelectedMenuItem(
+        history.location.pathname || ROUTE_PATHS.START_PAGE_MAP[role]
+      ),
+    [role, history]
+  )
+  console.log(role)
   // [TEMPLATE]
   return (
     <Sider

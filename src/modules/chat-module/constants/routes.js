@@ -9,7 +9,8 @@ const ROUTES = {
   },
   CHAT_SHOW: {
     component: ChatShow,
-    path: ROUTE_PATHS.CHAT_SHOW
+    path: ROUTE_PATHS.CHAT_SHOW,
+    exact: true
   }
 }
 
