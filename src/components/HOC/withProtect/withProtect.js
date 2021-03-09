@@ -10,7 +10,7 @@ import { useEffect } from 'react'
  *
  * @comment withProtect - React HOC component using to protect routes.
  *
- * @since 09 Mar 2021 ( v.0.0.2 ) // LAST-EDIT DATE
+ * @since 09 Mar 2021 ( v.0.0.3 ) // LAST-EDIT DATE
  *
  * @param {string[]} protectConfig.roles - array of roles that have access to this route
  *
