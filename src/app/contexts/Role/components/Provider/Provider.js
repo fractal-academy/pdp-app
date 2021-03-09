@@ -10,7 +10,7 @@ import { ROLES } from '~/constants'
  * 	RoleProvider - React context provider component.
  * 	Use to role in application to use different views & behavior.
  *
- * @since 08 Mar 2021 ( v.0.0.1 ) // LAST-EDIT DATE
+ * @since 08 Mar 2021 ( v.0.0.2 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
