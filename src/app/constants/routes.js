@@ -84,14 +84,14 @@ const ROUTES = {
     path: ROUTE_PATHS.TECHNOLOGIES_ALL,
     exact: true
   },
-  TECHNOLOGY_SHOW: {
-    component: TechnologyShow,
-    path: ROUTE_PATHS.TECHNOLOGY_SHOW,
-    exact: true
-  },
   TECHNOLOGY_CREATE: {
     component: withProtect({ roles: [ROLES.ADMIN] })(TechnologyCreate),
     path: ROUTE_PATHS.TECHNOLOGY_CREATE,
+    exact: true
+  },
+  TECHNOLOGY_SHOW: {
+    component: TechnologyShow,
+    path: ROUTE_PATHS.TECHNOLOGY_SHOW,
     exact: true
   },
   COMPETENCES_ALL: {
