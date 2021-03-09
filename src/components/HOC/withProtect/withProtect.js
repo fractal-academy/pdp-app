@@ -3,6 +3,7 @@ import { useRole } from 'contexts/Role/hooks'
 import { AccessDenied } from '~/components'
 import { useParams } from 'react-router-dom'
 import _ from 'lodash'
+import { useEffect } from 'react'
 
 /**
  * @info withProtect (08 Mar 2021) // CREATION DATE
@@ -24,6 +25,13 @@ const withProtect = (protectConfig) => (Component) => (props) => {
   const params = useParams()
   const { role, setRole, accessRoles } = useRole()
 
+  // [USE_EFFECTS]
+  useEffect(() => {
+    if (role !== _.intersection(roles, accessRoles)[0]) {
+      setRole(_.intersection(roles, accessRoles)[0])
+    }
+  }, [accessRoles, roles, setRole])
+
   // [LOGIC]
   if (
     !roles?.includes(_.intersection(roles, accessRoles)[0]) ||
@@ -35,6 +43,7 @@ const withProtect = (protectConfig) => (Component) => (props) => {
     }
     return <AccessDenied />
   }
+
   return <Component {...props} />
 }
 
