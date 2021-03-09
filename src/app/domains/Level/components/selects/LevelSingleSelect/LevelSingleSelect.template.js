@@ -25,10 +25,9 @@ const LevelSingleSelect = (props) => {
     firestore.collection(COLLECTIONS.TECHNOLOGIES).doc(technologyId)
   )
 
-  // [USE_EFFECTS]
+  // [TEMPLATE]
   if (loading) return <Text type="secondary">loading...</Text>
 
-  // [TEMPLATE]
   return (
     <Select style={styles.levelSelectWidth} size="large">
       {technology &&
@@ -43,7 +42,7 @@ const LevelSingleSelect = (props) => {
 
 // [PROPTYPES]
 LevelSingleSelect.propTypes = {
-  technologyId: PropTypes.string
+  technologyId: PropTypes.string.isRequired
 }
 
 export default LevelSingleSelect
