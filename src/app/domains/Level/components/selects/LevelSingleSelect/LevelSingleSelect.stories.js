@@ -7,6 +7,8 @@ const metadata = {
 }
 export default metadata
 
-export const LevelSingleSelectStory = (args) => <LevelSingleSelect {...args} />
+export const LevelSingleSelectStory = (args) => (
+  <LevelSingleSelect technologyId="LCpboRsqU6zvWYRirBOD" {...args} />
+)
 
 LevelSingleSelectStory.args = {}

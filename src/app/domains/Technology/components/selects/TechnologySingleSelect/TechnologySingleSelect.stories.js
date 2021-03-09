@@ -7,6 +7,8 @@ const metadata = {
 }
 export default metadata
 
-export const TechnologySingleSelectStory = (args) => <TechnologySingleSelect {...args} />
+export const TechnologySingleSelectStory = (args) => (
+  <TechnologySingleSelect {...args} />
+)
 
 TechnologySingleSelectStory.args = {}
