@@ -20,7 +20,7 @@ export const PROJECT_SHOW = '/projects/:id'
 // Technology route path
 export const TECHNOLOGIES_ALL = '/technologies'
 export const TECHNOLOGY_SHOW = '/technologies/:id'
-export const TECHNOLOGY_CREATE = '/technologies/create'
+export const TECHNOLOGY_CREATE = '/technologies/create' // technology creation flow
 
 // Competence route path
 export const COMPETENCES_ALL = '/competences'
@@ -44,15 +44,15 @@ export const PLAN_CREATE = '/plans/create'
 export const PLAN_EDIT = '/plans/:id/edit'
 
 // Material route path
-export const MATERIAL_CREATE = '/material/create'
+export const MATERIAL_CREATE = '/material/create' // technology creation flow
 
 // Todo route path
-export const TODO_CREATE = '/todo/create'
+export const TODO_CREATE = '/todo/create' // technology creation flow
 
 // Interview route path
 export const INTERVIEW_SHOW = '/interview/:id'
 export const INTERVIEW_EDIT = '/interview/:id/edit'
-export const INTERVIEW_CREATE = '/interview/create'
+export const INTERVIEW_CREATE = '/interview/create' // technology creation flow
 
 // Notification route path
 export const NOTIFICATIONS_ALL = '/notifications'
