@@ -1,5 +1,7 @@
 import PropTypes from 'prop-types'
-
+import { List } from 'antd'
+import { Remove, Edit } from 'antd-styled'
+import { DeleteOutlined, EditOutlined } from '@ant-design/icons'
 /**
  * @info TodoSimpleList (05 Mar 2021) // CREATION DATE
  *
@@ -10,16 +12,18 @@ import PropTypes from 'prop-types'
  * @return {ReactComponent}
  */
 
+const MOCK_DATA = ['first', 'second', 'third', 'fourth', 'fifth']
+
 const TodoSimpleList = (props) => {
   // [INTERFACES]
   /*
-  code sample: 
+  code sample:
   const { data } = props
   */
 
   // [ADDITIONAL_HOOKS]
   /*
-  code sample: 
+  code sample:
   const firestore = useFirestore()
   */
 
@@ -33,15 +37,29 @@ const TodoSimpleList = (props) => {
   // [HELPER_FUNCTIONS]
 
   // [COMPUTED_PROPERTIES]
-  /* 
-    code sample: 
+  /*
+    code sample:
     const userDisplayName = user.firstName + user.lastName
   */
 
   // [USE_EFFECTS]
 
   // [TEMPLATE]
-  return <div>TodoSimpleList</div>
+  return (
+    <List
+      size="large"
+      dataSource={MOCK_DATA}
+      renderItem={(item) => (
+        <List.Item
+          actions={[
+            <Edit icon={<EditOutlined />} />,
+            <Remove icon={<DeleteOutlined />} />
+          ]}>
+          <div>{item}</div>
+        </List.Item>
+      )}
+    />
+  )
 }
 
 // [PROPTYPES]

@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types'
-
+import { Button, Form, Input } from 'antd'
 /**
  * @info TodoSimpleForm (05 Mar 2021) // CREATION DATE
  *
@@ -13,13 +13,13 @@ import PropTypes from 'prop-types'
 const TodoSimpleForm = (props) => {
   // [INTERFACES]
   /*
-  code sample: 
+  code sample:
   const { data } = props
   */
 
   // [ADDITIONAL_HOOKS]
   /*
-  code sample: 
+  code sample:
   const firestore = useFirestore()
   */
 
@@ -33,15 +33,26 @@ const TodoSimpleForm = (props) => {
   // [HELPER_FUNCTIONS]
 
   // [COMPUTED_PROPERTIES]
-  /* 
-    code sample: 
+  /*
+    code sample:
     const userDisplayName = user.firstName + user.lastName
   */
 
   // [USE_EFFECTS]
 
   // [TEMPLATE]
-  return <div>TodoSimpleForm</div>
+  return (
+    <Form layout="inline" size="large">
+      <Form.Item style={{ flex: 1 }}>
+        <Input placeholder="Enter what student need to do..." />
+      </Form.Item>
+      <Form.Item noStyle>
+        <Button htmlType="submit" type="primary">
+          Add task
+        </Button>
+      </Form.Item>
+    </Form>
+  )
 }
 
 // [PROPTYPES]
