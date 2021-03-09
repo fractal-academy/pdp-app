@@ -2,7 +2,7 @@ import PropTypes from 'prop-types'
 import { Select } from 'antd'
 import { SKILLS_VALUES } from '~/constants'
 import * as styles from './SkillSingleSelect.style'
-
+import { useEffect, useState } from 'react'
 /**
  * @info SkillSingleSelect (05 Mar 2021) // CREATION DATE
  *
@@ -17,19 +17,27 @@ const SkillSingleSelect = (props) => {
   // [INTERFACES]
   const { skill, onSkillSelect } = props
 
+  // [COMPONENT_STATE_HOOKS]
+  const [skillName, setSkillName] = useState(skill || SKILLS_VALUES[0])
+
   // [HELPER_FUNCTIONS]
   const handleSkillSelect = (value) => {
     onSkillSelect && onSkillSelect(value)
+    setSkillName(value)
   }
+
+  // [USE_EFFECTS]
+  useEffect(() => {
+    onSkillSelect && onSkillSelect(skillName)
+  }, [])
 
   // [TEMPLATE]
   return (
     <Select
       style={styles.skillSelectWidth}
-      defaultValue={skill || SKILLS_VALUES[0]}
+      defaultValue={skillName}
       onChange={handleSkillSelect}
-      size="large"
-      bordered={false}>
+      size="large">
       {SKILLS_VALUES.map((skill) => (
         <Select.Option value={skill}>{skill}</Select.Option>
       ))}
