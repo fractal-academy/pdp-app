@@ -1,52 +1,49 @@
 import PropTypes from 'prop-types'
-
+import { Select, Typography } from 'antd'
+import * as styles from './LevelSingleSelect.style'
+import { LevelSimpleView } from '../../views'
+import firestore from '~/services/Firebase/firestore/index'
+import { useDocumentData } from 'react-firebase-hooks/firestore'
+import { COLLECTIONS } from 'app/constants'
+const { Text } = Typography
 /**
  * @info LevelSingleSelect (09 Mar 2021) // CREATION DATE
  *
  * @comment LevelSingleSelect - React component.
  *
- * @since 09 Mar 2021 ( v.0.0.1 ) // LAST-EDIT DATE
+ * @since 09 Mar 2021 ( v.0.0.2 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
 
 const LevelSingleSelect = (props) => {
   // [INTERFACES]
-  /*
-  code sample: 
-  const { data } = props
-  */
+  const { technologyId } = props
 
   // [ADDITIONAL_HOOKS]
-  /*
-  code sample: 
-  const firestore = useFirestore()
-  */
-
-  // [COMPONENT_STATE_HOOKS]
-  /*
-  code sample:
-  const singleton = useRef(true) // references also put here
-  const [state, setState] = useState({})
-  */
-
-  // [HELPER_FUNCTIONS]
-
-  // [COMPUTED_PROPERTIES]
-  /* 
-    code sample: 
-    const userDisplayName = user.firstName + user.lastName
-  */
+  const [technology, loading] = useDocumentData(
+    firestore.collection(COLLECTIONS.TECHNOLOGIES).doc(technologyId)
+  )
 
   // [USE_EFFECTS]
+  if (loading) return <Text type="secondary">loading...</Text>
 
   // [TEMPLATE]
-  return <div>LevelSingleSelect</div>
+  return (
+    <Select style={styles.levelSelectWidth} size="large">
+      {technology &&
+        Object.keys(technology.levelIds).map((level) => (
+          <Select.Option value={level}>
+            <LevelSimpleView levelId={level} />
+          </Select.Option>
+        ))}
+    </Select>
+  )
 }
 
 // [PROPTYPES]
 LevelSingleSelect.propTypes = {
-  props: PropTypes.object
+  technologyId: PropTypes.string
 }
 
 export default LevelSingleSelect
