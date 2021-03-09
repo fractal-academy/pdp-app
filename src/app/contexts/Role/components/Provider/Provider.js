@@ -1,8 +1,7 @@
-import { useEffect, useState } from 'react'
-import { useHistory } from 'react-router-dom'
+import { useState } from 'react'
 import { useSession } from 'contexts/Session/hooks'
 import roleContext from 'contexts/Role/context'
-import { ROUTE_PATHS } from 'app/constants'
+import { ROLES } from '~/constants'
 
 /**
  * @info RoleProvider (08 Mar 2021) // CREATION DATE
@@ -16,27 +15,27 @@ import { ROUTE_PATHS } from 'app/constants'
  * @return {ReactComponent}
  */
 
+const ACCESS = {
+  [ROLES.ADMIN]: [ROLES.ADMIN, ROLES.MENTOR, ROLES.STUDENT],
+  [ROLES.MENTOR]: [ROLES.MENTOR, ROLES.STUDENT],
+  [ROLES.STUDENT]: [ROLES.STUDENT]
+}
+
 const RoleProvider = (props) => {
   // [ADDITIONAL_HOOKS]
   const session = useSession()
-  const history = useHistory()
 
   // [COMPONENT_STATE_HOOKS]
   const [currentRole, setCurrentRole] = useState(session.role)
 
-  // [USE_EFFECTS]
-  useEffect(() => setCurrentRole(session.role), [session.role])
-
-  //FIXME bug: on every page refresh push to role start page
-  useEffect(() => history.push(ROUTE_PATHS.START_PAGE_MAP[session.role]), [
-    session.role,
-    history
-  ])
-
   // [TEMPLATE]
   return (
     <roleContext.Provider
-      value={{ role: currentRole, setRole: setCurrentRole }}
+      value={{
+        accessRoles: ACCESS[session.role],
+        role: currentRole,
+        setRole: setCurrentRole
+      }}
       {...props}
     />
   )

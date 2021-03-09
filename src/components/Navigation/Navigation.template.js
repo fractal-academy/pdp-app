@@ -92,7 +92,7 @@ const Navigation = () => {
       ),
     [role, history]
   )
-  console.log(role)
+
   // [TEMPLATE]
   return (
     <Sider
