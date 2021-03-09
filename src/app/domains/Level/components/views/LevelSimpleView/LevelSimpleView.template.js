@@ -16,11 +16,13 @@ const { Text } = Typography
 
 const LevelSimpleView = (props) => {
   // [INTERFACES]
-  const { levelId } = props
+  const { levelId, sublevelId } = props
 
   // [ADDITIONAL_HOOKS]
   const [level, loading] = useDocumentData(
-    firestore.collection(COLLECTIONS.LEVELS).doc(levelId)
+    firestore
+      .collection(sublevelId ? COLLECTIONS.SUB_LEVELS : COLLECTIONS.LEVELS)
+      .doc(sublevelId ? sublevelId : levelId)
   )
 
   // [TEMPLATE]
