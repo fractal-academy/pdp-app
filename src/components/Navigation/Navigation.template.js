@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Box, Sider } from 'antd-styled'
-import { Menu } from 'antd'
+import { Divider, Menu } from 'antd'
 import { useHistory, generatePath } from 'react-router-dom'
 import { LogoutOutlined } from '@ant-design/icons'
 import { UserAdvancedView } from 'domains/User/components/views'
@@ -112,6 +112,9 @@ const Navigation = () => {
             }}
             avatarLeft
           />
+        </Box>
+        <Box paddingX={4}>
+          <Divider>Menu</Divider>
         </Box>
         <Menu
           selectedKeys={[selectedMenuItem]}

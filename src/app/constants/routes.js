@@ -1,4 +1,3 @@
-import * as ROUTE_PATHS from './routePaths'
 import { SessionLogin, SessionRegister } from 'domains/Session/routes'
 import { UserAll, UserShow } from 'domains/User/routes'
 import { StudentAll } from 'domains/Student/routes'
@@ -30,7 +29,12 @@ import {
 import { NotificationAll } from 'domains/Notification/routes'
 
 import ChatModuleRoutes from 'chat-module'
+
 import { NotFoundPath } from '~/components'
+import { withProtect } from '~/components/HOC'
+
+import { ROLES } from '~/constants'
+import * as ROUTE_PATHS from './routePaths'
 
 const ROUTES = {
   SESSION_LOGIN: {
@@ -42,60 +46,56 @@ const ROUTES = {
     path: ROUTE_PATHS.SESSION_REGISTRATION
   },
   USERS_ALL: {
-    // protect: ['admin', 'mentor'],
-    component: UserAll,
+    component: withProtect({ roles: [ROLES.ADMIN] })(UserAll),
     path: ROUTE_PATHS.USERS_ALL,
     exact: true
   },
   USER_SHOW: {
     component: UserShow,
-    path: ROUTE_PATHS.USER_SHOW
+    path: ROUTE_PATHS.USER_SHOW,
+    exact: true
   },
   STUDENTS_ALL: {
     // protect: ['admin', 'mentor'],
-    component: StudentAll,
+    component: withProtect({ roles: [ROLES.MENTOR] })(StudentAll),
     path: ROUTE_PATHS.STUDENTS_ALL,
     exact: true
   },
   COMPANIES_ALL: {
-    //protect: ['admin'],
-    component: CompanyAll,
+    component: withProtect({ roles: [ROLES.ADMIN] })(CompanyAll),
     path: ROUTE_PATHS.COMPANIES_ALL,
     exact: true
   },
   COMPANY_SHOW: {
-    //  protect: ['admin'],
-    component: CompanyShow,
+    component: withProtect({ roles: [ROLES.ADMIN] })(CompanyShow),
     path: ROUTE_PATHS.COMPANY_SHOW
   },
   PROJECTS_ALL: {
-    //  protect: ['admin'],
-    component: ProjectAll,
+    component: withProtect({ roles: [ROLES.ADMIN] })(ProjectAll),
     path: ROUTE_PATHS.PROJECTS_ALL,
     exact: true
   },
   PROJECT_SHOW: {
-    //protect: ['admin', 'mentor'],
     component: ProjectShow,
     path: ROUTE_PATHS.PROJECT_SHOW
   },
   TECHNOLOGIES_ALL: {
-    // protect: ['admin'],
-    component: TechnologyAll,
+    component: withProtect({ roles: [ROLES.ADMIN] })(TechnologyAll),
     path: ROUTE_PATHS.TECHNOLOGIES_ALL,
     exact: true
   },
   TECHNOLOGY_SHOW: {
     component: TechnologyShow,
-    path: ROUTE_PATHS.TECHNOLOGY_SHOW
+    path: ROUTE_PATHS.TECHNOLOGY_SHOW,
+    exact: true
   },
   TECHNOLOGY_CREATE: {
-    //protect: ['admin'],
-    component: TechnologyCreate,
-    path: ROUTE_PATHS.TECHNOLOGY_CREATE
+    component: withProtect({ roles: [ROLES.ADMIN] })(TechnologyCreate),
+    path: ROUTE_PATHS.TECHNOLOGY_CREATE,
+    exact: true
   },
   COMPETENCES_ALL: {
-    component: CompetenceAll,
+    component: withProtect({ roles: [ROLES.ADMIN] })(CompetenceAll),
     path: ROUTE_PATHS.COMPETENCES_ALL,
     exact: true
   },
@@ -105,57 +105,49 @@ const ROUTES = {
     exact: true
   },
   COMPETENCE_EDIT: {
-    // protect: ['admin'],
-    component: CompetenceEdit,
+    component: withProtect({ roles: [ROLES.ADMIN] })(CompetenceEdit),
     path: ROUTE_PATHS.COMPETENCE_EDIT
   },
   COMPETENCE_CREATE: {
-    // protect: ['admin'],
-    component: CompetenceCreate,
+    component: withProtect({ roles: [ROLES.ADMIN] })(CompetenceCreate),
     path: ROUTE_PATHS.COMPETENCE_CREATE
   },
   LEVEL_EDIT: {
-    // protect: ['admin'],
-    component: LevelEdit,
+    component: withProtect({ roles: [ROLES.ADMIN] })(LevelEdit),
     path: ROUTE_PATHS.LEVEL_EDIT
   },
   SKILL_CREATE: {
-    //  protect: ['admin'],
-    component: SkillCreate,
+    component: withProtect({ roles: [ROLES.ADMIN] })(SkillCreate),
     path: ROUTE_PATHS.SKILL_CREATE
   },
   SPECIALITY_CREATE: {
-    // protect: ['admin'],
-    component: SpecialityCreate,
+    component: withProtect({ roles: [ROLES.ADMIN] })(SpecialityCreate),
     path: ROUTE_PATHS.SPECIALITY_CREATE
   },
   PLAN_ALL: {
-    component: PlanAll,
+    component: withProtect({ roles: [ROLES.STUDENT] })(PlanAll),
     path: ROUTE_PATHS.PLANS_ALL,
     exact: true
   },
   PLAN_SHOW: {
-    component: PlanShow,
+    component: withProtect({ roles: [ROLES.STUDENT] })(PlanShow),
     path: ROUTE_PATHS.PLAN_SHOW,
     exact: true
   },
   PLAN_CREATE: {
-    component: PlanCreate,
+    component: withProtect({ roles: [ROLES.MENTOR] })(PlanCreate),
     path: ROUTE_PATHS.PLAN_CREATE
   },
   PLAN_EDIT: {
-    //   protect: ['mentor', 'admin'],
-    component: PlanEdit,
+    component: withProtect({ roles: [ROLES.MENTOR] })(PlanEdit),
     path: ROUTE_PATHS.PLAN_EDIT
   },
   MATERIAL_CREATE: {
-    //  protect: ['admin'],
-    component: MaterialCreate,
+    component: withProtect({ roles: [ROLES.ADMIN] })(MaterialCreate),
     path: ROUTE_PATHS.MATERIAL_CREATE
   },
   TODO_CREATE: {
-    //  protect: ['admin'],
-    component: TodoCreate,
+    component: withProtect({ roles: [ROLES.ADMIN] })(TodoCreate),
     path: ROUTE_PATHS.TODO_CREATE
   },
   INTERVIEW_SHOW: {
@@ -163,14 +155,14 @@ const ROUTES = {
     path: ROUTE_PATHS.INTERVIEW_SHOW
   },
   INTERVIEW_EDIT: {
-    // protect: ['admin', 'mentor'],
-    component: InterviewEdit,
+    component: withProtect({ roles: [ROLES.ADMIN, ROLES.MENTOR] })(
+      InterviewEdit
+    ),
     path: ROUTE_PATHS.INTERVIEW_EDIT,
     exact: true
   },
   INTERVIEW_CREATE: {
-    // protect: ['mentor'],
-    component: InterviewCreate,
+    component: withProtect({ roles: [ROLES.ADMIN] })(InterviewCreate),
     path: ROUTE_PATHS.INTERVIEW_CREATE
   },
   NOTIFICATIONS_ALL: {
