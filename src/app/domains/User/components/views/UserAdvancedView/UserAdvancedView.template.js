@@ -4,6 +4,8 @@ import { Row, Col, Box } from 'antd-styled'
 import { RoleSimpleView } from 'domains/Role/components/views/RoleSimpleView'
 import { RoleSingleSelect } from 'domains/Role/components/selects'
 import { UserOutlined } from '@ant-design/icons'
+import { useSession } from 'contexts/Session/hooks'
+import { ROLES } from '~/constants'
 const { Title } = Typography
 
 /**
@@ -28,6 +30,9 @@ const UserAdvancedView = (props) => {
     onAvatarClick,
     avatarLeft
   } = props
+
+  // [ADDITIONAL_HOOKS]
+  const session = useSession()
 
   // [COMPUTED_PROPERTIES]
   const userDisplayName =
@@ -59,7 +64,7 @@ const UserAdvancedView = (props) => {
         alignItems={!avatarLeft && 'flex-end'}>
         <Title level={4}>{userDisplayName}</Title>
 
-        {withRoleSelect ? (
+        {withRoleSelect && session.role !== ROLES.STUDENT ? (
           <RoleSingleSelect role={role} onRoleSelect={withRoleSelect} />
         ) : (
           <Box display="inline-flex">
