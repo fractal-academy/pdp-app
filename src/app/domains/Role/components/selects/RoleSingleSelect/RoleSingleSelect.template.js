@@ -1,7 +1,6 @@
 import PropTypes from 'prop-types'
 import { Select } from 'antd'
 import { useRole } from 'contexts/Role/hooks'
-import { ROLES_VALUES } from '~/constants'
 
 /**
  * @info RoleSingleSelect (05 Mar 2021) // CREATION DATE
@@ -18,7 +17,7 @@ const RoleSingleSelect = (props) => {
   const { role, onRoleSelect } = props
 
   // [ADDITIONAL_HOOKS]
-  const { setRole } = useRole()
+  const { setRole, accessRoles } = useRole()
 
   // [HELPER_FUNCTIONS]
   const handleRoleSelect = (value) => {
@@ -29,11 +28,11 @@ const RoleSingleSelect = (props) => {
   // [TEMPLATE]
   return (
     <Select
-      defaultValue={role}
+      value={role}
       onChange={handleRoleSelect}
       size="small"
       bordered={false}>
-      {ROLES_VALUES.map((role) => (
+      {accessRoles.map((role) => (
         <Select.Option value={role}>{role}</Select.Option>
       ))}
     </Select>

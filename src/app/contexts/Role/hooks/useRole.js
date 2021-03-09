@@ -9,7 +9,7 @@ import roleContext from '../context'
  * @since 08 Mar 2021 ( v.0.0.1 ) // LAST-EDIT DATE
  *
  * @returns {{
-        accessRoles: array,
+        accessRoles: object,
         role: string,
         setRole: function
       }}

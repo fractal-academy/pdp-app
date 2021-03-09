@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Box, Sider } from 'antd-styled'
-import { Menu } from 'antd'
+import { Divider, Menu } from 'antd'
 import { useHistory, generatePath } from 'react-router-dom'
 import { LogoutOutlined } from '@ant-design/icons'
 import { UserAdvancedView } from 'domains/User/components/views'
@@ -43,8 +43,7 @@ const MENU_ITEMS = {
     },
     CHATS: {
       title: 'Chats',
-      hide: [ROLES.ADMIN],
-      route: CHAT_ROUTE_PATHS.CHATS_ALL
+      route: generatePath(CHAT_ROUTE_PATHS.CHATS_ALL, { role: ROLES.MENTOR })
     }
   },
   [ROLES.STUDENT]: {
@@ -54,8 +53,7 @@ const MENU_ITEMS = {
     },
     CHATS: {
       title: 'Chats',
-      hide: [ROLES.ADMIN],
-      route: CHAT_ROUTE_PATHS.CHATS_ALL
+      route: generatePath(CHAT_ROUTE_PATHS.CHATS_ALL, { role: ROLES.STUDENT })
     }
   }
 }
@@ -76,7 +74,7 @@ const Navigation = () => {
 
   // [COMPONENT_STATE_HOOKS]
   const [selectedMenuItem, setSelectedMenuItem] = useState(
-    ROUTE_PATHS.START_PAGE_MAP[role]
+    history.location.pathname || ROUTE_PATHS.START_PAGE_MAP[role]
   )
 
   // [HELPER_FUNCTIONS]
@@ -87,7 +85,13 @@ const Navigation = () => {
   const roleMenu = Object.values(MENU_ITEMS[role])
 
   // [USE_EFFECTS]
-  useEffect(() => setSelectedMenuItem(ROUTE_PATHS.START_PAGE_MAP[role]), [role])
+  useEffect(
+    () =>
+      setSelectedMenuItem(
+        history.location.pathname || ROUTE_PATHS.START_PAGE_MAP[role]
+      ),
+    [role, history]
+  )
 
   // [TEMPLATE]
   return (
@@ -108,6 +112,9 @@ const Navigation = () => {
             }}
             avatarLeft
           />
+        </Box>
+        <Box paddingX={4}>
+          <Divider>Menu</Divider>
         </Box>
         <Menu
           selectedKeys={[selectedMenuItem]}

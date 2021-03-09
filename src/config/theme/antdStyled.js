@@ -15,8 +15,8 @@ theme.grid.paddings = [
 theme.primaryColor = '#F88888'
 theme.primaryGradient = 'linear-gradient(-45deg, #0D42B1, #247EE5)'
 
-theme.color = {}
-theme.color.primary = theme.primaryColor
+theme.colors = {}
+theme.colors.primary = theme.primaryColor
 
 theme.shadow = {}
 theme.shadow.card = '0 12px 8px -12px rgba(3, 11, 23, 0.2)'
