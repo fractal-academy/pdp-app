@@ -3,13 +3,14 @@ import { useRole } from 'contexts/Role/hooks'
 import { AccessDenied } from '~/components'
 import { useParams } from 'react-router-dom'
 import _ from 'lodash'
+import { useEffect } from 'react'
 
 /**
  * @info withProtect (08 Mar 2021) // CREATION DATE
  *
  * @comment withProtect - React HOC component using to protect routes.
  *
- * @since 09 Mar 2021 ( v.0.0.2 ) // LAST-EDIT DATE
+ * @since 09 Mar 2021 ( v.0.0.3 ) // LAST-EDIT DATE
  *
  * @param {string[]} protectConfig.roles - array of roles that have access to this route
  *
@@ -24,6 +25,13 @@ const withProtect = (protectConfig) => (Component) => (props) => {
   const params = useParams()
   const { role, setRole, accessRoles } = useRole()
 
+  // [USE_EFFECTS]
+  useEffect(() => {
+    if (role !== _.intersection(roles, accessRoles)[0]) {
+      setRole(_.intersection(roles, accessRoles)[0])
+    }
+  }, [accessRoles, roles, setRole])
+
   // [LOGIC]
   if (
     !roles?.includes(_.intersection(roles, accessRoles)[0]) ||
@@ -35,6 +43,7 @@ const withProtect = (protectConfig) => (Component) => (props) => {
     }
     return <AccessDenied />
   }
+
   return <Component {...props} />
 }
 
