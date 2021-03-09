@@ -37,7 +37,8 @@ const LevelSimpleView = (props) => {
 
 // [PROPTYPES]
 LevelSimpleView.propTypes = {
-  levelId: PropTypes.string.isRequired
+  levelId: PropTypes.string,
+  sublevelId: PropTypes.string
 }
 
 export default LevelSimpleView

@@ -54,9 +54,7 @@ const LevelTreeSingleSelect = (props) => {
             {technology.levelIds[level].map((sublevel) => (
               <TreeNode
                 value={sublevel}
-                title={
-                  <LevelSimpleView levelId={level} sublevelId={sublevel} />
-                }
+                title={<LevelSimpleView sublevelId={sublevel} />}
               />
             ))}
           </TreeNode>
