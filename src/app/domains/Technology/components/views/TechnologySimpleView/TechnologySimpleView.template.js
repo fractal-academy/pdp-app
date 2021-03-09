@@ -29,11 +29,11 @@ const TechnologySimpleView = (props) => {
   return (
     <>
       {withHashTag ? (
-        <Text strong color={technology.color}>
-          {`#${technology.name}`}
+        <Text strong color={technology?.color}>
+          {`#${technology?.name}`}
         </Text>
       ) : (
-        <Title level={3}>{technology.name}</Title>
+        <Title level={3}>{technology?.name}</Title>
       )}
     </>
   )
