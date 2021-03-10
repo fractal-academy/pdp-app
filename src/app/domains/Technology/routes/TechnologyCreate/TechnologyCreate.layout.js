@@ -13,9 +13,7 @@ import { TechnologyAdvancedForm } from 'domains/Technology/components/forms'
 
 const TechnologyCreate = () => {
   // [HELPER_FUNCTIONS]
-  const onSubmit = (values) => {
-    console.log('values', values)
-  }
+  const onSubmit = (values) => {}
 
   // [TEMPLATE]
   const Buttons = () => (
