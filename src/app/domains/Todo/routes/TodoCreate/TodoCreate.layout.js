@@ -11,12 +11,12 @@ import _ from 'lodash'
  *
  * @comment TodoCreate - React component.
  *
- * @since 10 Mar 2021 ( v.0.0.2 ) // LAST-EDIT DATE
+ * @since 10 Mar 2021 ( v.0.0.3 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
 
-const TodoCreate = (props) => {
+const TodoCreate = () => {
   // [COMPONENT_STATE_HOOKS]
   const [todos, setTodos] = useState([])
   const [editTodo, setEditTodo] = useState(false)
