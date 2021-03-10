@@ -1,9 +1,9 @@
 import PropTypes from 'prop-types'
 import { List, Typography, Input, Form } from 'antd'
-import { Remove, Edit, Box } from 'antd-styled'
+import { Remove, Edit, Box, Text } from 'antd-styled'
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons'
 import { useState, useRef, useEffect } from 'react'
-const { Text } = Typography
+import * as style from './InterviewSimpleList.style'
 
 /**
  * @info InterviewSimpleList (05 Mar 2021) // CREATION DATE
@@ -85,7 +85,7 @@ const InterviewSimpleList = (props) => {
                 </Form.Item>
               </Form>
             ) : (
-              <Text>{question}</Text>
+              <Text style={style.dots}>{question}</Text>
             )}
           </List.Item>
         </Box>
