@@ -137,7 +137,7 @@ const ROUTES = {
     path: ROUTE_PATHS.SPECIALITY_CREATE
   },
   PLAN_ALL: {
-    component: withContent(withProtect({ roles: [ROLES.STUDENT] })(PlanAll)),
+    component: withProtect({ roles: [ROLES.STUDENT] })(PlanAll),
     path: ROUTE_PATHS.PLANS_ALL,
     exact: true
   },
