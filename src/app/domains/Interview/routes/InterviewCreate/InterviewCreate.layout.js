@@ -1,9 +1,11 @@
 import { Button } from 'antd'
+import { useHistory } from 'react-router-dom'
 import { Row, Col, Back, HeadingPrimary } from 'antd-styled'
 import { InterviewSimpleList } from 'domains/Interview/components/lists'
 import { InterviewSimpleForm } from 'domains/Interview/components/forms'
 import { useState } from 'react'
 import _ from 'lodash'
+import { ROUTE_PATHS } from 'app/constants'
 
 /**
  * @info InterviewCreate (05 Mar 2021) // CREATION DATE
@@ -16,6 +18,9 @@ import _ from 'lodash'
  */
 
 const InterviewCreate = (props) => {
+  // [ADDITIONAL_HOOKS]
+  const history = useHistory()
+
   // [COMPONENT_STATE_HOOKS]
   const [questions, setQuestions] = useState([])
   const [editQuestion, setEditQuestion] = useState(false)
@@ -33,16 +38,25 @@ const InterviewCreate = (props) => {
     setQuestions(newQuestions)
   }
 
+  // -- Header step button functions --
+  const onClickNext = () => {}
+  const onClickBack = () => {
+    history.goBack()
+  }
+  // -----------------------------
+
   // [TEMPLATE]
   return (
     <Row>
       <Col span={24}>
         <Row gutter={[8]} mb={3} justify="space-between">
           <Col>
-            <Back size="large">Back</Back>
+            <Back onClick={onClickBack} size="large">
+              Back
+            </Back>
           </Col>
           <Col>
-            <Button size="large" type="primary">
+            <Button onClick={onClickNext} size="large" type="primary">
               Next
             </Button>
           </Col>
