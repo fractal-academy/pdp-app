@@ -36,7 +36,7 @@ const TodoSimpleList = (props) => {
 
   const onSubmit = (value, idx) => {
     const newTodos = [...todos]
-    newTodos[idx] = value.todo
+    newTodos[idx] = value.todo || editTodo.todo
     setTodos(newTodos)
     setEditTodo(false)
   }
