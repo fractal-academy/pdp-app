@@ -1,9 +1,11 @@
+import { useState } from 'react'
+import { useHistory } from 'react-router-dom'
 import { Button } from 'antd'
 import { Row, Col, Back, HeadingPrimary } from 'antd-styled'
 import { TodoSimpleForm } from 'domains/Todo/components/forms'
 import { TodoSimpleList } from 'domains/Todo/components/lists'
-import { useState } from 'react'
 import _ from 'lodash'
+import { ROUTE_PATHS } from 'app/constants'
 
 /**
  * @info TodoCreate (05 Mar 2021) // CREATION DATE
@@ -16,6 +18,9 @@ import _ from 'lodash'
  */
 
 const TodoCreate = () => {
+  // [ADDITIONAL_HOOKS]
+  const history = useHistory()
+
   // [COMPONENT_STATE_HOOKS]
   const [todos, setTodos] = useState([])
   const [editTodo, setEditTodo] = useState(false)
@@ -33,16 +38,27 @@ const TodoCreate = () => {
     setTodos(newTodos)
   }
 
+  // -- Header step button functions --
+  const onClickNext = () => {
+    history.push(ROUTE_PATHS.MATERIAL_CREATE)
+  }
+  const onClickBack = () => {
+    history.goBack()
+  }
+  // -----------------------------
+
   // [TEMPLATE]
   return (
     <Row>
       <Col span={24}>
         <Row gutter={[8]} mb={3} justify="space-between">
           <Col>
-            <Back size="large">Back</Back>
+            <Back onClick={onClickBack} size="large">
+              Back
+            </Back>
           </Col>
           <Col>
-            <Button size="large" type="primary">
+            <Button onClick={onClickNext} size="large" type="primary">
               Next
             </Button>
           </Col>
