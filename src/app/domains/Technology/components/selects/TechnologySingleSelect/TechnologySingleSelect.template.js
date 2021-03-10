@@ -12,20 +12,14 @@ const { Text } = Typography
  *
  * @comment TechnologySingleSelect - React component.
  *
- * @since 09 Mar 2021 ( v.0.0.1 ) // LAST-EDIT DATE
+ * @since 10 Mar 2021 ( v.0.0.2 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
 
 const TechnologySingleSelect = (props) => {
   // [INTERFACES]
-  const {
-    technology,
-    onTechnologySelect,
-
-    setTechnologyId,
-    ...rest
-  } = props
+  const { technology, onTechnologySelect, setTechnologyId, ...rest } = props
 
   // [ADDITIONAL_HOOKS]
   const [technologies, loading] = useCollectionData(
