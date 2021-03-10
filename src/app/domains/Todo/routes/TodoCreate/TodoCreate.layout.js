@@ -1,9 +1,8 @@
-import PropTypes from 'prop-types'
 import { Button } from 'antd'
 import { Row, Col, Back, HeadingPrimary } from 'antd-styled'
 import { TodoSimpleForm } from 'domains/Todo/components/forms'
 import { TodoSimpleList } from 'domains/Todo/components/lists'
-import { useState, useRef } from 'react'
+import { useState } from 'react'
 import _ from 'lodash'
 
 /**
@@ -11,7 +10,7 @@ import _ from 'lodash'
  *
  * @comment TodoCreate - React component.
  *
- * @since 10 Mar 2021 ( v.0.0.3 ) // LAST-EDIT DATE
+ * @since 10 Mar 2021 ( v.0.0.4 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
@@ -20,9 +19,6 @@ const TodoCreate = () => {
   // [COMPONENT_STATE_HOOKS]
   const [todos, setTodos] = useState([])
   const [editTodo, setEditTodo] = useState(false)
-
-  // [ADDITIONAL_HOOKS]
-  const inputRef = useRef()
 
   // [HELPER_FUNCTIONS]
   const onSubmit = (value) => {
@@ -54,11 +50,7 @@ const TodoCreate = () => {
         <HeadingPrimary title="Create ToDo" />
         <Row gutter={[8, 16]} justify="center">
           <Col span={16}>
-            <TodoSimpleForm
-              onSubmit={onSubmit}
-              editTodo={editTodo}
-              ref={inputRef}
-            />
+            <TodoSimpleForm onSubmit={onSubmit} editTodo={editTodo} />
           </Col>
           <Col span={16}>
             <TodoSimpleList
