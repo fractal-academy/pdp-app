@@ -37,9 +37,10 @@ const InterviewSimpleList = (props) => {
 
   const onSubmit = (value, idx) => {
     const newQuestions = [...questions]
-    newQuestions[idx] = value.todo
+    newQuestions[idx] = value.question
     setQuestions(newQuestions)
     setEditQuestion(false)
+    form.resetFields()
   }
 
   // [USE_EFFECTS]
@@ -75,7 +76,7 @@ const InterviewSimpleList = (props) => {
                 style={{ width: '100%' }}
                 layout="inline"
                 onFinish={(todo) => onSubmit(todo, idx)}>
-                <Form.Item style={{ flex: 1 }} name="todo">
+                <Form.Item style={{ flex: 1 }} name="question">
                   <Input.TextArea
                     onPressEnter={(e) => {
                       e.preventDefault()
