@@ -7,55 +7,30 @@ import { DeleteOutlined, EditOutlined } from '@ant-design/icons'
  *
  * @comment TodoSimpleList - React component.
  *
- * @since 05 Mar 2021 ( v.0.0.1 ) // LAST-EDIT DATE
+ * @since 10 Mar 2021 ( v.0.0.2 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
 
-const MOCK_DATA = ['first', 'second', 'third', 'fourth', 'fifth']
-
 const TodoSimpleList = (props) => {
   // [INTERFACES]
-  /*
-  code sample:
-  const { data } = props
-  */
-
-  // [ADDITIONAL_HOOKS]
-  /*
-  code sample:
-  const firestore = useFirestore()
-  */
-
-  // [COMPONENT_STATE_HOOKS]
-  /*
-  code sample:
-  const singleton = useRef(true) // references also put here
-  const [state, setState] = useState({})
-  */
-
-  // [HELPER_FUNCTIONS]
-
-  // [COMPUTED_PROPERTIES]
-  /*
-    code sample:
-    const userDisplayName = user.firstName + user.lastName
-  */
-
-  // [USE_EFFECTS]
+  const { todos, onEditTodo, onDeleteTodo } = props
 
   // [TEMPLATE]
   return (
     <List
       size="large"
-      dataSource={MOCK_DATA}
-      renderItem={(item) => (
+      dataSource={todos}
+      renderItem={(todo) => (
         <List.Item
           actions={[
-            <Edit icon={<EditOutlined />} />,
-            <Remove icon={<DeleteOutlined />} />
+            <Edit icon={<EditOutlined />} onClick={() => onEditTodo(todo)} />,
+            <Remove
+              icon={<DeleteOutlined />}
+              onSubmit={() => onDeleteTodo(todo.id)}
+            />
           ]}>
-          <div>{item}</div>
+          <div>{todo.name}</div>
         </List.Item>
       )}
     />
@@ -63,6 +38,10 @@ const TodoSimpleList = (props) => {
 }
 
 // [PROPTYPES]
-TodoSimpleList.propTypes = {}
+TodoSimpleList.propTypes = {
+  todos: PropTypes.array,
+  onEditTodo: PropTypes.func,
+  onDeleteTodo: PropTypes.func
+}
 
 export default TodoSimpleList

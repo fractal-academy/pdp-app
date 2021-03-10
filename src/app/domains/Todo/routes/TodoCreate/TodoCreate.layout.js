@@ -3,46 +3,51 @@ import { Button } from 'antd'
 import { Row, Col, Back, HeadingPrimary } from 'antd-styled'
 import { TodoSimpleForm } from 'domains/Todo/components/forms'
 import { TodoSimpleList } from 'domains/Todo/components/lists'
+import { useState, useRef } from 'react'
+import { uid } from 'uid'
+import _ from 'lodash'
 
 /**
  * @info TodoCreate (05 Mar 2021) // CREATION DATE
  *
  * @comment TodoCreate - React component.
  *
- * @since 05 Mar 2021 ( v.0.0.1 ) // LAST-EDIT DATE
+ * @since 10 Mar 2021 ( v.0.0.2 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
 
 const TodoCreate = (props) => {
-  // [INTERFACES]
-  /*
-  code sample:
-  const { data } = props
-  */
-
-  // [ADDITIONAL_HOOKS]
-  /*
-  code sample:
-  const firestore = useFirestore()
-  */
-
   // [COMPONENT_STATE_HOOKS]
-  /*
-  code sample:
-  const singleton = useRef(true) // references also put here
-  const [state, setState] = useState({})
-  */
+  const [todos, setTodos] = useState([])
+  const [editTodo, setEditTodo] = useState()
+  const inputRef = useRef()
 
   // [HELPER_FUNCTIONS]
+  const onSubmit = (value) => {
+    let newTodos = []
+    if (editTodo) {
+      newTodos = _.remove(todos, (item) => {
+        return item.id !== editTodo.id
+      })
+      setTodos([...newTodos, { id: editTodo.id, name: value }])
+      setEditTodo('')
+    } else {
+      const id = uid()
+      setTodos([...todos, { id, name: value }])
+    }
+  }
 
-  // [COMPUTED_PROPERTIES]
-  /*
-    code sample:
-    const userDisplayName = user.firstName + user.lastName
-  */
-
-  // [USE_EFFECTS]
+  const onDeleteTodo = (id) => {
+    const newTodos = _.remove(todos, (item) => {
+      return item.id !== id
+    })
+    setTodos(newTodos)
+  }
+  const onEditTodo = (todo) => {
+    setEditTodo(todo)
+    inputRef.current.value = todo.name
+  }
 
   // [TEMPLATE]
   return (
@@ -61,10 +66,18 @@ const TodoCreate = (props) => {
         <HeadingPrimary title="Create ToDo" />
         <Row gutter={[8, 16]} justify="center">
           <Col span={16}>
-            <TodoSimpleForm />
+            <TodoSimpleForm
+              onSubmit={onSubmit}
+              editTodo={editTodo}
+              ref={inputRef}
+            />
           </Col>
           <Col span={16}>
-            <TodoSimpleList />
+            <TodoSimpleList
+              todos={todos}
+              onEditTodo={onEditTodo}
+              onDeleteTodo={onDeleteTodo}
+            />
           </Col>
         </Row>
       </Col>
