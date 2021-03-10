@@ -1,16 +1,15 @@
 import PropTypes from 'prop-types'
-import { List, Typography, Input, Form } from 'antd'
-import { Remove, Edit, Box, Text } from 'antd-styled'
+import { List, Input, Form, Col } from 'antd'
+import { Remove, Edit, Box, Text, Row } from 'antd-styled'
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons'
 import { useState, useRef, useEffect } from 'react'
-import * as style from './InterviewSimpleList.style'
 
 /**
  * @info InterviewSimpleList (05 Mar 2021) // CREATION DATE
  *
  * @comment InterviewSimpleList - React component.
  *
- * @since 10 Mar 2021 ( v.0.0.2 ) // LAST-EDIT DATE
+ * @since 11 Mar 2021 ( v.0.0.4 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
@@ -67,25 +66,28 @@ const InterviewSimpleList = (props) => {
               />
             ]}>
             {editQuestion.idx === idx ? (
-              <Form
-                form={form}
-                style={{ width: '100%' }}
-                layout="inline"
-                onFinish={(question) => onSubmit(question, idx)}>
-                <Form.Item style={{ flex: 1 }} name="question">
-                  <Input.TextArea
-                    onPressEnter={(e) => {
-                      e.preventDefault()
-                      form.submit()
-                    }}
-                    rows={1}
-                    ref={inputRef}
-                    defaultValue={editQuestion.question}
-                  />
-                </Form.Item>
-              </Form>
+              <Row flex={1}>
+                <Col span={24}>
+                  <Form
+                    form={form}
+                    layout="inline"
+                    onFinish={(question) => onSubmit(question, idx)}>
+                    <Form.Item style={{ flex: 1 }} name="question">
+                      <Input.TextArea
+                        onPressEnter={(e) => {
+                          e.preventDefault()
+                          form.submit()
+                        }}
+                        rows={1}
+                        ref={inputRef}
+                        defaultValue={editQuestion.question}
+                      />
+                    </Form.Item>
+                  </Form>
+                </Col>
+              </Row>
             ) : (
-              <Text style={style.dots}>{question}</Text>
+              <Text ellipsis>{question}</Text>
             )}
           </List.Item>
         </Box>
