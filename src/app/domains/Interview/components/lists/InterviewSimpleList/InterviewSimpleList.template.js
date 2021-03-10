@@ -1,7 +1,11 @@
 import PropTypes from 'prop-types'
 import { List, Typography, Input, Form } from 'antd'
 import { Remove, Edit, Box } from 'antd-styled'
-import { DeleteOutlined, EditOutlined } from '@ant-design/icons'
+import {
+  ConsoleSqlOutlined,
+  DeleteOutlined,
+  EditOutlined
+} from '@ant-design/icons'
 import { useState, useRef, useEffect } from 'react'
 const { Text } = Typography
 
@@ -21,6 +25,7 @@ const InterviewSimpleList = (props) => {
 
   // [ADDITIONAL_HOOKS]
   const inputRef = useRef(null)
+  const [form] = Form.useForm()
 
   // [COMPONENT_STATE_HOOKS]
   const [editQuestion, setEditQuestion] = useState(false)
@@ -32,7 +37,7 @@ const InterviewSimpleList = (props) => {
 
   const onSubmit = (value, idx) => {
     const newQuestions = [...questions]
-    newQuestions[idx] = value.question
+    newQuestions[idx] = value.todo
     setQuestions(newQuestions)
     setEditQuestion(false)
   }
@@ -66,11 +71,20 @@ const InterviewSimpleList = (props) => {
             ]}>
             {editQuestion.idx === idx ? (
               <Form
+                form={form}
                 style={{ width: '100%' }}
-                onFinish={(todo) => onSubmit(todo, idx)}
-                layout="inline">
+                layout="inline"
+                onFinish={(todo) => onSubmit(todo, idx)}>
                 <Form.Item style={{ flex: 1 }} name="todo">
-                  <Input ref={inputRef} defaultValue={editQuestion.todo} />
+                  <Input.TextArea
+                    onPressEnter={(e) => {
+                      e.preventDefault()
+                      form.submit()
+                    }}
+                    rows={1}
+                    ref={inputRef}
+                    defaultValue={editQuestion.todo}
+                  />
                 </Form.Item>
               </Form>
             ) : (
