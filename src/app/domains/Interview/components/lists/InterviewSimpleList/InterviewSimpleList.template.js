@@ -27,8 +27,8 @@ const InterviewSimpleList = (props) => {
   const [editQuestion, setEditQuestion] = useState(false)
 
   // [HELPER_FUNCTIONS]
-  const onEdit = (todo, idx) => {
-    setEditQuestion({ todo, idx })
+  const onEdit = (question, idx) => {
+    setEditQuestion({ question, idx })
   }
 
   const onSubmit = (value, idx) => {
@@ -71,7 +71,7 @@ const InterviewSimpleList = (props) => {
                 form={form}
                 style={{ width: '100%' }}
                 layout="inline"
-                onFinish={(todo) => onSubmit(todo, idx)}>
+                onFinish={(question) => onSubmit(question, idx)}>
                 <Form.Item style={{ flex: 1 }} name="question">
                   <Input.TextArea
                     onPressEnter={(e) => {
@@ -80,7 +80,7 @@ const InterviewSimpleList = (props) => {
                     }}
                     rows={1}
                     ref={inputRef}
-                    defaultValue={editQuestion.todo}
+                    defaultValue={editQuestion.question}
                   />
                 </Form.Item>
               </Form>
