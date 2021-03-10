@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types'
-import { Select } from 'antd'
+import { Select, Form } from 'antd'
 import { SKILLS_VALUES } from '~/constants'
 import * as styles from './SkillSingleSelect.style'
 import { useEffect, useState } from 'react'
@@ -15,7 +15,7 @@ import { useEffect, useState } from 'react'
 
 const SkillSingleSelect = (props) => {
   // [INTERFACES]
-  const { skill, onSkillSelect } = props
+  const { skill, onSkillSelect, ...rest } = props
 
   // [COMPONENT_STATE_HOOKS]
   const [skillName, setSkillName] = useState(skill || SKILLS_VALUES[0])
@@ -33,15 +33,17 @@ const SkillSingleSelect = (props) => {
 
   // [TEMPLATE]
   return (
-    <Select
-      style={styles.skillSelectWidth}
-      defaultValue={skillName}
-      onChange={handleSkillSelect}
-      size="large">
-      {SKILLS_VALUES.map((skill) => (
-        <Select.Option value={skill}>{skill}</Select.Option>
-      ))}
-    </Select>
+    <Form.Item {...rest}>
+      <Select
+        style={styles.skillSelectWidth}
+        defaultValue={skillName}
+        onChange={handleSkillSelect}
+        size="large">
+        {SKILLS_VALUES.map((skill) => (
+          <Select.Option value={skill}>{skill}</Select.Option>
+        ))}
+      </Select>
+    </Form.Item>
   )
 }
 

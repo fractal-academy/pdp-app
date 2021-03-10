@@ -1,2 +1,3 @@
 import { LevelSimpleTree } from './LevelSimpleTree'
-export { LevelSimpleTree }
+import { LevelTreeSingleSelect } from './LevelTreeSingleSelect'
+export { LevelSimpleTree, LevelTreeSingleSelect }

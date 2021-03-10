@@ -1,5 +1,8 @@
-import { Typography } from 'antd'
+import { Typography, Button } from 'antd'
+import { Box } from 'antd-styled'
 import { TechnologySimpleList } from 'domains/Technology/components/lists'
+import { useHistory } from 'react-router-dom'
+import { ROUTE_PATHS } from 'app/constants'
 const { Title } = Typography
 
 /**
@@ -7,7 +10,7 @@ const { Title } = Typography
  *
  * @comment TechnologyAll - React component.
  *
- * @since 08 Mar 2021 ( v.0.0.2 ) // LAST-EDIT DATE
+ * @since 10 Mar 2021 ( v.0.0.3 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
@@ -15,10 +18,20 @@ const { Title } = Typography
 const MOCK_DATA = [{ technologyId: 'LCpboRsqU6zvWYRirBOD', skillId: '789' }]
 
 const TechnologyAll = () => {
+  // [ADDITIONAL_HOOKS]
+  const history = useHistory()
+
   // [TEMPLATE]
   return (
     <>
-      <Title>Technologies</Title>
+      <Box display="flex" justifyContent="space-between" alignItems="center">
+        <Title>Technologies</Title>
+        <Button
+          type="primary"
+          onClick={() => history.push(ROUTE_PATHS.TECHNOLOGY_CREATE)}>
+          Add technology
+        </Button>
+      </Box>
       <TechnologySimpleList data={MOCK_DATA} />
     </>
   )

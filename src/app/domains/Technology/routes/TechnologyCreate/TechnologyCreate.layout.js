@@ -1,47 +1,41 @@
-import PropTypes from 'prop-types'
-
+import { PageWrapper, Card, Title, Box } from 'antd-styled'
+import { Button } from 'antd'
+import { TechnologyAdvancedForm } from 'domains/Technology/components/forms'
 /**
  * @info TechnologyCreate (05 Mar 2021) // CREATION DATE
  *
  * @comment TechnologyCreate - React component.
  *
- * @since 05 Mar 2021 ( v.0.0.1 ) // LAST-EDIT DATE
+ * @since 09 Mar 2021 ( v.0.0.2 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
 
-const TechnologyCreate = (props) => {
-  // [INTERFACES]
-  /*
-  code sample: 
-  const { data } = props
-  */
-
-  // [ADDITIONAL_HOOKS]
-  /*
-  code sample: 
-  const firestore = useFirestore()
-  */
-
-  // [COMPONENT_STATE_HOOKS]
-  /*
-  code sample:
-  const singleton = useRef(true) // references also put here
-  const [state, setState] = useState({})
-  */
-
+const TechnologyCreate = () => {
   // [HELPER_FUNCTIONS]
-
-  // [COMPUTED_PROPERTIES]
-  /* 
-    code sample: 
-    const userDisplayName = user.firstName + user.lastName
-  */
-
-  // [USE_EFFECTS]
+  const onSubmit = (values) => {
+    console.log('values', values)
+  }
 
   // [TEMPLATE]
-  return <div>TechnologyCreate</div>
+  const Buttons = () => (
+    <Button type="primary" htmlType="submit">
+      Next
+    </Button>
+  )
+
+  return (
+    <PageWrapper alignMiddle="true">
+      <Card>
+        <Box mb={4}>
+          <Title level={2} display="flex" justifyContent="center">
+            Init technology
+          </Title>
+        </Box>
+        <TechnologyAdvancedForm Buttons={Buttons} onSubmit={onSubmit} />
+      </Card>
+    </PageWrapper>
+  )
 }
 
 // [PROPTYPES]
