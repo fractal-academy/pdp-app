@@ -1,2 +1,2 @@
-import { MaterialListsWithUpload } from './MaterialListsWithUpload'
-export { MaterialListsWithUpload }
+import { MaterialSimpleListWithUpload } from './MaterialSimpleListWithUpload'
+export { MaterialSimpleListWithUpload }

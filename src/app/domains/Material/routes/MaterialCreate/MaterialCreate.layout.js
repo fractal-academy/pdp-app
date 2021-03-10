@@ -1,4 +1,6 @@
-import PropTypes from 'prop-types'
+import { Button } from 'antd'
+import { Row, Col, Back, HeadingPrimary } from 'antd-styled'
+import { MaterialSimpleListWithUpload } from 'domains/Material/components/combined/lists'
 
 /**
  * @info MaterialCreate (05 Mar 2021) // CREATION DATE
@@ -10,16 +12,16 @@ import PropTypes from 'prop-types'
  * @return {ReactComponent}
  */
 
-const MaterialCreate = (props) => {
+const MaterialCreate = () => {
   // [INTERFACES]
   /*
-  code sample: 
+  code sample:
   const { data } = props
   */
 
   // [ADDITIONAL_HOOKS]
   /*
-  code sample: 
+  code sample:
   const firestore = useFirestore()
   */
 
@@ -33,18 +35,36 @@ const MaterialCreate = (props) => {
   // [HELPER_FUNCTIONS]
 
   // [COMPUTED_PROPERTIES]
-  /* 
-    code sample: 
+  /*
+    code sample:
     const userDisplayName = user.firstName + user.lastName
   */
 
   // [USE_EFFECTS]
 
   // [TEMPLATE]
-  return <div>MaterialCreate</div>
+  return (
+    <Row>
+      <Col span={24}>
+        <Row gutter={[8]} mb={3} justify="space-between">
+          <Col>
+            <Back size="large">Back</Back>
+          </Col>
+          <Col>
+            <Button size="large" type="primary">
+              Next
+            </Button>
+          </Col>
+        </Row>
+        <HeadingPrimary title="Add useful materials" />
+        <Row gutter={[8, 16]} justify="center">
+          <Col sm={24} md={20} lg={16} xl={14} xxl={10}>
+            <MaterialSimpleListWithUpload />
+          </Col>
+        </Row>
+      </Col>
+    </Row>
+  )
 }
-
-// [PROPTYPES]
-MaterialCreate.propTypes = {}
 
 export default MaterialCreate

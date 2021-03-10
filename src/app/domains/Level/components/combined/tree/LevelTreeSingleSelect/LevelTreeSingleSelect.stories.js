@@ -7,6 +7,8 @@ const metadata = {
 }
 export default metadata
 
-export const LevelTreeSingleSelectStory = (args) => <LevelTreeSingleSelect {...args} />
+export const LevelTreeSingleSelectStory = (args) => (
+  <LevelTreeSingleSelect {...args} />
+)
 
 LevelTreeSingleSelectStory.args = {}
