@@ -5,7 +5,7 @@ import { forwardRef } from 'react'
  * @info TodoSimpleForm (05 Mar 2021) // CREATION DATE
  *
  * @comment TodoSimpleForm - React component.
- *setFieldsValue
+ *
  * @since 10 Mar 2021 ( v.0.0.2 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
