@@ -2,7 +2,7 @@ import PropTypes from 'prop-types'
 import { List, Typography, Input, Form } from 'antd'
 import { Remove, Edit, Box } from 'antd-styled'
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons'
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 const { Text } = Typography
 /**
  * @info TodoSimpleList (05 Mar 2021) // CREATION DATE
@@ -18,9 +18,17 @@ const TodoSimpleList = (props) => {
   // [INTERFACES]
   const { setTodos, todos, onDeleteTodo } = props
 
+  const inputRef = useRef(null)
+
   // [COMPONENT_STATE_HOOKS]
   const [editTodo, setEditTodo] = useState(false)
 
+  useEffect(() => {
+    editTodo &&
+      inputRef.current.focus({
+        cursor: 'end'
+      })
+  }, [editTodo])
   // [HELPER_FUNCTIONS]
   const onEdit = (todo, idx) => {
     setEditTodo({ todo, idx })
@@ -58,7 +66,7 @@ const TodoSimpleList = (props) => {
                 onFinish={(todo) => onSubmit(todo, idx)}
                 layout="inline">
                 <Form.Item style={{ flex: 1 }} name="todo">
-                  <Input defaultValue={editTodo.todo} />
+                  <Input ref={inputRef} defaultValue={editTodo.todo} />
                 </Form.Item>
               </Form>
             ) : (
