@@ -1,3 +1,3 @@
 import withProtect from './withProtect'
-
-export { withProtect }
+import withContent from './withContent'
+export { withProtect, withContent }

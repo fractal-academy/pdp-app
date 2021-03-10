@@ -44,7 +44,7 @@ const withProtect = (protectConfig) => (Component) => (props) => {
       setRole(params.role)
       return <Component {...props} />
     }
-    if (!accessRoles.some((role) => role === params.role)) {
+    if (params.role && !accessRoles.some((role) => role === params.role)) {
       return <NotFoundPath />
     }
     return <AccessDenied />

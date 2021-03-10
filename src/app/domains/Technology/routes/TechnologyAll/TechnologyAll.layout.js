@@ -15,12 +15,7 @@ const { Title } = Typography
  * @return {ReactComponent}
  */
 
-const MOCK_DATA = [
-  { technologyId: 'boGRir9DiSNxCIuBeBNi', skillId: '789' },
-  { technologyId: 'D5MeBdtiMGLHB6svJSs9', skillId: '789' },
-  { technologyId: 'XgNXGIY5Xo1pKJaUusNr', skillId: '789' },
-  { technologyId: 'zi4sSBkfJZs1wlLOOPpJ', skillId: '789' }
-]
+const MOCK_DATA = [{ technologyId: 'LCpboRsqU6zvWYRirBOD', skillId: '789' }]
 
 const TechnologyAll = () => {
   // [ADDITIONAL_HOOKS]
