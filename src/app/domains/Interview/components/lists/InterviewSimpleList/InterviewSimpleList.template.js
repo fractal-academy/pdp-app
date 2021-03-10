@@ -33,7 +33,7 @@ const InterviewSimpleList = (props) => {
 
   const onSubmit = (value, idx) => {
     const newQuestions = [...questions]
-    newQuestions[idx] = value.question
+    newQuestions[idx] = value.question || editQuestion.question
     setQuestions(newQuestions)
     setEditQuestion(false)
     form.resetFields()
