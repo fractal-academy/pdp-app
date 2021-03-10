@@ -70,7 +70,6 @@ const InterviewSimpleList = (props) => {
                 <Col span={24}>
                   <Form
                     form={form}
-                    layout="inline"
                     onFinish={(question) => onSubmit(question, idx)}>
                     <Form.Item style={{ flex: 1 }} name="question">
                       <Input.TextArea
