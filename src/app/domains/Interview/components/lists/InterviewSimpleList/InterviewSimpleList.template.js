@@ -1,11 +1,7 @@
 import PropTypes from 'prop-types'
 import { List, Typography, Input, Form } from 'antd'
 import { Remove, Edit, Box } from 'antd-styled'
-import {
-  ConsoleSqlOutlined,
-  DeleteOutlined,
-  EditOutlined
-} from '@ant-design/icons'
+import { DeleteOutlined, EditOutlined } from '@ant-design/icons'
 import { useState, useRef, useEffect } from 'react'
 const { Text } = Typography
 
