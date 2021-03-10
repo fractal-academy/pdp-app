@@ -1,16 +1,15 @@
 import PropTypes from 'prop-types'
-import { List, Typography, Input, Form } from 'antd'
-import { Remove, Edit, Box } from 'antd-styled'
+import { List, Input, Form, Col } from 'antd'
+import { Remove, Edit, Box, Text, Row } from 'antd-styled'
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons'
 import { useState, useRef, useEffect } from 'react'
-const { Text } = Typography
 
 /**
  * @info InterviewSimpleList (05 Mar 2021) // CREATION DATE
  *
  * @comment InterviewSimpleList - React component.
  *
- * @since 10 Mar 2021 ( v.0.0.2 ) // LAST-EDIT DATE
+ * @since 11 Mar 2021 ( v.0.0.4 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
@@ -21,20 +20,22 @@ const InterviewSimpleList = (props) => {
 
   // [ADDITIONAL_HOOKS]
   const inputRef = useRef(null)
+  const [form] = Form.useForm()
 
   // [COMPONENT_STATE_HOOKS]
   const [editQuestion, setEditQuestion] = useState(false)
 
   // [HELPER_FUNCTIONS]
-  const onEdit = (todo, idx) => {
-    setEditQuestion({ todo, idx })
+  const onEdit = (question, idx) => {
+    setEditQuestion({ question, idx })
   }
 
   const onSubmit = (value, idx) => {
     const newQuestions = [...questions]
-    newQuestions[idx] = value.question
+    newQuestions[idx] = value.question || editQuestion.question
     setQuestions(newQuestions)
     setEditQuestion(false)
+    form.resetFields()
   }
 
   // [USE_EFFECTS]
@@ -65,16 +66,27 @@ const InterviewSimpleList = (props) => {
               />
             ]}>
             {editQuestion.idx === idx ? (
-              <Form
-                style={{ width: '100%' }}
-                onFinish={(todo) => onSubmit(todo, idx)}
-                layout="inline">
-                <Form.Item style={{ flex: 1 }} name="todo">
-                  <Input ref={inputRef} defaultValue={editQuestion.todo} />
-                </Form.Item>
-              </Form>
+              <Row flex={1}>
+                <Col span={24}>
+                  <Form
+                    form={form}
+                    onFinish={(question) => onSubmit(question, idx)}>
+                    <Form.Item style={{ flex: 1 }} name="question">
+                      <Input.TextArea
+                        onPressEnter={(e) => {
+                          e.preventDefault()
+                          form.submit()
+                        }}
+                        rows={1}
+                        ref={inputRef}
+                        defaultValue={editQuestion.question}
+                      />
+                    </Form.Item>
+                  </Form>
+                </Col>
+              </Row>
             ) : (
-              <Text>{question}</Text>
+              <Text ellipsis>{question}</Text>
             )}
           </List.Item>
         </Box>
