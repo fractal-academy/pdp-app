@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types'
 import { Button, Form, Input } from 'antd'
-import { forwardRef, useEffect } from 'react'
+import { forwardRef } from 'react'
 /**
  * @info TodoSimpleForm (05 Mar 2021) // CREATION DATE
  *
@@ -13,7 +13,7 @@ import { forwardRef, useEffect } from 'react'
 
 const TodoSimpleForm = forwardRef((props, ref) => {
   // [INTERFACES]
-  const { onSubmit, editTodo } = props
+  const { onSubmit } = props
 
   // [ADDITIONAL_HOOKS]
   const [form] = Form.useForm()
@@ -25,11 +25,6 @@ const TodoSimpleForm = forwardRef((props, ref) => {
     ref.current.focus()
   }
 
-  // [USE_EFFECTS]
-  useEffect(() => {
-    form.setFieldsValue({ todo: editTodo && editTodo.name })
-  }, [editTodo])
-
   // [TEMPLATE]
   return (
     <Form form={form} layout="inline" size="large" onFinish={onFinish}>
@@ -38,7 +33,7 @@ const TodoSimpleForm = forwardRef((props, ref) => {
       </Form.Item>
       <Form.Item noStyle>
         <Button htmlType="submit" type="primary">
-          {editTodo ? 'Save' : 'Add task'}
+          Add task
         </Button>
       </Form.Item>
     </Form>
@@ -47,8 +42,7 @@ const TodoSimpleForm = forwardRef((props, ref) => {
 
 // [PROPTYPES]
 TodoSimpleForm.propTypes = {
-  onSubmit: PropTypes.func.isRequired,
-  editTodo: PropTypes.object
+  onSubmit: PropTypes.func.isRequired
 }
 
 export default TodoSimpleForm
