@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types'
 import { useState } from 'react'
-import { TreeSelect, Typography } from 'antd'
+import { TreeSelect, Typography, Form } from 'antd'
 import firestore from '~/services/Firebase/firestore/index'
 import { useDocumentData } from 'react-firebase-hooks/firestore'
 import { COLLECTIONS } from 'app/constants'
@@ -21,18 +21,20 @@ const { TreeNode } = TreeSelect
 
 const LevelTreeSingleSelect = (props) => {
   // [INTERFACES]
-  const { technologyId } = props
+  const { technologyId, disabled, ...rest } = props
 
   // [ADDITIONAL_HOOKS]
   const [technology, loading] = useDocumentData(
-    firestore.collection(COLLECTIONS.TECHNOLOGIES).doc(technologyId)
+    !disabled &&
+      technologyId &&
+      firestore.collection(COLLECTIONS.TECHNOLOGIES).doc(technologyId)
   )
 
   // [COMPONENT_STATE_HOOKS]
-  const [value, setValue] = useState()
+  const [value, setValue] = useState('')
 
   // [HELPER_FUNCTIONS]
-  const onChange = () => {
+  const onChange = (value) => {
     setValue(value)
   }
 
@@ -40,26 +42,30 @@ const LevelTreeSingleSelect = (props) => {
   if (loading) return <Text type="secondary">loading...</Text>
 
   return (
-    <TreeSelect
-      showSearch
-      style={styles.levelTreeSingleSelectWidth}
-      value={value}
-      placeholder="Please select"
-      allowClear
-      treeDefaultExpandAll
-      onChange={onChange}>
-      {technology.levelIds &&
-        Object.keys(technology.levelIds).map((level) => (
-          <TreeNode value={level} title={<LevelSimpleView levelId={level} />}>
-            {technology.levelIds[level].map((sublevel) => (
-              <TreeNode
-                value={sublevel}
-                title={<LevelSimpleView sublevelId={sublevel} />}
-              />
-            ))}
-          </TreeNode>
-        ))}
-    </TreeSelect>
+    <Form.Item {...rest}>
+      <TreeSelect
+        size="large"
+        disabled={disabled}
+        showSearch
+        style={styles.levelTreeSingleSelectWidth}
+        placeholder="Please select"
+        allowClear
+        treeDefaultExpandAll
+        value={value}
+        onChange={onChange}>
+        {technology?.levelIds &&
+          Object.keys(technology.levelIds).map((level) => (
+            <TreeNode title={<LevelSimpleView levelId={level} value={level} />}>
+              {technology.levelIds[level].map((sublevel) => (
+                <TreeNode
+                  value={sublevel}
+                  title={<LevelSimpleView sublevelId={sublevel} />}
+                />
+              ))}
+            </TreeNode>
+          ))}
+      </TreeSelect>
+    </Form.Item>
   )
 }
 
