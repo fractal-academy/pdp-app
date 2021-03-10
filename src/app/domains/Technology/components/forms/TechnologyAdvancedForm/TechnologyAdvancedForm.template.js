@@ -1,50 +1,121 @@
 import PropTypes from 'prop-types'
-
+import { Box } from 'antd-styled'
+import { Input, Form, Button, Space, Typography } from 'antd'
+import { SkillSingleSelect } from '~/app/domains/Skill/components/selects'
+import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons'
+import { LevelTreeSingleSelect } from 'domains/Level/components/combined/tree'
+import { TechnologySingleSelect } from 'domains/Technology/components/selects'
+import { useState } from 'react'
+const { Text } = Typography
 /**
  * @info TechnologyAdvancedForm (05 Mar 2021) // CREATION DATE
  *
  * @comment TechnologyAdvancedForm - React component.
  *
- * @since 05 Mar 2021 ( v.0.0.1 ) // LAST-EDIT DATE
+ * @since 10 Mar 2021 ( v.0.0.3 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
 
 const TechnologyAdvancedForm = (props) => {
   // [INTERFACES]
-  /*
-  code sample: 
-  const { data } = props
-  */
+  const { Buttons, onSubmit } = props
 
   // [ADDITIONAL_HOOKS]
-  /*
-  code sample: 
-  const firestore = useFirestore()
-  */
+  const [form] = Form.useForm()
 
   // [COMPONENT_STATE_HOOKS]
-  /*
-  code sample:
-  const singleton = useRef(true) // references also put here
-  const [state, setState] = useState({})
-  */
+  const [technologyId, setTechnologyId] = useState()
 
   // [HELPER_FUNCTIONS]
-
-  // [COMPUTED_PROPERTIES]
-  /* 
-    code sample: 
-    const userDisplayName = user.firstName + user.lastName
-  */
-
-  // [USE_EFFECTS]
+  const onSkillSelect = (value) => {
+    form.setFieldsValue({ skillName: value })
+  }
 
   // [TEMPLATE]
-  return <div>TechnologyAdvancedForm</div>
+  return (
+    <Form form={form} onFinish={onSubmit}>
+      <Form.Item
+        name="technologyName"
+        label="Technology name: "
+        rules={[
+          {
+            required: true,
+            message: 'Please input technology name'
+          }
+        ]}>
+        <Input placeholder="Enter name of technology" />
+      </Form.Item>
+      <Box display="flex" justifyContent="center">
+        <SkillSingleSelect
+          name="skillName"
+          label="Select skill"
+          rules={[{ required: true }]}
+          onSkillSelect={onSkillSelect}
+        />
+      </Box>
+      <Box marginBottom={2} display="flex" justifyContent="center">
+        <Text>Required technologies: </Text>
+      </Box>
+      <Form.List name="requiredTechnologies">
+        {(fields, { add, remove }) => (
+          <>
+            {fields.map((field, idx) => (
+              <Box display="flex" justifyContent="center">
+                <Space key={field.key} align="baseline">
+                  <TechnologySingleSelect
+                    {...field}
+                    name={[field.name, 'technologyId']}
+                    fieldKey={[field.fieldKey, 'technologyId']}
+                    setTechnologyId={setTechnologyId}
+                  />
+                  <LevelTreeSingleSelect
+                    {...field}
+                    name={[field.name, 'sublevelId']}
+                    fieldKey={[field.fieldKey, 'sublevelId']}
+                    disabled={
+                      !form.getFieldsValue().requiredTechnologies[idx]
+                        ? true
+                        : false
+                    }
+                    technologyId={
+                      form.getFieldsValue().requiredTechnologies[idx]
+                        ?.technologyId
+                    }
+                  />
+                  <MinusCircleOutlined onClick={() => remove(field.name)} />
+                </Space>
+              </Box>
+            ))}
+            <Form.Item>
+              <Button
+                type="dashed"
+                onClick={() => {
+                  add()
+                  setTechnologyId('')
+                }}
+                block
+                icon={<PlusOutlined />}>
+                Add field
+              </Button>
+            </Form.Item>
+          </>
+        )}
+      </Form.List>
+
+      <Box display="flex" justifyContent="flex-end">
+        <Form.Item>
+          <Buttons />
+        </Form.Item>
+      </Box>
+    </Form>
+  )
 }
 
 // [PROPTYPES]
-TechnologyAdvancedForm.propTypes = {}
+TechnologyAdvancedForm.propTypes = {
+  onSubmit: PropTypes.func,
+  Buttons: PropTypes.func
+}
 
 export default TechnologyAdvancedForm
