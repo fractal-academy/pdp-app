@@ -35,7 +35,6 @@ const LevelTreeSingleSelect = (props) => {
 
   // [HELPER_FUNCTIONS]
   const onChange = (value) => {
-    console.log(value)
     setValue(value)
   }
 
