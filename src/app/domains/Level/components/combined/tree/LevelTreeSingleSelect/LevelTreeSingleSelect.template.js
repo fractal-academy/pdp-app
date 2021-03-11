@@ -1,5 +1,4 @@
 import PropTypes from 'prop-types'
-import { useState } from 'react'
 import { Box } from 'antd-styled'
 import { Typography, Form, Cascader } from 'antd'
 import firestore from '~/services/Firebase/firestore/index'
@@ -31,39 +30,22 @@ const LevelTreeSingleSelect = (props) => {
     firestore.collection(COLLECTIONS.TECHNOLOGIES)
   )
 
-  // [COMPONENT_STATE_HOOKS]
-  const [value, setValue] = useState('')
-
-  // [HELPER_FUNCTIONS]
-  const onChange = (value) => {
-    setValue(value)
-  }
   const options = []
   const getOptions = () => {
-    const getSublevels = (sublevels) => {
-      const options = []
-      for (const sublevel of sublevels) {
-        options.push({
-          value: sublevel,
-          label: <LevelSimpleView sublevelId={sublevel} />
-        })
-        return options
-      }
-    }
+    const getSublevels = (sublevels) =>
+      sublevels.map((sublevel) => ({
+        value: sublevel,
+        label: <LevelSimpleView sublevelId={sublevel} />
+      }))
 
-    const getLevels = (levels) => {
-      const options = []
-      for (const level of Object.keys(levels)) {
-        options.push({
-          value: level,
-          label: <LevelSimpleView levelId={level} />,
-          children: getSublevels(levels[level])
-        })
-      }
-      return options
-    }
+    const getLevels = (levels) =>
+      Object.keys(levels).map((level) => ({
+        value: level,
+        label: <LevelSimpleView levelId={level} />,
+        children: getSublevels(levels[level])
+      }))
 
-    Object.keys(technologies).map((technology) => {
+    Object.keys(technologies).forEach((technology) => {
       const children = getLevels(technologies[technology].levelIds)
       options.push({
         value: technologies[technology].id,
@@ -101,7 +83,6 @@ const LevelTreeSingleSelect = (props) => {
     <Form.Item {...rest}>
       <Cascader
         displayRender={(data) => data.length > 0 && renderCascaderItem(data)}
-        onChange={onChange}
         options={options}
         placeholder="Please select"
       />
