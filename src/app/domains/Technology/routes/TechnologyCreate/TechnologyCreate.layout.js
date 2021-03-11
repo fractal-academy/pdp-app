@@ -6,14 +6,26 @@ import { TechnologyAdvancedForm } from 'domains/Technology/components/forms'
  *
  * @comment TechnologyCreate - React component.
  *
- * @since 09 Mar 2021 ( v.0.0.2 ) // LAST-EDIT DATE
+ * @since 11 Mar 2021 ( v.0.0.3 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
 
 const TechnologyCreate = () => {
   // [HELPER_FUNCTIONS]
-  const onSubmit = (values) => {}
+  const onSubmit = (values) => {
+    let requiredTechnologies = {}
+    values.requiredTechnologies.map((tech) => {
+      requiredTechnologies = {
+        ...requiredTechnologies,
+        [Object.values(tech)[0][0]]: {
+          levelId: Object.values(tech)[0][1],
+          sublevelId: Object.values(tech)[0][2]
+        }
+      }
+    })
+    console.log('requiredTechnologies', requiredTechnologies)
+  }
 
   // [TEMPLATE]
   const Buttons = () => (

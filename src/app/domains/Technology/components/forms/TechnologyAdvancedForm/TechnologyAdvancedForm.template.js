@@ -4,7 +4,6 @@ import { Input, Form, Button, Space, Typography } from 'antd'
 import { SkillSingleSelect } from '~/app/domains/Skill/components/selects'
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons'
 import { LevelTreeSingleSelect } from 'domains/Level/components/combined/tree'
-import { TechnologySingleSelect } from 'domains/Technology/components/selects'
 import { useState } from 'react'
 const { Text } = Typography
 /**
@@ -12,7 +11,7 @@ const { Text } = Typography
  *
  * @comment TechnologyAdvancedForm - React component.
  *
- * @since 10 Mar 2021 ( v.0.0.3 ) // LAST-EDIT DATE
+ * @since 11 Mar 2021 ( v.0.0.4 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
@@ -50,7 +49,7 @@ const TechnologyAdvancedForm = (props) => {
         <SkillSingleSelect
           name="skillName"
           label="Select skill"
-          rules={[{ required: true }]}
+          rules={[{ required: true, message: 'Select skill ' }]}
           onSkillSelect={onSkillSelect}
         />
       </Box>
@@ -63,25 +62,11 @@ const TechnologyAdvancedForm = (props) => {
             {fields.map((field, idx) => (
               <Box display="flex" justifyContent="center">
                 <Space key={field.key} align="baseline">
-                  <TechnologySingleSelect
-                    {...field}
-                    name={[field.name, 'technologyId']}
-                    fieldKey={[field.fieldKey, 'technologyId']}
-                    setTechnologyId={setTechnologyId}
-                  />
                   <LevelTreeSingleSelect
                     {...field}
-                    name={[field.name, 'sublevelId']}
-                    fieldKey={[field.fieldKey, 'sublevelId']}
-                    disabled={
-                      !form.getFieldsValue().requiredTechnologies[idx]
-                        ? true
-                        : false
-                    }
-                    technologyId={
-                      form.getFieldsValue().requiredTechnologies[idx]
-                        ?.technologyId
-                    }
+                    rules={[{ required: true, message: 'Select technology' }]}
+                    name={[field.name, 'technology']}
+                    fieldKey={[field.fieldKey, 'technology']}
                   />
                   <MinusCircleOutlined onClick={() => remove(field.name)} />
                 </Space>
@@ -96,7 +81,7 @@ const TechnologyAdvancedForm = (props) => {
                 }}
                 block
                 icon={<PlusOutlined />}>
-                Add field
+                Add required technology
               </Button>
             </Form.Item>
           </>
