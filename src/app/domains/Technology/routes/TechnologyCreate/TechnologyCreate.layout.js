@@ -6,7 +6,7 @@ import { TechnologyAdvancedForm } from 'domains/Technology/components/forms'
  *
  * @comment TechnologyCreate - React component.
  *
- * @since 11 Mar 2021 ( v.0.0.3 ) // LAST-EDIT DATE
+ * @since 11 Mar 2021 ( v.0.0.4 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
@@ -24,7 +24,6 @@ const TechnologyCreate = () => {
         }
       }
     })
-    console.log('requiredTechnologies', requiredTechnologies)
   }
 
   // [TEMPLATE]
