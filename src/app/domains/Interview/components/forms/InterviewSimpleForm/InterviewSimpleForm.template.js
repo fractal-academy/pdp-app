@@ -2,16 +2,16 @@ import PropTypes from 'prop-types'
 import { Button, Form, Input } from 'antd'
 import { useRef } from 'react'
 /**
- * @info TodoSimpleForm (05 Mar 2021) // CREATION DATE
+ * @info InterviewSimpleForm (10 Mar 2021) // CREATION DATE
  *
- * @comment TodoSimpleForm - React component.
+ * @comment InterviewSimpleForm - React component.
  *
- * @since 11 Mar 2021 ( v.0.0.4 ) // LAST-EDIT DATE
+ * @since 11 Mar 2021 ( v.0.0.3 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
 
-const TodoSimpleForm = (props) => {
+const InterviewSimpleForm = (props) => {
   // [INTERFACES]
   const { onSubmit } = props
 
@@ -21,7 +21,7 @@ const TodoSimpleForm = (props) => {
 
   // [HELPER_FUNCTIONS]
   const onFinish = (data) => {
-    data.todo && onSubmit(data.todo)
+    data.question && onSubmit(data.question)
     form.resetFields()
     inputRef.current.focus()
   }
@@ -29,12 +29,12 @@ const TodoSimpleForm = (props) => {
   // [TEMPLATE]
   return (
     <Form form={form} layout="inline" size="large" onFinish={onFinish}>
-      <Form.Item style={{ flex: 1 }} name="todo">
-        <Input placeholder="Enter what student need to do..." ref={inputRef} />
+      <Form.Item style={{ flex: 1 }} name="question">
+        <Input placeholder="Enter what student need to know" ref={inputRef} />
       </Form.Item>
       <Form.Item noStyle>
         <Button htmlType="submit" type="primary">
-          Add task
+          Add question
         </Button>
       </Form.Item>
     </Form>
@@ -42,8 +42,8 @@ const TodoSimpleForm = (props) => {
 }
 
 // [PROPTYPES]
-TodoSimpleForm.propTypes = {
+InterviewSimpleForm.propTypes = {
   onSubmit: PropTypes.func.isRequired
 }
 
-export default TodoSimpleForm
+export default InterviewSimpleForm

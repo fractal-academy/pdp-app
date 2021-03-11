@@ -9,18 +9,20 @@ const { Text } = Typography
  *
  * @comment LevelSimpleView - React component.
  *
- * @since 07 Mar 2021 ( v.0.0.2 ) // LAST-EDIT DATE
+ * @since 09 Mar 2021 ( v.0.0.3 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
 
 const LevelSimpleView = (props) => {
   // [INTERFACES]
-  const { levelId } = props
+  const { levelId, sublevelId } = props
 
   // [ADDITIONAL_HOOKS]
   const [level, loading] = useDocumentData(
-    firestore.collection(COLLECTIONS.LEVELS).doc(levelId)
+    firestore
+      .collection(sublevelId ? COLLECTIONS.SUB_LEVELS : COLLECTIONS.LEVELS)
+      .doc(sublevelId ? sublevelId : levelId)
   )
 
   // [TEMPLATE]
@@ -35,7 +37,8 @@ const LevelSimpleView = (props) => {
 
 // [PROPTYPES]
 LevelSimpleView.propTypes = {
-  levelId: PropTypes.string.isRequired
+  levelId: PropTypes.string,
+  sublevelId: PropTypes.string
 }
 
 export default LevelSimpleView

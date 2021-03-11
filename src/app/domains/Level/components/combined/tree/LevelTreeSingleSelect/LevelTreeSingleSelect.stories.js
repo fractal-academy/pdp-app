@@ -8,7 +8,7 @@ const metadata = {
 export default metadata
 
 export const LevelTreeSingleSelectStory = (args) => (
-  <LevelTreeSingleSelect {...args} />
+  <LevelTreeSingleSelect technologyId="LCpboRsqU6zvWYRirBOD" {...args} />
 )
 
 LevelTreeSingleSelectStory.args = {}

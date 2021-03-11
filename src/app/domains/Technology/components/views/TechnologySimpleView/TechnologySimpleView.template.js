@@ -9,7 +9,7 @@ import { Title, Text } from 'antd-styled'
  *
  * @comment TechnologySimpleView - React component.
  *
- * @since 08 Mar 2021 ( v.0.0.3 ) // LAST-EDIT DATE
+ * @since 10 Mar 2021 ( v.0.0.4 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
@@ -29,11 +29,11 @@ const TechnologySimpleView = (props) => {
   return (
     <>
       {withHashTag ? (
-        <Text strong color={technology.color}>
-          {`#${technology.name}`}
+        <Text strong color={technology?.color}>
+          {`#${technology?.name}`}
         </Text>
       ) : (
-        <Title level={3}>{technology.name}</Title>
+        <Title level={3}>{technology?.name}</Title>
       )}
     </>
   )
