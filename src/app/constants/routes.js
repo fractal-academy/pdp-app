@@ -164,6 +164,12 @@ const ROUTES = {
     component: withContent(withProtect({ roles: [ROLES.ADMIN] })(TodoCreate)),
     path: ROUTE_PATHS.TODO_CREATE
   },
+  INTERVIEW_CREATE: {
+    component: withContent(
+      withProtect({ roles: [ROLES.ADMIN] })(InterviewCreate)
+    ),
+    path: ROUTE_PATHS.INTERVIEW_CREATE
+  },
   INTERVIEW_SHOW: {
     component: InterviewShow,
     path: ROUTE_PATHS.INTERVIEW_SHOW
@@ -174,12 +180,6 @@ const ROUTES = {
     ),
     path: ROUTE_PATHS.INTERVIEW_EDIT,
     exact: true
-  },
-  INTERVIEW_CREATE: {
-    component: withContent(
-      withProtect({ roles: [ROLES.ADMIN] })(InterviewCreate)
-    ),
-    path: ROUTE_PATHS.INTERVIEW_CREATE
   },
   NOTIFICATIONS_ALL: {
     component: NotificationAll,

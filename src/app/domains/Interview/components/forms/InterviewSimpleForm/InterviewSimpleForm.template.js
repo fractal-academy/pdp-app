@@ -1,52 +1,47 @@
 import PropTypes from 'prop-types'
+import { Button, Form, Input } from 'antd'
 
 /**
  * @info InterviewSimpleForm (10 Mar 2021) // CREATION DATE
  *
  * @comment InterviewSimpleForm - React component.
  *
- * @since 10 Mar 2021 ( v.0.0.1 ) // LAST-EDIT DATE
+ * @since 10 Mar 2021 ( v.0.0.2 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
 
 const InterviewSimpleForm = (props) => {
   // [INTERFACES]
-  /*
-  code sample: 
-  const { data } = props
-  */
+  const { onSubmit } = props
 
   // [ADDITIONAL_HOOKS]
-  /*
-  code sample: 
-  const firestore = useFirestore()
-  */
-
-  // [COMPONENT_STATE_HOOKS]
-  /*
-  code sample:
-  const singleton = useRef(true) // references also put here
-  const [state, setState] = useState({})
-  */
+  const [form] = Form.useForm()
 
   // [HELPER_FUNCTIONS]
-
-  // [COMPUTED_PROPERTIES]
-  /* 
-    code sample: 
-    const userDisplayName = user.firstName + user.lastName
-  */
-
-  // [USE_EFFECTS]
+  const onFinish = (data) => {
+    data.question && onSubmit(data.question)
+    form.resetFields()
+  }
 
   // [TEMPLATE]
-  return <div>InterviewSimpleForm</div>
+  return (
+    <Form form={form} layout="inline" size="large" onFinish={onFinish}>
+      <Form.Item style={{ flex: 1 }} name="question">
+        <Input placeholder="Enter what student need to know" />
+      </Form.Item>
+      <Form.Item noStyle>
+        <Button htmlType="submit" type="primary">
+          Add question
+        </Button>
+      </Form.Item>
+    </Form>
+  )
 }
 
 // [PROPTYPES]
 InterviewSimpleForm.propTypes = {
-  props: PropTypes.object
+  onSubmit: PropTypes.func.isRequired
 }
 
 export default InterviewSimpleForm
