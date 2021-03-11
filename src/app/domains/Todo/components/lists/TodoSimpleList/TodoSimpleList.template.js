@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types'
-import { List, Typography, Input, Form } from 'antd'
-import { Remove, Edit, Box } from 'antd-styled'
+import { List, Typography, Input, Form, Col } from 'antd'
+import { Remove, Edit, Box, Row } from 'antd-styled'
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons'
 import { useState, useRef, useEffect } from 'react'
 const { Text } = Typography
@@ -9,7 +9,7 @@ const { Text } = Typography
  *
  * @comment TodoSimpleList - React component.
  *
- * @since 10 Mar 2021 ( v.0.0.2 ) // LAST-EDIT DATE
+ * @since 11 Mar 2021 ( v.0.0.3 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
@@ -18,7 +18,9 @@ const TodoSimpleList = (props) => {
   // [INTERFACES]
   const { setTodos, todos, onDeleteTodo } = props
 
+  // [ADDITIONAL_HOOKS]
   const inputRef = useRef(null)
+  const [form] = Form.useForm()
 
   // [COMPONENT_STATE_HOOKS]
   const [editTodo, setEditTodo] = useState(false)
@@ -61,16 +63,25 @@ const TodoSimpleList = (props) => {
               />
             ]}>
             {editTodo.idx === idx ? (
-              <Form
-                style={{ width: '100%' }}
-                onFinish={(todo) => onSubmit(todo, idx)}
-                layout="inline">
-                <Form.Item style={{ flex: 1 }} name="todo">
-                  <Input ref={inputRef} defaultValue={editTodo.todo} />
-                </Form.Item>
-              </Form>
+              <Row flex={1}>
+                <Col span={24}>
+                  <Form form={form} onFinish={(todo) => onSubmit(todo, idx)}>
+                    <Form.Item style={{ flex: 1 }} name="todo">
+                      <Input.TextArea
+                        onPressEnter={(e) => {
+                          e.preventDefault()
+                          form.submit()
+                        }}
+                        rows={1}
+                        ref={inputRef}
+                        defaultValue={editTodo.todo}
+                      />
+                    </Form.Item>
+                  </Form>
+                </Col>
+              </Row>
             ) : (
-              <Text>{todo}</Text>
+              <Text ellipsis>{todo}</Text>
             )}
           </List.Item>
         </Box>
