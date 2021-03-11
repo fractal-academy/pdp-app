@@ -15,7 +15,7 @@ const TechnologyCreate = () => {
   // [HELPER_FUNCTIONS]
   const onSubmit = (values) => {
     let requiredTechnologies = {}
-    values.requiredTechnologies.map((tech) => {
+    values.requiredTechnologies.forEach((tech) => {
       requiredTechnologies = {
         ...requiredTechnologies,
         [Object.values(tech)[0][0]]: {
@@ -35,7 +35,7 @@ const TechnologyCreate = () => {
   )
 
   return (
-    <PageWrapper alignMiddle="true">
+    <PageWrapper alignMiddle>
       <Card>
         <Box mb={4}>
           <Title level={2} display="flex" justifyContent="center">

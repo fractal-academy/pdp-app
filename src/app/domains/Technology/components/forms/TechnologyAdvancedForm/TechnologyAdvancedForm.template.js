@@ -60,7 +60,7 @@ const TechnologyAdvancedForm = (props) => {
         {(fields, { add, remove }) => (
           <>
             {fields.map((field, idx) => (
-              <Box display="flex" justifyContent="center">
+              <Box display="flex" justifyContent="center" key={idx}>
                 <Space key={field.key} align="baseline">
                   <LevelTreeSingleSelect
                     {...field}
@@ -73,14 +73,7 @@ const TechnologyAdvancedForm = (props) => {
               </Box>
             ))}
             <Form.Item>
-              <Button
-                type="dashed"
-                onClick={() => {
-                  add()
-                  setTechnologyId('')
-                }}
-                block
-                icon={<PlusOutlined />}>
+              <Button type="dashed" onClick={add} block icon={<PlusOutlined />}>
                 Add required technology
               </Button>
             </Form.Item>
