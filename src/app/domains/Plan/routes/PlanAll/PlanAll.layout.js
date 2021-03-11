@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types'
-
+import { Content, Sider, Title } from 'antd-styled'
 /**
  * @info PlanAll (05 Mar 2021) // CREATION DATE
  *
@@ -13,13 +13,13 @@ import PropTypes from 'prop-types'
 const PlanAll = (props) => {
   // [INTERFACES]
   /*
-  code sample: 
+  code sample:
   const { data } = props
   */
 
   // [ADDITIONAL_HOOKS]
   /*
-  code sample: 
+  code sample:
   const firestore = useFirestore()
   */
 
@@ -33,15 +33,26 @@ const PlanAll = (props) => {
   // [HELPER_FUNCTIONS]
 
   // [COMPUTED_PROPERTIES]
-  /* 
-    code sample: 
+  /*
+    code sample:
     const userDisplayName = user.firstName + user.lastName
   */
 
   // [USE_EFFECTS]
 
   // [TEMPLATE]
-  return <div>PlanAll</div>
+  return (
+    <>
+      <Content bg="#ffffff" paddingTop={4} paddingX={4}>
+        <Title>Plans</Title>
+      </Content>
+      <Sider paddingTop={4} paddingX={4}>
+        <Title textAlign="center" style={{ color: 'white' }}>
+          Todo
+        </Title>
+      </Sider>
+    </>
+  )
 }
 
 // [PROPTYPES]
