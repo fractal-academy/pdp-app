@@ -1,51 +1,19 @@
 import PropTypes from 'prop-types'
 import { Form, Input, Button } from 'antd'
+
 /**
  * @info MaterialSimpleForm (10 Mar 2021) // CREATION DATE
  *
  * @comment MaterialSimpleForm - React component.
  *
- * @since 10 Mar 2021 ( v.0.0.1 ) // LAST-EDIT DATE
+ * @since 11 Mar 2021 ( v.0.0.3 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
 
 const MaterialSimpleForm = (props) => {
   // [INTERFACES]
-  /*
-  code sample:
-  const { data } = props
-  */
-
-  // [ADDITIONAL_HOOKS]
-  /*
-  code sample:
-  const firestore = useFirestore()
-  */
-
-  // [COMPONENT_STATE_HOOKS]
-  /*
-  code sample:
-  const singleton = useRef(true) // references also put here
-  const [state, setState] = useState({})
-  */
-
-  // [HELPER_FUNCTIONS]
-
-  const onFinish = (data) => {
-    console.log(data)
-  }
-  const onFinishFailed = (data) => {
-    console.log(data)
-  }
-
-  // [COMPUTED_PROPERTIES]
-  /*
-    code sample:
-    const userDisplayName = user.firstName + user.lastName
-  */
-
-  // [USE_EFFECTS]
+  const { onFinish, onFinishFailed } = props
 
   // [TEMPLATE]
   return (
@@ -56,7 +24,7 @@ const MaterialSimpleForm = (props) => {
       size="large">
       <Form.Item
         style={{ flex: 1 }}
-        name="materialLink"
+        name="url"
         rules={[
           { required: true, message: 'First enter link to material.' },
           { type: 'url', message: 'You can enter only links here.' }
@@ -74,7 +42,8 @@ const MaterialSimpleForm = (props) => {
 
 // [PROPTYPES]
 MaterialSimpleForm.propTypes = {
-  props: PropTypes.object
+  onFinish: PropTypes.func,
+  onFinishFailed: PropTypes.func
 }
 
 export default MaterialSimpleForm

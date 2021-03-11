@@ -71,7 +71,7 @@ const Navigation = () => {
   const history = useHistory()
   const session = useSession()
   const { role } = useRole()
-  let match = useRouteMatch(ROUTE_PATHS.START_PAGE_MAP[role])
+  const match = useRouteMatch(ROUTE_PATHS.START_PAGE_MAP[role])
 
   // [COMPONENT_STATE_HOOKS]
   const [selectedMenuItem, setSelectedMenuItem] = useState(
@@ -86,9 +86,6 @@ const Navigation = () => {
   const roleMenu = Object.values(MENU_ITEMS[role])
 
   // [USE_EFFECTS]
-
-  console.log(history)
-
   useEffect(() => {
     setSelectedMenuItem(
       history.location.pathname || ROUTE_PATHS.START_PAGE_MAP[role]

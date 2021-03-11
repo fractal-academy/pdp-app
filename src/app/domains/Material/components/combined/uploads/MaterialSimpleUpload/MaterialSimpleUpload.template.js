@@ -1,7 +1,16 @@
 import PropTypes from 'prop-types'
 import { Upload } from 'antd'
-import { InboxOutlined } from '@ant-design/icons'
-
+import {
+  FileImageOutlined,
+  FileTextOutlined,
+  FileZipOutlined,
+  InboxOutlined,
+  LinkOutlined,
+  VideoCameraOutlined,
+  FileOutlined,
+  LoadingOutlined,
+  CloseCircleOutlined
+} from '@ant-design/icons'
 const { Dragger } = Upload
 
 /**
@@ -9,48 +18,52 @@ const { Dragger } = Upload
  *
  * @comment MaterialSimpleUpload - React component.
  *
- * @since 10 Mar 2021 ( v.0.0.1 ) // LAST-EDIT DATE
+ * @since 11 Mar 2021 ( v.0.0.5 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
 
+const FILE_TYPE_MAP = {
+  image: FileImageOutlined,
+  url: LinkOutlined,
+  plain: FileTextOutlined,
+  zip: FileZipOutlined,
+  video: VideoCameraOutlined
+}
+
 const MaterialSimpleUpload = (props) => {
   // [INTERFACES]
-  /*
-  code sample:
-  const { data } = props
-  */
-
-  // [ADDITIONAL_HOOKS]
-  /*
-  code sample:
-  const firestore = useFirestore()
-  */
-
-  // [COMPONENT_STATE_HOOKS]
-  /*
-  code sample:
-  const singleton = useRef(true) // references also put here
-  const [state, setState] = useState({})
-  */
+  const { materials, onUpload, onRemove } = props
 
   // [HELPER_FUNCTIONS]
-
-  // [COMPUTED_PROPERTIES]
-  /*
-    code sample:
-    const userDisplayName = user.firstName + user.lastName
-  */
-
-  // [USE_EFFECTS]
+  const customFileIcon = (file) => {
+    if (file.status === 'uploading') {
+      return <LoadingOutlined />
+    }
+    if (file.status === 'error') {
+      return <CloseCircleOutlined style={{ color: 'red' }} />
+    }
+    const inter = Object.keys(FILE_TYPE_MAP).find((item) =>
+      file.type.includes(item)
+    )
+    if (!FILE_TYPE_MAP[inter]) {
+      return <FileOutlined />
+    }
+    const Icon = FILE_TYPE_MAP[inter]
+    return <Icon />
+  }
 
   // [TEMPLATE]
   return (
     <Dragger
       name="material"
       height="fit-content"
-      multiple
-      showUploadList={false}>
+      listType="picture"
+      iconRender={customFileIcon}
+      fileList={materials}
+      customRequest={onUpload}
+      onRemove={onRemove}
+      multiple>
       <p className="ant-upload-drag-icon">
         <InboxOutlined />
       </p>
@@ -67,7 +80,9 @@ const MaterialSimpleUpload = (props) => {
 
 // [PROPTYPES]
 MaterialSimpleUpload.propTypes = {
-  props: PropTypes.object
+  materials: PropTypes.arrayOf(PropTypes.object),
+  onUpload: PropTypes.func,
+  onRemove: PropTypes.func
 }
 
 export default MaterialSimpleUpload
