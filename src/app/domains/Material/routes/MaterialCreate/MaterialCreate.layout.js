@@ -7,13 +7,14 @@ import { MaterialSimpleForm } from 'domains/Material/components/forms'
 import { MaterialSimpleUpload } from 'domains/Material/components/combined/uploads'
 import storage from '~/services/Firebase/storage'
 import { PageWrapper } from '~/components/HOC'
+import { ROUTE_PATHS } from 'app/constants'
 
 /**
  * @info MaterialCreate (05 Mar 2021) // CREATION DATE
  *
  * @comment MaterialCreate - React component.
  *
- * @since 12 Mar 2021 ( v.0.0.6 ) // LAST-EDIT DATE
+ * @since 12 Mar 2021 ( v.0.0.7 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
@@ -116,7 +117,8 @@ const MaterialCreate = () => {
   }
 
   const onBack = () => history.goBack()
-  const onNext = () => console.log('log')
+  const onNext = () =>
+    history.push(ROUTE_PATHS.INTERVIEW_CREATE, { ...history.state, materials })
 
   // [TEMPLATE]
   return (
