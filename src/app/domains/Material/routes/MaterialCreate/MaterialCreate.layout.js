@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import _ from 'lodash'
 import { v5 as uuidv5, v4 as uuidv4 } from 'uuid'
-import { Divider, message } from 'antd'
+import { Divider, message, Empty } from 'antd'
 import { MaterialSimpleForm } from 'domains/Material/components/forms'
 import { MaterialSimpleUpload } from 'domains/Material/components/combined/uploads'
 import storage from '~/services/Firebase/storage'
@@ -128,6 +128,13 @@ const MaterialCreate = () => {
         onUpload={onMaterialUpload}
         onRemove={onMaterialRemove}
       />
+
+      {!materials.length && (
+        <Empty
+          image={Empty.PRESENTED_IMAGE_SIMPLE}
+          description="No materials"
+        />
+      )}
     </PageWrapper>
   )
 }
