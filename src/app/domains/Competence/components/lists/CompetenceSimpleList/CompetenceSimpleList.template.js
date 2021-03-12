@@ -1,9 +1,8 @@
 import PropTypes from 'prop-types'
-import { List, Card, Spin, Typography } from 'antd'
+import { List, Card, Typography } from 'antd'
 import { Box } from 'antd-styled'
 import { CompetenceSimpleView } from 'domains/Competence/components/views'
 import { TechnologySimpleView } from 'domains/Technology/components/views'
-import { LoadingOutlined } from '@ant-design/icons'
 import { LevelSingleSelect } from 'domains/Level/components/selects'
 import { EditOutlined } from '@ant-design/icons'
 const { Text } = Typography
@@ -19,29 +18,19 @@ const { Text } = Typography
 
 const CompetenceSimpleList = (props) => {
   // [INTERFACES]
-  const { data, loading } = props
+  const { data } = props
 
   // [HELPER_FUNCTIONS]
   const onEdit = (competenceId) => {}
 
   // [TEMPLATE]
 
-  if (loading)
-    return (
-      <Box
-        display="flex"
-        justifyContent="center"
-        height="100%"
-        alignItems="center">
-        <Spin indicator={<LoadingOutlined style={{ fontSize: 24 }} spin />} />
-      </Box>
-    )
   return (
     <List
       grid={{ gutter: 16, column: 2 }}
       dataSource={data}
       renderItem={(competence) => (
-        <List.Item>
+        <List.Item key={competence.id}>
           <Card
             title={
               <Box
@@ -62,7 +51,11 @@ const CompetenceSimpleList = (props) => {
               <Box>
                 {competence.technologyIds ? (
                   competence.technologyIds.map((technology) => (
-                    <TechnologySimpleView tag technologyId={technology} />
+                    <TechnologySimpleView
+                      tag
+                      technologyId={technology}
+                      key={technology}
+                    />
                   ))
                 ) : (
                   <Text>There are not technologies...</Text>

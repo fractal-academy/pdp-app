@@ -39,7 +39,7 @@ const LevelSingleSelect = (props) => {
       size="large"
       defaultValue={Object.keys(data.levelIds)[0]}>
       {Object.keys(data.levelIds).map((level) => (
-        <Select.Option value={level}>
+        <Select.Option value={level} key={level}>
           <LevelSimpleView levelId={level} />
         </Select.Option>
       ))}
