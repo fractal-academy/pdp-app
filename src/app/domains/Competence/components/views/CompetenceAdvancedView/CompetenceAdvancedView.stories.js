@@ -8,7 +8,12 @@ const metadata = {
 export default metadata
 
 export const CompetenceAdvancedViewStory = (args) => (
-  <CompetenceAdvancedView {...args} />
+  <CompetenceAdvancedView
+    competenceId="AXqMhPVZQawmlrPF2ZX4"
+    levelId="WcFBhEUJeEWHsLlgRpLz"
+    subLevelId="OiKjfFs2j2eJaH6Etcmq"
+    {...args}
+  />
 )
 
 CompetenceAdvancedViewStory.args = {}

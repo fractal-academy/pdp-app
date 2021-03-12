@@ -1,15 +1,15 @@
 import PropTypes from 'prop-types'
-import { Tag, Typography } from 'antd'
+import { Typography } from 'antd'
 import firestore from '~/services/Firebase/firestore/index'
 import { useDocumentData } from 'react-firebase-hooks/firestore'
-import { COLLECTIONS } from 'app/constants'
-const { Text } = Typography
+import * as COLLECTIONS from '~/app/constants/collections'
+const { Text, Title } = Typography
 /**
  * @info CompetenceSimpleView (07 Mar 2021) // CREATION DATE
  *
  * @comment CompetenceSimpleView - React component.
  *
- * @since 07 Mar 2021 ( v.0.0.1 ) // LAST-EDIT DATE
+ * @since 12 Mar 2021 ( v.0.0.2 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
@@ -26,7 +26,7 @@ const CompetenceSimpleView = (props) => {
   // [TEMPLATE]
   if (loading) return <Text type="secondary">loading...</Text>
 
-  return <Tag color={competence.color}>{competence.name}</Tag>
+  return <Title level={3}>{competence.name}</Title>
 }
 
 // [PROPTYPES]
