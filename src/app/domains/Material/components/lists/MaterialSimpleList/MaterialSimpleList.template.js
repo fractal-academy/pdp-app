@@ -32,28 +32,6 @@ const MOCK_DATA = [
 const MaterialSimpleList = (props) => {
   // [INTERFACES]
   const { withDelete } = props
-  // [ADDITIONAL_HOOKS]
-  /*
-  code sample:
-  const firestore = useFirestore()
-  */
-
-  // [COMPONENT_STATE_HOOKS]
-  /*
-  code sample:
-  const singleton = useRef(true) // references also put here
-  const [state, setState] = useState({})
-  */
-
-  // [HELPER_FUNCTIONS]
-
-  // [COMPUTED_PROPERTIES]
-  /*
-    code sample:
-    const userDisplayName = user.firstName + user.lastName
-  */
-
-  // [USE_EFFECTS]
 
   // [TEMPLATE]
   return (

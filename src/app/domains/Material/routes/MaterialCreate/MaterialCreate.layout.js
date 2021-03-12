@@ -12,7 +12,7 @@ import storage from '~/services/Firebase/storage'
  *
  * @comment MaterialCreate - React component.
  *
- * @since 12 Mar 2021 ( v.0.0.5 ) // LAST-EDIT DATE
+ * @since 12 Mar 2021 ( v.0.0.6 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
@@ -99,13 +99,16 @@ const MaterialCreate = () => {
       const storageRef = storage.refFromURL(removedItem.url)
       try {
         await storageRef.delete()
+        setMaterials(buffer)
         message.success('Material was successfully deleted.')
       } catch (error) {
         message.error(error.message)
       }
+    } else {
+      setMaterials(buffer)
+      message.success('Material was successfully deleted.')
     }
 
-    setMaterials(buffer)
     return false
   }
 
