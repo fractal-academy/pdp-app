@@ -1,18 +1,16 @@
-import { Button } from 'antd'
+import { useState } from 'react'
 import { useHistory } from 'react-router-dom'
-import { Row, Col, Back, HeadingPrimary } from 'antd-styled'
 import { InterviewSimpleList } from 'domains/Interview/components/lists'
 import { InterviewSimpleForm } from 'domains/Interview/components/forms'
-import { useState } from 'react'
+import { PageWrapper } from '~/components/HOC'
 import _ from 'lodash'
-import { ROUTE_PATHS } from 'app/constants'
 
 /**
  * @info InterviewCreate (05 Mar 2021) // CREATION DATE
  *
  * @comment InterviewCreate - React component.
  *
- * @since 10 Mar 2021 ( v.0.0.2 ) // LAST-EDIT DATE
+ * @since 12 Mar 2021 ( v.0.0.3 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
@@ -39,46 +37,27 @@ const InterviewCreate = (props) => {
   }
 
   // -- Header step button functions --
-  const onClickNext = () => {}
-  const onClickBack = () => {
+  const onNext = () => {
+    console.log('click')
+  }
+  const onBack = () => {
     history.goBack()
   }
-  // -----------------------------
+  // ----------------------------------
 
   // [TEMPLATE]
   return (
-    <Row>
-      <Col span={24}>
-        <Row gutter={[8]} mb={3} justify="space-between">
-          <Col>
-            <Back onClick={onClickBack} size="large">
-              Back
-            </Back>
-          </Col>
-          <Col>
-            <Button onClick={onClickNext} size="large" type="primary">
-              Next
-            </Button>
-          </Col>
-        </Row>
-        <HeadingPrimary title="Create questions for interview" />
-        <Row gutter={[8, 16]} justify="center">
-          <Col span={16}>
-            <InterviewSimpleForm
-              onSubmit={onSubmit}
-              editQuestion={editQuestion}
-            />
-          </Col>
-          <Col span={16}>
-            <InterviewSimpleList
-              setQuestions={setQuestions}
-              questions={questions}
-              onDeleteQuestion={onDeleteQuestion}
-            />
-          </Col>
-        </Row>
-      </Col>
-    </Row>
+    <PageWrapper
+      title="Create questions for interview"
+      onBack={onBack}
+      onNext={onNext}>
+      <InterviewSimpleForm onSubmit={onSubmit} editQuestion={editQuestion} />
+      <InterviewSimpleList
+        setQuestions={setQuestions}
+        questions={questions}
+        onDeleteQuestion={onDeleteQuestion}
+      />
+    </PageWrapper>
   )
 }
 
