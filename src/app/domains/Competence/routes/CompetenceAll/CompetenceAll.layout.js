@@ -2,9 +2,8 @@ import { CompetenceSimpleList } from 'domains/Competence/components/lists'
 import firestore from '~/services/Firebase/firestore/index'
 import { useCollectionData } from 'react-firebase-hooks/firestore'
 import { COLLECTIONS } from 'app/constants'
-import { LoadingOutlined } from '@ant-design/icons'
-import { Box } from 'antd-styled'
-import { Typography, Spin } from 'antd'
+import { Typography } from 'antd'
+import { Spinner } from '~/components'
 const { Title } = Typography
 /**
  * @info CompetenceAll (05 Mar 2021) // CREATION DATE
@@ -26,17 +25,7 @@ const CompetenceAll = (props) => {
   return (
     <>
       <Title>Competences</Title>
-      {loading ? (
-        <Box
-          display="flex"
-          justifyContent="center"
-          height="100%"
-          alignItems="center">
-          <Spin indicator={<LoadingOutlined style={{ fontSize: 24 }} spin />} />
-        </Box>
-      ) : (
-        <CompetenceSimpleList data={competences} />
-      )}
+      {loading ? <Spinner /> : <CompetenceSimpleList data={competences} />}
     </>
   )
 }
