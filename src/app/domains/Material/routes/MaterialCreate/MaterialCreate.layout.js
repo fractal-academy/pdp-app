@@ -1,11 +1,12 @@
 import { useState } from 'react'
+import { useHistory } from 'react-router-dom'
 import _ from 'lodash'
 import { v5 as uuidv5, v4 as uuidv4 } from 'uuid'
-import { Button, Divider, message } from 'antd'
-import { Row, Col, Back, HeadingPrimary } from 'antd-styled'
+import { Divider, message, Empty } from 'antd'
 import { MaterialSimpleForm } from 'domains/Material/components/forms'
 import { MaterialSimpleUpload } from 'domains/Material/components/combined/uploads'
 import storage from '~/services/Firebase/storage'
+import { PageWrapper } from '~/components/HOC'
 
 /**
  * @info MaterialCreate (05 Mar 2021) // CREATION DATE
@@ -20,6 +21,8 @@ import storage from '~/services/Firebase/storage'
 const STORAGE_URL = 'materials/'
 
 const MaterialCreate = () => {
+  // [ADDITIONAL_HOOKS]
+  const history = useHistory()
   // [COMPONENT_STATE_HOOKS]
   const [materials, setMaterials] = useState([])
 
@@ -112,34 +115,27 @@ const MaterialCreate = () => {
     return false
   }
 
+  const onBack = () => history.goBack()
+  const onNext = () => console.log('log')
+
   // [TEMPLATE]
   return (
-    <Row>
-      <Col span={24}>
-        <Row gutter={[8]} mb={3} justify="space-between">
-          <Col>
-            <Back size="large">Back</Back>
-          </Col>
-          <Col>
-            <Button size="large" type="primary">
-              Next
-            </Button>
-          </Col>
-        </Row>
-        <HeadingPrimary title="Add useful materials" />
-        <Row gutter={[8, 16]} justify="center">
-          <Col sm={24} md={20} lg={16} xl={14} xxl={10}>
-            <MaterialSimpleForm onFinish={onLinkAdd} />
-            <Divider>Or</Divider>
-            <MaterialSimpleUpload
-              materials={materials}
-              onUpload={onMaterialUpload}
-              onRemove={onMaterialRemove}
-            />
-          </Col>
-        </Row>
-      </Col>
-    </Row>
+    <PageWrapper title="Add useful materials" onBack={onBack} onNext={onNext}>
+      <MaterialSimpleForm onFinish={onLinkAdd} />
+      <Divider>Or</Divider>
+      <MaterialSimpleUpload
+        materials={materials}
+        onUpload={onMaterialUpload}
+        onRemove={onMaterialRemove}
+      />
+
+      {!materials.length && (
+        <Empty
+          image={Empty.PRESENTED_IMAGE_SIMPLE}
+          description="No materials"
+        />
+      )}
+    </PageWrapper>
   )
 }
 
