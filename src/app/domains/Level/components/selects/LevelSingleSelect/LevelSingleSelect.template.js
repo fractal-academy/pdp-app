@@ -18,31 +18,39 @@ const { Text } = Typography
 
 const LevelSingleSelect = (props) => {
   // [INTERFACES]
-  const { technologyId } = props
+  const { technologyId, competenceId } = props
 
   // [ADDITIONAL_HOOKS]
-  const [technology, loading] = useDocumentData(
-    firestore.collection(COLLECTIONS.TECHNOLOGIES).doc(technologyId)
+  const [data, loading] = useDocumentData(
+    firestore
+      .collection(
+        technologyId ? COLLECTIONS.TECHNOLOGIES : COLLECTIONS.COMPETENCES
+      )
+      .doc(technologyId ? technologyId : competenceId)
   )
 
   // [TEMPLATE]
   if (loading) return <Text type="secondary">loading...</Text>
 
   return (
-    <Select style={styles.levelSelectWidth} size="large">
-      {technology &&
-        Object.keys(technology.levelIds).map((level) => (
-          <Select.Option value={level}>
-            <LevelSimpleView levelId={level} />
-          </Select.Option>
-        ))}
+    <Select
+      bordered={false}
+      style={styles.levelSelectWidth}
+      size="large"
+      defaultValue={Object.keys(data.levelIds)[0]}>
+      {Object.keys(data.levelIds).map((level) => (
+        <Select.Option value={level} key={level}>
+          <LevelSimpleView levelId={level} />
+        </Select.Option>
+      ))}
     </Select>
   )
 }
 
 // [PROPTYPES]
 LevelSingleSelect.propTypes = {
-  technologyId: PropTypes.string.isRequired
+  technologyId: PropTypes.string,
+  competenceId: PropTypes.string
 }
 
 export default LevelSingleSelect

@@ -10,7 +10,7 @@ const { Text } = Typography
  *
  * @comment TechnologyAdvancedView - React component.
  *
- * @since 08 Mar 2021 ( v.0.0.2 ) // LAST-EDIT DATE
+ * @since 12 Mar 2021 ( v.0.0.3 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
@@ -23,8 +23,7 @@ const TechnologyAdvancedView = (props) => {
   return (
     <>
       <TechnologySimpleView technologyId={technologyId} />
-      <TechnologySimpleView technologyId={technologyId} withHashTag />
-      <Box>
+      <Box mt={2}>
         <SkillSimpleView skillId={skillId} />
         <Text>{` skill`}</Text>
       </Box>

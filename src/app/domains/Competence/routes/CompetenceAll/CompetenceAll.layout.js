@@ -1,50 +1,33 @@
-import PropTypes from 'prop-types'
-
+import { CompetenceSimpleList } from 'domains/Competence/components/lists'
+import firestore from '~/services/Firebase/firestore/index'
+import { useCollectionData } from 'react-firebase-hooks/firestore'
+import { COLLECTIONS } from 'app/constants'
+import { Typography } from 'antd'
+import { Spinner } from '~/components'
+const { Title } = Typography
 /**
  * @info CompetenceAll (05 Mar 2021) // CREATION DATE
  *
  * @comment CompetenceAll - React component.
  *
- * @since 05 Mar 2021 ( v.0.0.1 ) // LAST-EDIT DATE
+ * @since 12 Mar 2021 ( v.0.0.3 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
 
 const CompetenceAll = (props) => {
-  // [INTERFACES]
-  /*
-  code sample: 
-  const { data } = props
-  */
-
   // [ADDITIONAL_HOOKS]
-  /*
-  code sample: 
-  const firestore = useFirestore()
-  */
-
-  // [COMPONENT_STATE_HOOKS]
-  /*
-  code sample:
-  const singleton = useRef(true) // references also put here
-  const [state, setState] = useState({})
-  */
-
-  // [HELPER_FUNCTIONS]
-
-  // [COMPUTED_PROPERTIES]
-  /* 
-    code sample: 
-    const userDisplayName = user.firstName + user.lastName
-  */
-
-  // [USE_EFFECTS]
+  const [competences, loading] = useCollectionData(
+    firestore.collection(COLLECTIONS.COMPETENCES)
+  )
 
   // [TEMPLATE]
-  return <div>CompetenceAll</div>
+  return (
+    <>
+      <Title>Competences</Title>
+      {loading ? <Spinner /> : <CompetenceSimpleList data={competences} />}
+    </>
+  )
 }
-
-// [PROPTYPES]
-CompetenceAll.propTypes = {}
 
 export default CompetenceAll

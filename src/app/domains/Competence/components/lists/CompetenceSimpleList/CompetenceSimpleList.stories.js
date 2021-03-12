@@ -8,7 +8,14 @@ const metadata = {
 export default metadata
 
 export const CompetenceSimpleListStory = (args) => (
-  <CompetenceSimpleList {...args} />
+  <CompetenceSimpleList
+    data={[
+      { competenceId: 'AXqMhPVZQawmlrPF2ZX4' },
+      { competenceId: 'J6LP97iGQwmoStiG6VVE' },
+      { competenceId: 'J6LP97iGQwmoStiG6VVE' }
+    ]}
+    {...args}
+  />
 )
 
 CompetenceSimpleListStory.args = {}

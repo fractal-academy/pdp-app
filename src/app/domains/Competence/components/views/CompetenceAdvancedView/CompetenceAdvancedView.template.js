@@ -1,50 +1,35 @@
 import PropTypes from 'prop-types'
-
+import { LevelAdvancedView } from 'domains/Level/components/views'
+import { CompetenceSimpleView } from 'domains/Competence/components/views'
+import { Box } from 'antd-styled'
 /**
  * @info CompetenceAdvancedView (05 Mar 2021) // CREATION DATE
  *
  * @comment CompetenceAdvancedView - React component.
  *
- * @since 05 Mar 2021 ( v.0.0.1 ) // LAST-EDIT DATE
+ * @since 12 Mar 2021 ( v.0.0.2 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
 
 const CompetenceAdvancedView = (props) => {
   // [INTERFACES]
-  /*
-  code sample: 
-  const { data } = props
-  */
-
-  // [ADDITIONAL_HOOKS]
-  /*
-  code sample: 
-  const firestore = useFirestore()
-  */
-
-  // [COMPONENT_STATE_HOOKS]
-  /*
-  code sample:
-  const singleton = useRef(true) // references also put here
-  const [state, setState] = useState({})
-  */
-
-  // [HELPER_FUNCTIONS]
-
-  // [COMPUTED_PROPERTIES]
-  /* 
-    code sample: 
-    const userDisplayName = user.firstName + user.lastName
-  */
-
-  // [USE_EFFECTS]
+  const { competenceId, levelId, subLevelId } = props
 
   // [TEMPLATE]
-  return <div>CompetenceAdvancedView</div>
+  return (
+    <Box>
+      <CompetenceSimpleView competenceId={competenceId} />
+      <LevelAdvancedView levelId={levelId} subLevelId={subLevelId} />
+    </Box>
+  )
 }
 
 // [PROPTYPES]
-CompetenceAdvancedView.propTypes = {}
+CompetenceAdvancedView.propTypes = {
+  competenceId: PropTypes.string.isRequired,
+  levelId: PropTypes.string,
+  subLevelId: PropTypes.string
+}
 
 export default CompetenceAdvancedView
