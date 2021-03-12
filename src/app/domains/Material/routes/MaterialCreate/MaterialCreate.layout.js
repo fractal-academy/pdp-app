@@ -14,7 +14,7 @@ import { ROUTE_PATHS } from 'app/constants'
  *
  * @comment MaterialCreate - React component.
  *
- * @since 12 Mar 2021 ( v.0.0.6 ) // LAST-EDIT DATE
+ * @since 12 Mar 2021 ( v.0.0.7 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
