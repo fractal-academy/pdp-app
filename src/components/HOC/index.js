@@ -1,3 +1,5 @@
 import withProtect from './withProtect'
 import withContent from './withContent'
-export { withProtect, withContent }
+import PageWrapper from './PageWrapper'
+
+export { withProtect, withContent, PageWrapper }

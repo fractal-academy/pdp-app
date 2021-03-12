@@ -1,9 +1,8 @@
 import { useState } from 'react'
 import { useHistory } from 'react-router-dom'
-import { Button } from 'antd'
-import { Row, Col, Back, HeadingPrimary } from 'antd-styled'
 import { TodoSimpleForm } from 'domains/Todo/components/forms'
 import { TodoSimpleList } from 'domains/Todo/components/lists'
+import { PageWrapper } from '~/components/HOC'
 import _ from 'lodash'
 import { ROUTE_PATHS } from 'app/constants'
 
@@ -39,45 +38,24 @@ const TodoCreate = () => {
   }
 
   // -- Header step button functions --
-  const onClickNext = () => {
+  const onNext = () => {
     history.push(ROUTE_PATHS.MATERIAL_CREATE)
   }
-  const onClickBack = () => {
+  const onBack = () => {
     history.goBack()
   }
   // -----------------------------
 
   // [TEMPLATE]
   return (
-    <Row>
-      <Col span={24}>
-        <Row gutter={[8]} mb={3} justify="space-between">
-          <Col>
-            <Back onClick={onClickBack} size="large">
-              Back
-            </Back>
-          </Col>
-          <Col>
-            <Button onClick={onClickNext} size="large" type="primary">
-              Next
-            </Button>
-          </Col>
-        </Row>
-        <HeadingPrimary title="Create ToDo" />
-        <Row gutter={[8, 16]} justify="center">
-          <Col span={16}>
-            <TodoSimpleForm onSubmit={onSubmit} editTodo={editTodo} />
-          </Col>
-          <Col span={16}>
-            <TodoSimpleList
-              setTodos={setTodos}
-              todos={todos}
-              onDeleteTodo={onDeleteTodo}
-            />
-          </Col>
-        </Row>
-      </Col>
-    </Row>
+    <PageWrapper title="Create ToDo" onNext={onNext} onBack={onBack}>
+      <TodoSimpleForm onSubmit={onSubmit} editTodo={editTodo} />
+      <TodoSimpleList
+        setTodos={setTodos}
+        todos={todos}
+        onDeleteTodo={onDeleteTodo}
+      />
+    </PageWrapper>
   )
 }
 
