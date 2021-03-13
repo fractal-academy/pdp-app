@@ -18,7 +18,7 @@ const { Dragger } = Upload
  *
  * @comment MaterialSimpleUpload - React component.
  *
- * @since 11 Mar 2021 ( v.0.0.5 ) // LAST-EDIT DATE
+ * @since 12 Mar 2021 ( v.0.0.6 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
@@ -62,6 +62,7 @@ const MaterialSimpleUpload = (props) => {
       iconRender={customFileIcon}
       fileList={materials}
       customRequest={onUpload}
+      isImageUrl={(file) => file.type.includes('image')}
       onRemove={onRemove}
       multiple>
       <p className="ant-upload-drag-icon">
