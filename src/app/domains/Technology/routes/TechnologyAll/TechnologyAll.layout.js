@@ -1,9 +1,8 @@
-import { Typography, Button } from 'antd'
-import { Box } from 'antd-styled'
 import { TechnologySimpleList } from 'domains/Technology/components/lists'
 import { useHistory } from 'react-router-dom'
 import { ROUTE_PATHS } from 'app/constants'
-const { Title } = Typography
+import { PageTitle } from '~/components'
+import { Button } from 'antd'
 
 /**
  * @info TechnologyAll (05 Mar 2021) // CREATION DATE
@@ -21,17 +20,21 @@ const TechnologyAll = () => {
   // [ADDITIONAL_HOOKS]
   const history = useHistory()
 
+  // [HELPER_FUNCTIONS]
+  const addTechnology = () => {
+    history.push(ROUTE_PATHS.TECHNOLOGY_CREATE)
+  }
+  const AddButton = () => {
+    return (
+      <Button type="primary" onClick={addTechnology}>
+        Add technology
+      </Button>
+    )
+  }
   // [TEMPLATE]
   return (
     <>
-      <Box display="flex" justifyContent="space-between" alignItems="center">
-        <Title>Technologies</Title>
-        <Button
-          type="primary"
-          onClick={() => history.push(ROUTE_PATHS.TECHNOLOGY_CREATE)}>
-          Add technology
-        </Button>
-      </Box>
+      <PageTitle title="Technologies" action={<AddButton />} />
       <TechnologySimpleList data={MOCK_DATA} />
     </>
   )
