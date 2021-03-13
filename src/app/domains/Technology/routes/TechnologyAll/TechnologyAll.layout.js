@@ -9,7 +9,7 @@ import { Button } from 'antd'
  *
  * @comment TechnologyAll - React component.
  *
- * @since 10 Mar 2021 ( v.0.0.3 ) // LAST-EDIT DATE
+ * @since 13 Mar 2021 ( v.0.0.4 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
