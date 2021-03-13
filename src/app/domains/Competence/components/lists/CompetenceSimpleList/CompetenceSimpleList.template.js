@@ -5,13 +5,14 @@ import { CompetenceSimpleView } from 'domains/Competence/components/views'
 import { TechnologySimpleView } from 'domains/Technology/components/views'
 import { LevelSingleSelect } from 'domains/Level/components/selects'
 import { EditOutlined } from '@ant-design/icons'
+import { getGrid } from '~/utils'
 const { Text } = Typography
 /**
  * @info CompetenceSimpleList (05 Mar 2021) // CREATION DATE
  *
  * @comment CompetenceSimpleList - React component.
  *
- * @since 12 Mar 2021 ( v.0.0.2 ) // LAST-EDIT DATE
+ * @since 13 Mar 2021 ( v.0.0.3 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
@@ -24,10 +25,12 @@ const CompetenceSimpleList = (props) => {
   const onEdit = (competenceId) => {}
 
   // [TEMPLATE]
-
   return (
     <List
-      grid={{ gutter: 16, xs: 1, sm: 1, md: 1, lg: 2, xl: 2, xxl: 2 }}
+      grid={{
+        gutter: 16,
+        ...getGrid({ xs: 1, lg: 2 })
+      }}
       dataSource={data}
       renderItem={(competence) => (
         <List.Item key={competence.id}>
