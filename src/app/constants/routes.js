@@ -141,14 +141,14 @@ const ROUTES = {
     path: ROUTE_PATHS.PLANS_ALL,
     exact: true
   },
+  PLAN_CREATE: {
+    component: withContent(withProtect({ roles: [ROLES.MENTOR] })(PlanCreate)),
+    path: ROUTE_PATHS.PLAN_CREATE
+  },
   PLAN_SHOW: {
     component: withContent(withProtect({ roles: [ROLES.STUDENT] })(PlanShow)),
     path: ROUTE_PATHS.PLAN_SHOW,
     exact: true
-  },
-  PLAN_CREATE: {
-    component: withContent(withProtect({ roles: [ROLES.MENTOR] })(PlanCreate)),
-    path: ROUTE_PATHS.PLAN_CREATE
   },
   PLAN_EDIT: {
     component: withContent(withProtect({ roles: [ROLES.MENTOR] })(PlanEdit)),
