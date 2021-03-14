@@ -7,7 +7,7 @@ import { Button, Divider } from 'antd'
  *
  * @comment PageWrapper - React HOC component using easily config wizard page
  *
- * @since 13 Mar 2021 ( v.0.0.2 ) // LAST-EDIT DATE
+ * @since 14 Mar 2021 ( v.0.0.4 ) // LAST-EDIT DATE
  *
  * @param {node}          props.children                Use to place main content under title.
  * @param {string} 				props.title										Use to set page title.
@@ -15,7 +15,7 @@ import { Button, Divider } from 'antd'
  * @param {object} 				[props.contentColProps] 			Use to config main content layout.
  * @param {boolean}       props.inlineHeader            Use to set title and actions in one row
  * @param {boolean}       props.fullWidth               Set full width for main content
- * @param {object}        props.titleProps              Use to confit title component
+ * @param {object}        props.titleProps              Use to config title component
  * @param {function} 			props.onBack 								  Callback on back button click.
  * @param {object} 				props.backBtnProps 						Properties for back button.
  *
