@@ -1,7 +1,6 @@
 import PropTypes from 'prop-types'
 import { List } from 'antd'
 import { Remove } from 'antd-styled'
-
 import { MaterialSimpleView } from 'domains/Material/components/views'
 import { DeleteOutlined } from '@ant-design/icons'
 /**
@@ -9,7 +8,7 @@ import { DeleteOutlined } from '@ant-design/icons'
  *
  * @comment MaterialSimpleList - React component.
  *
- * @since 10 Mar 2021 ( v.0.0.2 ) // LAST-EDIT DATE
+ * @since 14 Mar 2021 ( v.0.0.3 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
@@ -31,12 +30,12 @@ const MOCK_DATA = [
 
 const MaterialSimpleList = (props) => {
   // [INTERFACES]
-  const { withDelete } = props
+  const { withDelete, data } = props
 
   // [TEMPLATE]
   return (
     <List
-      dataSource={MOCK_DATA}
+      dataSource={data || MOCK_DATA}
       renderItem={(material) => (
         <List.Item
           actions={withDelete && [<Remove icon={<DeleteOutlined />} />]}>
@@ -49,7 +48,8 @@ const MaterialSimpleList = (props) => {
 
 // [PROPTYPES]
 MaterialSimpleList.propTypes = {
-  withDelete: PropTypes.bool
+  withDelete: PropTypes.bool,
+  data: PropTypes.array.isRequired
 }
 
 export default MaterialSimpleList

@@ -37,28 +37,26 @@ const MaterialSimpleView = (props) => {
   const { type, size, name, url } = props
   // [TEMPLATE]
   return (
-    <Box>
-      <Space>
-        {type === 'image' ? (
-          <Image
-            width={SIZE_MAP[size]}
-            height={SIZE_MAP[size]}
-            style={{ borderRadius: '4px' }}
-            src={url}
-          />
-        ) : (
-          <Icon
-            component={FILE_TYPE_MAP[type] ?? PaperClipOutlined}
-            style={{ fontSize: SIZE_MAP[size] }}
-          />
-        )}
-        {(type === 'url' && (
-          <Link href={url} target="_blank">
-            {name}
-          </Link>
-        )) || <Text>{name}</Text>}
-      </Space>
-    </Box>
+    <Space>
+      {type === 'image' ? (
+        <Image
+          width={SIZE_MAP[size]}
+          height={SIZE_MAP[size]}
+          style={{ borderRadius: '4px' }}
+          src={url}
+        />
+      ) : (
+        <Icon
+          component={FILE_TYPE_MAP[type] ?? PaperClipOutlined}
+          style={{ fontSize: SIZE_MAP[size] }}
+        />
+      )}
+      {(type === 'url' && (
+        <Link href={url} target="_blank">
+          {name}
+        </Link>
+      )) || <Text>{name}</Text>}
+    </Space>
   )
 }
 
