@@ -97,7 +97,7 @@ const PlanCreate = () => {
   const [isOverview, setIsOverview] = useState(false)
 
   // [HELPER_FUNCTIONS]
-  const onNext = () => console.log('asd')
+  const onAssign = () => {}
   const onCheck = (item, { checkedNodes }) => {
     const filteredTech = checkedNodes.filter(
       (technology) => !technology.hasOwnProperty('children')
@@ -121,12 +121,7 @@ const PlanCreate = () => {
               backBtnLeft
               inlineHeader
               fullWidth>
-              <Tree
-                checkable
-                treeData={MOCK_DATA}
-                // checkedKeys={technologies.map((technology) => technology.key)}
-                onCheck={onCheck}
-              />
+              <Tree checkable treeData={MOCK_DATA} onCheck={onCheck} />
             </PageWrapper>
           </Content>
           <Sider width="fit-content" paddingTop={4} paddingX={4}>
@@ -147,7 +142,7 @@ const PlanCreate = () => {
             title="Create plan for Dima"
             titleProps={{ textAlign: 'left' }}
             onBack={() => setIsOverview(!isOverview)}
-            onNext={() => console.log('assign')}
+            onNext={onAssign}
             nextBtnProps={{ text: 'Assign' }}
             backBtnLeft
             inlineHeader>
