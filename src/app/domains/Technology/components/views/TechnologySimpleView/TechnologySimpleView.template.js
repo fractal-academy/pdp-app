@@ -10,7 +10,7 @@ import { Title, Text } from 'antd-styled'
  *
  * @comment TechnologySimpleView - React component.
  *
- * @since 12 Mar 2021 ( v.0.0.5 ) // LAST-EDIT DATE
+ * @since 14 Mar 2021 ( v.0.0.6 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
@@ -32,7 +32,7 @@ const TechnologySimpleView = (props) => {
       {tag ? (
         <Tag>{technology?.name}</Tag>
       ) : (
-        <Title level={3}>{technology?.name}</Title>
+        <Title level={4}>{technology?.name}</Title>
       )}
     </>
   )
