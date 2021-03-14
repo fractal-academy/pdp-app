@@ -19,15 +19,20 @@ const STATUS = {
 
 const Status = (props) => {
   // [INTERFACES]
-  const { status } = props
+  const { status, ...rest } = props
 
   // [TEMPLATE]
-  return <Box style={{ ...style(STATUS[status]) }}>{status}</Box>
+  return (
+    <Box style={{ ...style(STATUS[status]) }} {...rest}>
+      {status}
+    </Box>
+  )
 }
 
 // [PROPTYPES]
 Status.propTypes = {
-  status: PropTypes.string.isRequired
+  status: PropTypes.string.isRequired,
+  rest: PropTypes.object
 }
 
 export default Status
