@@ -23,7 +23,7 @@ const Status = (props) => {
 
   // [TEMPLATE]
   return (
-    <Box style={{ ...style(STATUS[status]) }} {...rest}>
+    <Box style={style(STATUS[status])} {...rest}>
       {status}
     </Box>
   )
