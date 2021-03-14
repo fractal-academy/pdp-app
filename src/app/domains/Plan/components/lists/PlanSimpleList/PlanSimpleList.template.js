@@ -1,50 +1,54 @@
 import PropTypes from 'prop-types'
+import { List, Collapse } from 'antd'
+import { Box } from 'antd-styled'
+import { TechnologyAdvancedView } from 'domains/Technology/components/views'
+import { getGrid } from '~/utils'
+import { PlanAdvancedView } from 'domains/Plan/components/views'
+
+const { Panel } = Collapse
 
 /**
  * @info PlanSimpleList (05 Mar 2021) // CREATION DATE
  *
  * @comment PlanSimpleList - React component.
  *
- * @since 05 Mar 2021 ( v.0.0.1 ) // LAST-EDIT DATE
+ * @since 14 Mar 2021 ( v.0.0.2 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
 
 const PlanSimpleList = (props) => {
   // [INTERFACES]
-  /*
-  code sample: 
   const { data } = props
-  */
-
-  // [ADDITIONAL_HOOKS]
-  /*
-  code sample: 
-  const firestore = useFirestore()
-  */
-
-  // [COMPONENT_STATE_HOOKS]
-  /*
-  code sample:
-  const singleton = useRef(true) // references also put here
-  const [state, setState] = useState({})
-  */
-
-  // [HELPER_FUNCTIONS]
-
-  // [COMPUTED_PROPERTIES]
-  /* 
-    code sample: 
-    const userDisplayName = user.firstName + user.lastName
-  */
-
-  // [USE_EFFECTS]
 
   // [TEMPLATE]
-  return <div>PlanSimpleList</div>
+  return (
+    <Collapse expandIconPosition="right" ghost>
+      {data.map((plan) => (
+        <Panel header={<PlanAdvancedView planId={plan.id} />} key={plan.id}>
+          <List
+            grid={{
+              gutter: 16,
+              ...getGrid({ xs: 1 })
+            }}
+            dataSource={Object.keys(plan.technologyIds)}
+            renderItem={(technology) => (
+              <List.Item>
+                <Box p={10}>
+                  <TechnologyAdvancedView technologyId={technology} />
+                </Box>
+              </List.Item>
+            )}
+          />
+        </Panel>
+      ))}
+    </Collapse>
+  )
 }
 
 // [PROPTYPES]
-PlanSimpleList.propTypes = {}
+PlanSimpleList.propTypes = {
+  data: PropTypes.array.isRequired
+}
 
 export default PlanSimpleList

@@ -7,6 +7,8 @@ const metadata = {
 }
 export default metadata
 
-export const PlanSimpleViewStory = (args) => <PlanSimpleView {...args} />
+export const PlanSimpleViewStory = (args) => (
+  <PlanSimpleView planId="wMiOdTzJOJddd3DZVYSD" {...args} />
+)
 
 PlanSimpleViewStory.args = {}

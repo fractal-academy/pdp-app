@@ -1,8 +1,14 @@
 import PropTypes from 'prop-types'
-import { TechnologySimpleView } from '../'
-import { SkillSimpleView } from 'domains/Skill/components/views'
-import { Typography } from 'antd'
-import { Box } from 'antd-styled'
+import { TechnologySimpleView } from 'domains/Technology/components/views'
+import { Typography, Space } from 'antd'
+import { Card } from 'antd-styled'
+import firestore from '~/services/Firebase/firestore/index'
+import {
+  useCollectionData,
+  useDocumentData
+} from 'react-firebase-hooks/firestore'
+import { COLLECTIONS } from 'app/constants'
+import { MaterialSimpleView } from '~/app/domains/Material/components/views'
 const { Text } = Typography
 
 /**
@@ -10,31 +16,47 @@ const { Text } = Typography
  *
  * @comment TechnologyAdvancedView - React component.
  *
- * @since 12 Mar 2021 ( v.0.0.3 ) // LAST-EDIT DATE
+ * @since 14 Mar 2021 ( v.0.0.4 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
 
 const TechnologyAdvancedView = (props) => {
   // [INTERFACES]
-  const { technologyId, skillId } = props
+  const { technologyId } = props
+
+  // [ADDITIONAL_HOOKS]
+  const [technology, loading] = useDocumentData(
+    firestore.collection(COLLECTIONS.TECHNOLOGIES).doc(technologyId)
+  )
+
+  const [materials, loadingMaterial] = useCollectionData(
+    !loading &&
+      firestore
+        .collection(COLLECTIONS.MATERIALS)
+        .where('id', 'in', Object.keys(technology.materialTemplateIds))
+  )
 
   // [TEMPLATE]
+  if (loading || loadingMaterial)
+    return <Text type="secondary">loading...</Text>
+
   return (
-    <>
-      <TechnologySimpleView technologyId={technologyId} />
-      <Box mt={2}>
-        <SkillSimpleView skillId={skillId} />
-        <Text>{` skill`}</Text>
-      </Box>
-    </>
+    <Card
+      title={<TechnologySimpleView technologyId={technology.id} />}
+      shadowless>
+      <Space size="large">
+        {materials?.map((item) => (
+          <MaterialSimpleView {...item} />
+        ))}
+      </Space>
+    </Card>
   )
 }
 
 // [PROPTYPES]
 TechnologyAdvancedView.propTypes = {
-  technologyId: PropTypes.string.isRequired,
-  skillId: PropTypes.string.isRequired
+  technologyId: PropTypes.string.isRequired
 }
 
 export default TechnologyAdvancedView

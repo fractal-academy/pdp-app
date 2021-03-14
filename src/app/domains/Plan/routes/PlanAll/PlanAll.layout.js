@@ -1,50 +1,34 @@
-import PropTypes from 'prop-types'
 import { Content, Sider, Title } from 'antd-styled'
+
+import firestore from '~/services/Firebase/firestore/index'
+import { useCollectionData } from 'react-firebase-hooks/firestore'
+import { COLLECTIONS } from 'app/constants'
+import { PlanSimpleList } from 'domains/Plan/components/lists'
+import { Spinner } from '~/components'
+import { useSession } from 'contexts/Session/hooks'
 /**
  * @info PlanAll (05 Mar 2021) // CREATION DATE
  *
  * @comment PlanAll - React component.
  *
- * @since 05 Mar 2021 ( v.0.0.1 ) // LAST-EDIT DATE
+ * @since 14 Mar 2021 ( v.0.0.2 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
 
-const PlanAll = (props) => {
-  // [INTERFACES]
-  /*
-  code sample:
-  const { data } = props
-  */
-
+const PlanAll = () => {
   // [ADDITIONAL_HOOKS]
-  /*
-  code sample:
-  const firestore = useFirestore()
-  */
-
-  // [COMPONENT_STATE_HOOKS]
-  /*
-  code sample:
-  const singleton = useRef(true) // references also put here
-  const [state, setState] = useState({})
-  */
-
-  // [HELPER_FUNCTIONS]
-
-  // [COMPUTED_PROPERTIES]
-  /*
-    code sample:
-    const userDisplayName = user.firstName + user.lastName
-  */
-
-  // [USE_EFFECTS]
+  const session = useSession()
+  const [plans, loading] = useCollectionData(
+    firestore.collection(COLLECTIONS.PLANS).where('id', 'in', session.planIds)
+  )
 
   // [TEMPLATE]
   return (
     <>
       <Content bg="#ffffff" paddingTop={4} paddingX={4}>
-        <Title>Plans</Title>
+        <Title>My plans</Title>
+        {loading ? <Spinner /> : <PlanSimpleList data={plans} />}
       </Content>
       <Sider paddingTop={4} paddingX={4}>
         <Title textAlign="center" style={{ color: 'white' }}>
@@ -54,8 +38,5 @@ const PlanAll = (props) => {
     </>
   )
 }
-
-// [PROPTYPES]
-PlanAll.propTypes = {}
 
 export default PlanAll
