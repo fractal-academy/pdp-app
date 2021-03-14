@@ -10,18 +10,21 @@ import { Button, Divider } from 'antd'
  * @since 14 Mar 2021 ( v.0.0.4 ) // LAST-EDIT DATE
  *
  * @param {node}          props.children                Use to place main content under title.
+ *
  * @param {string} 				props.title										Use to set page title.
+ * @param {object}        [props.titleProps]            Use to config title component
+ *
+ * @param {function} 			[props.onBack]							  Callback on back button click.
+ * @param {object}        [props.backBtnProps]          Properties for back button.
+
+ * @param {function} 			[props.onNext] 								Callback on next button click.
+ * @param {object} 				[props.nextBtnProps] 					Properties for next button.
+ *
  * @param {node} 					[props.action] 								Use to add actions.
  * @param {object} 				[props.contentColProps] 			Use to config main content layout.
- * @param {boolean}       props.inlineHeader            Use to set title and actions in one row
- * @param {boolean}       props.fullWidth               Set full width for main content
- * @param {object}        props.titleProps              Use to config title component
- * @param {function} 			props.onBack 								  Callback on back button click.
- * @param {object} 				props.backBtnProps 						Properties for back button.
- *
- * @param {function} 			props.onNext 									Callback on next button click.
- * @param {object} 				props.nextBtnProps 						Properties for next button.
- *
+ * @param {boolean}       [props.inlineHeader]          Use to set title and actions in one row
+ * @param {boolean}       [props.fullWidth]             Set full width for main content
+ * @param {boolean} 			[props.backBtnLeft]           Use to move back button to left.
  *
  * @return {React.FunctionComponent}
  */
@@ -144,7 +147,8 @@ PageWrapper.propTypes = {
   title: PropTypes.string,
   titleProps: PropTypes.object,
   inlineHeader: PropTypes.bool,
-  fullWidth: PropTypes.bool
+  fullWidth: PropTypes.bool,
+  backBtnLeft: PropTypes.bool
 }
 
 export default PageWrapper
