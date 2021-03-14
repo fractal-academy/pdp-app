@@ -47,12 +47,7 @@ const TechnologyAdvancedView = (props) => {
       shadowless>
       <Space size="large">
         {materials?.map((item) => (
-          <MaterialSimpleView
-            type={item.type}
-            size={item.size}
-            name={item.name}
-            url={item.url}
-          />
+          <MaterialSimpleView {...item} />
         ))}
       </Space>
     </Card>
