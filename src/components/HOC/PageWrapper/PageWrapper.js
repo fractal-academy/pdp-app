@@ -7,21 +7,24 @@ import { Button, Divider } from 'antd'
  *
  * @comment PageWrapper - React HOC component using easily config wizard page
  *
- * @since 13 Mar 2021 ( v.0.0.2 ) // LAST-EDIT DATE
+ * @since 14 Mar 2021 ( v.0.0.4 ) // LAST-EDIT DATE
  *
  * @param {node}          props.children                Use to place main content under title.
+ *
  * @param {string} 				props.title										Use to set page title.
+ * @param {object}        [props.titleProps]            Use to config title component
+ *
+ * @param {function} 			[props.onBack]							  Callback on back button click.
+ * @param {object}        [props.backBtnProps]          Properties for back button.
+
+ * @param {function} 			[props.onNext] 								Callback on next button click.
+ * @param {object} 				[props.nextBtnProps] 					Properties for next button.
+ *
  * @param {node} 					[props.action] 								Use to add actions.
  * @param {object} 				[props.contentColProps] 			Use to config main content layout.
- * @param {boolean}       props.inlineHeader            Use to set title and actions in one row
- * @param {boolean}       props.fullWidth               Set full width for main content
- * @param {object}        props.titleProps              Use to confit title component
- * @param {function} 			props.onBack 								  Callback on back button click.
- * @param {object} 				props.backBtnProps 						Properties for back button.
- *
- * @param {function} 			props.onNext 									Callback on next button click.
- * @param {object} 				props.nextBtnProps 						Properties for next button.
- *
+ * @param {boolean}       [props.inlineHeader]          Use to set title and actions in one row
+ * @param {boolean}       [props.fullWidth]             Set full width for main content
+ * @param {boolean} 			[props.backBtnLeft]           Use to move back button to left.
  *
  * @return {React.FunctionComponent}
  */
@@ -39,20 +42,23 @@ const PageWrapper = (props) => {
     inlineHeader,
     fullWidth,
     title,
-    titleProps
+    titleProps,
+    backBtnLeft
   } = props
 
   const actionBlock = (
     <>
-      {inlineHeader && action && <Divider type="vertical" />}
+      {onBack && inlineHeader && !backBtnLeft && action && (
+        <Divider type="vertical" />
+      )}
       {action}
-      {action && <Divider type="vertical" />}
+      {onNext && action && <Divider type="vertical" />}
     </>
   )
 
   const buttonsBlock = (
     <>
-      {onBack && (
+      {onBack && !backBtnLeft && (
         <Col>
           <Back size="large" onClick={onBack} {...backBtnProps}>
             {backBtnProps?.text ?? 'Back'}
@@ -84,9 +90,20 @@ const PageWrapper = (props) => {
         <Row gutter={[8]} mb={3} justify={onBack ? 'space-between' : 'end'}>
           {inlineHeader ? (
             <>
+              {backBtnLeft && (
+                <Col>
+                  <Back
+                    size="large"
+                    onClick={onBack}
+                    divided
+                    {...backBtnProps}
+                  />
+                </Col>
+              )}
               <Col flex={1}>
                 <HeadingPrimary
                   title={title}
+                  titleSize={2}
                   textAlign="left"
                   {...titleProps}
                 />
@@ -116,7 +133,7 @@ const PageWrapper = (props) => {
 
 // [PROPTYPES]
 PageWrapper.propTypes = {
-  children: PropTypes.node,
+  children: PropTypes.node.isRequired,
   contentColProps: PropTypes.object,
   onBack: PropTypes.func,
   backBtnProps: PropTypes.shape({
@@ -127,10 +144,11 @@ PageWrapper.propTypes = {
   nextBtnProps: PropTypes.shape({
     text: PropTypes.string
   }),
-  title: PropTypes.string,
+  title: PropTypes.string.isRequired,
   titleProps: PropTypes.object,
   inlineHeader: PropTypes.bool,
-  fullWidth: PropTypes.bool
+  fullWidth: PropTypes.bool,
+  backBtnLeft: PropTypes.bool
 }
 
 export default PageWrapper
