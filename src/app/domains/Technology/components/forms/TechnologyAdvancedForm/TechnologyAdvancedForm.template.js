@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types'
-import { Box } from 'antd-styled'
+import { Box, Save } from 'antd-styled'
 import { Input, Form, Button, Space, Typography } from 'antd'
 import { SkillSingleSelect } from '~/app/domains/Skill/components/selects'
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons'
@@ -12,14 +12,14 @@ const { Text } = Typography
  *
  * @comment TechnologyAdvancedForm - React component.
  *
- * @since 10 Mar 2021 ( v.0.0.3 ) // LAST-EDIT DATE
+ * @since 13 Mar 2021 ( v.0.0.4 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
 
 const TechnologyAdvancedForm = (props) => {
   // [INTERFACES]
-  const { Buttons, onSubmit } = props
+  const { onSubmit } = props
 
   // [ADDITIONAL_HOOKS]
   const [form] = Form.useForm()
@@ -102,10 +102,9 @@ const TechnologyAdvancedForm = (props) => {
           </>
         )}
       </Form.List>
-
       <Box display="flex" justifyContent="flex-end">
         <Form.Item>
-          <Buttons />
+          <Save htmlType="submit" text="Save" />
         </Form.Item>
       </Box>
     </Form>
