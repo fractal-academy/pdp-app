@@ -1,2 +1,3 @@
 import { PlanSimpleView } from './PlanSimpleView'
-export { PlanSimpleView }
+import { PlanAdvancedView } from './PlanAdvancedView'
+export { PlanSimpleView, PlanAdvancedView }
