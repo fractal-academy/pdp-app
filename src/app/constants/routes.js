@@ -51,7 +51,7 @@ const ROUTES = {
     exact: true
   },
   USER_SHOW: {
-    component: UserShow,
+    component: withContent(UserShow),
     path: ROUTE_PATHS.USER_SHOW,
     exact: true
   },
@@ -142,7 +142,7 @@ const ROUTES = {
     exact: true
   },
   PLAN_CREATE: {
-    component: withContent(withProtect({ roles: [ROLES.MENTOR] })(PlanCreate)),
+    component: withProtect({ roles: [ROLES.MENTOR] })(PlanCreate),
     path: ROUTE_PATHS.PLAN_CREATE
   },
   PLAN_SHOW: {
