@@ -1,8 +1,9 @@
 import PropTypes from 'prop-types'
 import { Table, Typography } from 'antd'
+import { useHistory, generatePath } from 'react-router-dom'
 import { UserSimpleView } from 'domains/User/components/views'
 import { CompanySimpleView } from 'domains/Company/components/views'
-
+import { ROUTE_PATHS } from 'app/constants'
 const { Text } = Typography
 
 /**
@@ -10,7 +11,7 @@ const { Text } = Typography
  *
  * @comment StudentSimpleTable - React component.
  *
- * @since 08 Mar 2021 ( v.0.0.1 ) // LAST-EDIT DATE
+ * @since 14 Mar 2021 ( v.0.0.2 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
@@ -46,8 +47,24 @@ const StudentSimpleTable = (props) => {
   // [INTERFACES]
   const { data } = props
 
+  // [ADDITIONAL_HOOKS]
+  const history = useHistory()
+
   // [TEMPLATE]
-  return <Table columns={columns} dataSource={data} pagination={false} />
+  return (
+    <Table
+      onRow={(record) => ({
+        onClick: () =>
+          history.push(generatePath(ROUTE_PATHS.USER_SHOW, { id: record.id })),
+        onMouseEnter: (e) => {
+          e.target.style.cursor = 'pointer'
+        }
+      })}
+      columns={columns}
+      dataSource={data}
+      pagination={false}
+    />
+  )
 }
 
 // [PROPTYPES]

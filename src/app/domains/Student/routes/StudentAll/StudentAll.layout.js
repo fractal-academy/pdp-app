@@ -15,26 +15,24 @@ const { Title } = Typography
 const MOCK_DATA = [
   {
     key: '1',
-    idUser: 8,
+    id: 'fesf',
     avatarURL: '',
     firstName: 'Fractal',
     secondName: 'Band2',
     email: 'email@gmail.com',
     role: 'student',
-    companyId: '123',
-    specialityId: '456'
+    companyId: '123'
   },
   {
     key: '2',
-    idUser: 8,
+    id: 'asdf',
     avatarURL:
       'https://firebasestorage.googleapis.com/v0/b/expenses-senseteq.appspot.com/o/photo_2020-11-27_19-32-45.jpg?alt=media&token=75958d4d-46ab-458f-b413-e81696c8c16d',
     firstName: 'Fractal',
     secondName: 'Band2',
     email: 'email@gmail.com',
     role: 'admin',
-    companyId: '123',
-    specialityId: '456'
+    companyId: '123'
   }
 ]
 

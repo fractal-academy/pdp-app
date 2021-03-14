@@ -1,28 +1,28 @@
-const { whenDev } = require('@craco/craco')
+// const { whenDev } = require('@craco/craco')
+// const CircularDependencyPlugin = require('circular-dependency-plugin')
 
 const CracoAlias = require('craco-alias')
 const CracoLessPlugin = require('craco-less')
 const antdTheme = require('./src/config/theme')
-const CircularDependencyPlugin = require('circular-dependency-plugin')
 
 module.exports = {
-  webpack: {
-    plugins: [
-      ...whenDev(
-        () => [
-          new CircularDependencyPlugin({
-            onDetected({ paths, compilation }) {
-              const pathChain = paths.join(' -> ')
-              if (pathChain.includes('src')) {
-                compilation.warnings.push(new Error(pathChain))
-              }
-            }
-          })
-        ],
-        []
-      )
-    ]
-  },
+  // webpack: {
+  //   plugins: [
+  //     ...whenDev(
+  //       () => [
+  //         new CircularDependencyPlugin({
+  //           onDetected({ paths, compilation }) {
+  //             const pathChain = paths.join(' -> ')
+  //             if (pathChain.includes('src')) {
+  //               compilation.warnings.push(new Error(pathChain))
+  //             }
+  //           }
+  //         })
+  //       ],
+  //       []
+  //     )
+  //   ]
+  // },
   plugins: [
     {
       plugin: CracoAlias,

@@ -4,12 +4,13 @@ import { Remove, Edit, Box, Row } from 'antd-styled'
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons'
 import { useState, useRef, useEffect } from 'react'
 const { Text } = Typography
+
 /**
  * @info TodoSimpleList (05 Mar 2021) // CREATION DATE
  *
  * @comment TodoSimpleList - React component.
  *
- * @since 11 Mar 2021 ( v.0.0.3 ) // LAST-EDIT DATE
+ * @since 14 Mar 2021 ( v.0.0.4 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
@@ -25,12 +26,6 @@ const TodoSimpleList = (props) => {
   // [COMPONENT_STATE_HOOKS]
   const [editTodo, setEditTodo] = useState(false)
 
-  useEffect(() => {
-    editTodo &&
-      inputRef.current.focus({
-        cursor: 'end'
-      })
-  }, [editTodo])
   // [HELPER_FUNCTIONS]
   const onEdit = (todo, idx) => {
     setEditTodo({ todo, idx })
@@ -43,6 +38,14 @@ const TodoSimpleList = (props) => {
     setEditTodo(false)
   }
 
+  // [USE_EFFECTS]
+  useEffect(() => {
+    editTodo &&
+      inputRef.current.focus({
+        cursor: 'end'
+      })
+  }, [editTodo])
+
   // [TEMPLATE]
   return (
     <List
@@ -53,10 +56,16 @@ const TodoSimpleList = (props) => {
           <List.Item
             actions={[
               <Edit
+                shape="default"
+                tooltip="Edit"
+                type="text"
                 icon={<EditOutlined />}
                 onClick={() => onEdit(todo, idx)}
               />,
               <Remove
+                shape="default"
+                tooltip="Remove"
+                type="text"
                 onClick={() => setEditTodo(false)}
                 icon={<DeleteOutlined />}
                 onSubmit={() => onDeleteTodo(idx)}
@@ -66,13 +75,13 @@ const TodoSimpleList = (props) => {
               <Row flex={1}>
                 <Col span={24}>
                   <Form form={form} onFinish={(todo) => onSubmit(todo, idx)}>
-                    <Form.Item style={{ flex: 1 }} name="todo">
+                    <Form.Item style={{ flex: 1 }} name="todo" noStyle>
                       <Input.TextArea
                         onPressEnter={(e) => {
                           e.preventDefault()
                           form.submit()
                         }}
-                        rows={1}
+                        autoSize={{ minRows: 1 }}
                         ref={inputRef}
                         defaultValue={editTodo.todo}
                       />
