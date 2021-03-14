@@ -133,7 +133,7 @@ const PageWrapper = (props) => {
 
 // [PROPTYPES]
 PageWrapper.propTypes = {
-  children: PropTypes.node,
+  children: PropTypes.node.isRequired,
   contentColProps: PropTypes.object,
   onBack: PropTypes.func,
   backBtnProps: PropTypes.shape({
@@ -144,7 +144,7 @@ PageWrapper.propTypes = {
   nextBtnProps: PropTypes.shape({
     text: PropTypes.string
   }),
-  title: PropTypes.string,
+  title: PropTypes.string.isRequired,
   titleProps: PropTypes.object,
   inlineHeader: PropTypes.bool,
   fullWidth: PropTypes.bool,
