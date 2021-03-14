@@ -17,7 +17,15 @@ import { ROLES } from '~/constants'
  * @return {ReactComponent}
  */
 
-const MOCK_SESSION_DATA = { role: ROLES.ADMIN, id: 'qwe' }
+const MOCK_SESSION_DATA = {
+  role: ROLES.ADMIN,
+  id: '71qafnU7dNefBs8NkpQR',
+  planIds: [
+    'wMiOdTzJOJddd3DZVYSD',
+    'Sz6TIO185wdPQeEtrWhI',
+    '7hhCm0ZiTmD9FJhwDQ8q'
+  ]
+}
 
 const SessionProvider = (props) => {
   // [INTERFACES]
