@@ -39,20 +39,23 @@ const PageWrapper = (props) => {
     inlineHeader,
     fullWidth,
     title,
-    titleProps
+    titleProps,
+    backBtnLeft
   } = props
 
   const actionBlock = (
     <>
-      {inlineHeader && action && <Divider type="vertical" />}
+      {onBack && inlineHeader && !backBtnLeft && action && (
+        <Divider type="vertical" />
+      )}
       {action}
-      {action && <Divider type="vertical" />}
+      {onNext && action && <Divider type="vertical" />}
     </>
   )
 
   const buttonsBlock = (
     <>
-      {onBack && (
+      {onBack && !backBtnLeft && (
         <Col>
           <Back size="large" onClick={onBack} {...backBtnProps}>
             {backBtnProps?.text ?? 'Back'}
@@ -84,9 +87,20 @@ const PageWrapper = (props) => {
         <Row gutter={[8]} mb={3} justify="space-between">
           {inlineHeader ? (
             <>
+              {backBtnLeft && (
+                <Col>
+                  <Back
+                    size="large"
+                    onClick={onBack}
+                    divided
+                    {...backBtnProps}
+                  />
+                </Col>
+              )}
               <Col flex={1}>
                 <HeadingPrimary
                   title={title}
+                  titleSize={2}
                   textAlign="left"
                   {...titleProps}
                 />
