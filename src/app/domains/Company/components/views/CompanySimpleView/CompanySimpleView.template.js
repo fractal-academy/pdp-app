@@ -10,29 +10,30 @@ const { Text } = Typography
  *
  * @comment CompanySimpleView - React component.
  *
- * @since 06 Mar 2021 ( v.0.0.2 ) // LAST-EDIT DATE
+ * @since 15 Mar 2021 ( v.0.0.3 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
 
 const CompanySimpleView = (props) => {
   // [INTERFACES]
-  const { companyId } = props
+  const { name, companyId } = props
 
   // [ADDITIONAL_HOOKS]
   const [company, loading] = useDocumentData(
-    firestore.collection(COLLECTIONS.COMPANIES).doc(companyId)
+    !name && firestore.collection(COLLECTIONS.COMPANIES).doc(companyId)
   )
 
   // [TEMPLATE]
   if (loading) return <Text type="secondary">loading...</Text>
 
-  return <Text type="secondary">{company.name}</Text>
+  return <Text type="secondary">{name || company.name}</Text>
 }
 
 // [PROPTYPES]
 CompanySimpleView.propTypes = {
-  companyId: PropTypes.string.isRequired
+  companyId: PropTypes.string,
+  name: PropTypes.string
 }
 
 export default CompanySimpleView
