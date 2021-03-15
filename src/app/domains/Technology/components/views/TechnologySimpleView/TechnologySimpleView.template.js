@@ -7,7 +7,7 @@ import { Title } from 'antd-styled'
  *
  * @comment TechnologySimpleView - React component.
  *
- * @since 15 Mar 2021 ( v.0.0.6 ) // LAST-EDIT DATE
+ * @since 15 Mar 2021 ( v.0.0.7 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
@@ -17,7 +17,17 @@ const TechnologySimpleView = (props) => {
   const { name, tag } = props
 
   // [TEMPLATE]
-  return <>{tag ? <Tag>{name}</Tag> : <Title level={4}>{name}</Title>}</>
+  return (
+    <>
+      {tag ? (
+        <Tag>{name}</Tag>
+      ) : (
+        <Title level={4} display="inline-flex">
+          {name}
+        </Title>
+      )}
+    </>
+  )
 }
 
 // [PROPTYPES]

@@ -16,14 +16,14 @@ import { MaterialSimpleView } from '~/app/domains/Material/components/views'
  *
  * @comment TechnologyAdvancedView - React component.
  *
- * @since 15 Mar 2021 ( v.0.0.5 ) // LAST-EDIT DATE
+ * @since 15 Mar 2021 ( v.0.06 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
 
 const TechnologyAdvancedView = (props) => {
   // [INTERFACES]
-  const { technologyId } = props
+  const { technologyId, extra } = props
 
   // [ADDITIONAL_HOOKS]
   const [technology, loading] = useDocumentData(
@@ -42,7 +42,8 @@ const TechnologyAdvancedView = (props) => {
       {!loadingMaterial && !loading ? (
         <Card
           title={<TechnologySimpleView name={technology.name} />}
-          shadowless>
+          shadowless
+          extra={extra}>
           <Space size="large">
             {materials?.map((item) => (
               <MaterialSimpleView {...item} />
@@ -58,7 +59,8 @@ const TechnologyAdvancedView = (props) => {
 
 // [PROPTYPES]
 TechnologyAdvancedView.propTypes = {
-  technologyId: PropTypes.string.isRequired
+  technologyId: PropTypes.string.isRequired,
+  extra: PropTypes.node
 }
 
 export default TechnologyAdvancedView
