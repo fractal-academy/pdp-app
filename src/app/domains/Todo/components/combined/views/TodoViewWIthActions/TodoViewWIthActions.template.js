@@ -1,16 +1,16 @@
 import PropTypes from 'prop-types'
 
 /**
- * @info TodoViews (05 Mar 2021) // CREATION DATE
+ * @info TodoViewWIthActions (15 Mar 2021) // CREATION DATE
  *
- * @comment TodoViews - React component.
+ * @comment TodoViewWIthActions - React component.
  *
- * @since 05 Mar 2021 ( v.0.0.1 ) // LAST-EDIT DATE
+ * @since 15 Mar 2021 ( v.0.0.1 ) // LAST-EDIT DATE
  *
- * @return {ReactComponent}
+ * @return {React.FC}
  */
 
-const TodoViews = (props) => {
+const TodoViewWIthActions = () => {
   // [INTERFACES]
   /*
   code sample: 
@@ -41,10 +41,12 @@ const TodoViews = (props) => {
   // [USE_EFFECTS]
 
   // [TEMPLATE]
-  return <div>TodoViews</div>
+  return <div>TodoViewWIthActions</div>
 }
 
 // [PROPTYPES]
-TodoViews.propTypes = {}
+TodoViewWIthActions.propTypes = {
+  props: PropTypes.object
+}
 
-export default TodoViews
+export default TodoViewWIthActions

@@ -14,7 +14,7 @@ const { Text } = Typography
  *
  * @comment PlanAdvancedView - React component.
  *
- * @since 14 Mar 2021 ( v.0.0.2 ) // LAST-EDIT DATE
+ * @since 15 Mar 2021 ( v.0.0.3 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
@@ -34,7 +34,7 @@ const PlanAdvancedView = (props) => {
   return (
     <Box display="flex" justifyContent="space-between">
       <Box display="flex" alignItems="center">
-        <PlanSimpleView planId={plan.id} mr={4} />
+        <PlanSimpleView name={plan.name} mr={4} />
         <Status status={plan.status} />
       </Box>
       <Box>
