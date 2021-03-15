@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types'
 import { TechnologySimpleView } from 'domains/Technology/components/views'
-import { Typography, Space } from 'antd'
+import { Space } from 'antd'
 import { Card } from 'antd-styled'
 import firestore from '~/services/Firebase/firestore/index'
 import {
@@ -8,22 +8,22 @@ import {
   useDocumentData
 } from 'react-firebase-hooks/firestore'
 import { COLLECTIONS } from 'app/constants'
+import { Spinner } from '~/components'
 import { MaterialSimpleView } from '~/app/domains/Material/components/views'
-const { Text } = Typography
 
 /**
  * @info TechnologyAdvancedView (05 Mar 2021) // CREATION DATE
  *
  * @comment TechnologyAdvancedView - React component.
  *
- * @since 14 Mar 2021 ( v.0.0.4 ) // LAST-EDIT DATE
+ * @since 15 Mar 2021 ( v.0.06 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
 
 const TechnologyAdvancedView = (props) => {
   // [INTERFACES]
-  const { technologyId } = props
+  const { technologyId, extra } = props
 
   // [ADDITIONAL_HOOKS]
   const [technology, loading] = useDocumentData(
@@ -37,26 +37,30 @@ const TechnologyAdvancedView = (props) => {
         .where('id', 'in', Object.keys(technology.materialTemplateIds))
   )
 
-  // [TEMPLATE]
-  if (loading || loadingMaterial)
-    return <Text type="secondary">loading...</Text>
-
   return (
-    <Card
-      title={<TechnologySimpleView technologyId={technology.id} />}
-      shadowless>
-      <Space size="large">
-        {materials?.map((item) => (
-          <MaterialSimpleView {...item} />
-        ))}
-      </Space>
-    </Card>
+    <>
+      {!loadingMaterial && !loading ? (
+        <Card
+          title={<TechnologySimpleView name={technology.name} />}
+          shadowless
+          extra={extra}>
+          <Space size="large">
+            {materials?.map((item) => (
+              <MaterialSimpleView {...item} />
+            ))}
+          </Space>
+        </Card>
+      ) : (
+        <Spinner />
+      )}
+    </>
   )
 }
 
 // [PROPTYPES]
 TechnologyAdvancedView.propTypes = {
-  technologyId: PropTypes.string.isRequired
+  technologyId: PropTypes.string.isRequired,
+  extra: PropTypes.node
 }
 
 export default TechnologyAdvancedView

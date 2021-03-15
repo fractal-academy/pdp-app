@@ -8,7 +8,7 @@ const metadata = {
 export default metadata
 
 export const CompanySimpleViewStory = (args) => (
-  <CompanySimpleView companyId="123" {...args} />
+  <CompanySimpleView name="Senseteq" {...args} />
 )
 
 CompanySimpleViewStory.args = {}

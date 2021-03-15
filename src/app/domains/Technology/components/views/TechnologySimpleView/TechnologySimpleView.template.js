@@ -1,38 +1,30 @@
 import PropTypes from 'prop-types'
-import firestore from '~/services/Firebase/firestore/index'
-import { useDocumentData } from 'react-firebase-hooks/firestore'
-import { COLLECTIONS } from 'app/constants'
 import { Tag } from 'antd'
-import { Title, Text } from 'antd-styled'
+import { Title } from 'antd-styled'
 
 /**
  * @info TechnologySimpleView (05 Mar 2021) // CREATION DATE
  *
  * @comment TechnologySimpleView - React component.
  *
- * @since 14 Mar 2021 ( v.0.0.6 ) // LAST-EDIT DATE
+ * @since 15 Mar 2021 ( v.0.0.7 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
 
 const TechnologySimpleView = (props) => {
   // [INTERFACES]
-  const { technologyId, tag } = props
-
-  // [ADDITIONAL_HOOKS]
-  const [technology, loading] = useDocumentData(
-    firestore.collection(COLLECTIONS.TECHNOLOGIES).doc(technologyId)
-  )
+  const { name, tag } = props
 
   // [TEMPLATE]
-  if (loading) return <Text type="secondary">loading...</Text>
-
   return (
     <>
       {tag ? (
-        <Tag>{technology?.name}</Tag>
+        <Tag>{name}</Tag>
       ) : (
-        <Title level={4}>{technology?.name}</Title>
+        <Title level={4} display="inline-flex">
+          {name}
+        </Title>
       )}
     </>
   )
@@ -40,7 +32,7 @@ const TechnologySimpleView = (props) => {
 
 // [PROPTYPES]
 TechnologySimpleView.propTypes = {
-  technologyId: PropTypes.string.isRequired,
+  name: PropTypes.string.isRequired,
   tag: PropTypes.bool
 }
 

@@ -4,7 +4,6 @@ import { Box } from 'antd-styled'
 import { TechnologyAdvancedView } from 'domains/Technology/components/views'
 import { getGrid } from '~/utils'
 import { PlanAdvancedView } from 'domains/Plan/components/views'
-
 const { Panel } = Collapse
 
 /**
@@ -12,7 +11,7 @@ const { Panel } = Collapse
  *
  * @comment PlanSimpleList - React component.
  *
- * @since 14 Mar 2021 ( v.0.0.2 ) // LAST-EDIT DATE
+ * @since 15 Mar 2021 ( v.0.0.3 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
@@ -23,7 +22,7 @@ const PlanSimpleList = (props) => {
 
   // [TEMPLATE]
   return (
-    <Collapse expandIconPosition="right" ghost>
+    <Collapse expandIconPosition="right" ghost accordion>
       {data.map((plan) => (
         <Panel header={<PlanAdvancedView planId={plan.id} />} key={plan.id}>
           <List

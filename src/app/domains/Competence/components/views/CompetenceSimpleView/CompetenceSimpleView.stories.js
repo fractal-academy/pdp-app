@@ -8,7 +8,7 @@ const metadata = {
 export default metadata
 
 export const CompetenceSimpleViewStory = (args) => (
-  <CompetenceSimpleView competenceId="J6LP97iGQwmoStiG6VVE" {...args} />
+  <CompetenceSimpleView name="WebDev" {...args} />
 )
 
 CompetenceSimpleViewStory.args = {}
