@@ -6,6 +6,7 @@ import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons'
 import { LevelTreeSingleSelect } from 'domains/Level/components/combined/tree'
 import { TechnologySingleSelect } from 'domains/Technology/components/selects'
 import { useState } from 'react'
+import { TechnologyAdvancedCascader } from '../../combined/cascader'
 const { Text } = Typography
 /**
  * @info TechnologyAdvancedForm (05 Mar 2021) // CREATION DATE
@@ -23,9 +24,6 @@ const TechnologyAdvancedForm = (props) => {
 
   // [ADDITIONAL_HOOKS]
   const [form] = Form.useForm()
-
-  // [COMPONENT_STATE_HOOKS]
-  const [technologyId, setTechnologyId] = useState()
 
   // [HELPER_FUNCTIONS]
   const onSkillSelect = (value) => {
@@ -63,26 +61,7 @@ const TechnologyAdvancedForm = (props) => {
             {fields.map((field, idx) => (
               <Box display="flex" justifyContent="center">
                 <Space key={field.key} align="baseline">
-                  <TechnologySingleSelect
-                    {...field}
-                    name={[field.name, 'technologyId']}
-                    fieldKey={[field.fieldKey, 'technologyId']}
-                    setTechnologyId={setTechnologyId}
-                  />
-                  <LevelTreeSingleSelect
-                    {...field}
-                    name={[field.name, 'sublevelId']}
-                    fieldKey={[field.fieldKey, 'sublevelId']}
-                    disabled={
-                      !form.getFieldsValue().requiredTechnologies[idx]
-                        ? true
-                        : false
-                    }
-                    technologyId={
-                      form.getFieldsValue().requiredTechnologies[idx]
-                        ?.technologyId
-                    }
-                  />
+                  <TechnologyAdvancedCascader />
                   <MinusCircleOutlined onClick={() => remove(field.name)} />
                 </Space>
               </Box>
@@ -92,7 +71,6 @@ const TechnologyAdvancedForm = (props) => {
                 type="dashed"
                 onClick={() => {
                   add()
-                  setTechnologyId('')
                 }}
                 block
                 icon={<PlusOutlined />}>
