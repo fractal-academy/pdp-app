@@ -1,4 +1,5 @@
 import PropTypes from 'prop-types'
+import { Checkbox } from 'antd'
 
 /**
  * @info TodoViewWIthActions (15 Mar 2021) // CREATION DATE
@@ -10,43 +11,37 @@ import PropTypes from 'prop-types'
  * @return {React.FC}
  */
 
-const TodoViewWIthActions = () => {
+const TodoViewWIthActions = (props) => {
   // [INTERFACES]
-  /*
-  code sample: 
-  const { data } = props
-  */
-
-  // [ADDITIONAL_HOOKS]
-  /*
-  code sample: 
-  const firestore = useFirestore()
-  */
-
-  // [COMPONENT_STATE_HOOKS]
-  /*
-  code sample:
-  const singleton = useRef(true) // references also put here
-  const [state, setState] = useState({})
-  */
+  const { technology } = props
+  const options = []
+  const defaultValue = []
 
   // [HELPER_FUNCTIONS]
-
-  // [COMPUTED_PROPERTIES]
-  /* 
-    code sample: 
-    const userDisplayName = user.firstName + user.lastName
-  */
-
-  // [USE_EFFECTS]
+  const getOptions = () =>
+    Object.keys(technology.todoIds).forEach((todoId) => {
+      options.push({
+        label: technology.todoIds[todoId].name,
+        value: technology.todoIds[todoId].id
+      })
+      technology.todoIds[todoId].isDone &&
+        defaultValue.push(technology.todoIds[todoId].id)
+    })
+  getOptions()
 
   // [TEMPLATE]
-  return <div>TodoViewWIthActions</div>
+  return (
+    <Checkbox.Group
+      options={options && options}
+      defaultValue={defaultValue && defaultValue}
+    />
+  )
 }
 
 // [PROPTYPES]
 TodoViewWIthActions.propTypes = {
-  props: PropTypes.object
+  planId: PropTypes.string.isRequired,
+  technologyId: PropTypes.string.isRequired
 }
 
 export default TodoViewWIthActions
