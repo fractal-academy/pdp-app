@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types'
 import { Box } from 'antd-styled'
-import { Typography } from 'antd'
+import { Typography, Space } from 'antd'
 import { PlanSimpleView } from 'domains/Plan/components/views'
 import { Status } from '~/components'
 import { FieldTimeOutlined } from '@ant-design/icons'
@@ -14,7 +14,7 @@ const { Text } = Typography
  *
  * @comment PlanAdvancedView - React component.
  *
- * @since 14 Mar 2021 ( v.0.0.2 ) // LAST-EDIT DATE
+ * @since 16 Mar 2021 ( v.0.0.4 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
@@ -33,16 +33,16 @@ const PlanAdvancedView = (props) => {
 
   return (
     <Box display="flex" justifyContent="space-between">
-      <Box display="flex" alignItems="center">
-        <PlanSimpleView planId={plan.id} mr={4} />
+      <Space size="large" align="start">
+        <PlanSimpleView name={plan.name} />
         <Status status={plan.status} />
-      </Box>
-      <Box>
+      </Space>
+      <Space align="start">
         <FieldTimeOutlined />
-        <Box ml={1} display="inline-block">
-          <Text>{moment(plan?.period?.end).format('DD.MM.YYYY')}</Text>
-        </Box>
-      </Box>
+        <Text display="inline-block">
+          {moment(plan?.period?.end).format('DD.MM.YYYY')}
+        </Text>
+      </Space>
     </Box>
   )
 }
