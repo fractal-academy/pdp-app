@@ -1,27 +1,20 @@
-import PropTypes from 'prop-types'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, memo } from 'react'
+import { Cascader } from 'antd'
 import { useCollectionData } from 'react-firebase-hooks/firestore'
 import firestore from '~/services/Firebase/firestore'
 import { COLLECTIONS } from 'app/constants'
-import { Cascader } from 'antd'
-import _ from 'lodash'
+
 /**
  * @info TechnologyAdvancedCascader (11 Mar 2021) // CREATION DATE
  *
  * @comment TechnologyAdvancedCascader - React component.
  *
- * @since 11 Mar 2021 ( v.0.0.1 ) // LAST-EDIT DATE
+ * @since 16 Mar 2021 ( v.0.0.3 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
 
-const TechnologyAdvancedCascader = (props) => {
-  // [INTERFACES]
-  /*
-  code sample: 
-  const { data } = props
-  */
-
+const TechnologyAdvancedCascader = () => {
   // [ADDITIONAL_HOOKS]
   const [technologies, loading] = useCollectionData(
     firestore.collection(COLLECTIONS.TECHNOLOGIES)
@@ -61,12 +54,6 @@ const TechnologyAdvancedCascader = (props) => {
     setOptions([...options])
   }
 
-  // [COMPUTED_PROPERTIES]
-  /* 
-    code sample: 
-    const userDisplayName = user.firstName + user.lastName
-  */
-
   // [USE_EFFECTS]
   useEffect(() => {
     let isComponentMount = true
@@ -80,7 +67,9 @@ const TechnologyAdvancedCascader = (props) => {
       }))
       setOptions(techMap)
     }
-    return () => (isComponentMount = false)
+    return () => {
+      isComponentMount = false
+    }
   }, [technologies])
 
   // [TEMPLATE]
@@ -94,9 +83,4 @@ const TechnologyAdvancedCascader = (props) => {
   )
 }
 
-// [PROPTYPES]
-TechnologyAdvancedCascader.propTypes = {
-  props: PropTypes.object
-}
-
-export default TechnologyAdvancedCascader
+export default memo(TechnologyAdvancedCascader)

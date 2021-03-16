@@ -1,90 +1,52 @@
 import PropTypes from 'prop-types'
-import { Box, Save } from 'antd-styled'
-import { Input, Form, Button, Space, Typography } from 'antd'
-import { SkillSingleSelect } from '~/app/domains/Skill/components/selects'
-import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons'
-import { LevelTreeSingleSelect } from 'domains/Level/components/combined/tree'
-import { TechnologySingleSelect } from 'domains/Technology/components/selects'
-import { useState } from 'react'
-import { TechnologyAdvancedCascader } from '../../combined/cascader'
-const { Text } = Typography
+import { Input, Form } from 'antd'
+import { LevelSelectWithCreate } from 'domains/Level/components/combined/selects'
+import { TypeSingleSelect } from 'domains/Type/components/selects'
+
 /**
  * @info TechnologyAdvancedForm (05 Mar 2021) // CREATION DATE
  *
  * @comment TechnologyAdvancedForm - React component.
  *
- * @since 13 Mar 2021 ( v.0.0.4 ) // LAST-EDIT DATE
+ * @since 16 Mar 2021 ( v.0.0.6 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
 
 const TechnologyAdvancedForm = (props) => {
   // [INTERFACES]
-  const { onSubmit } = props
-
-  // [ADDITIONAL_HOOKS]
-  const [form] = Form.useForm()
-
-  // [HELPER_FUNCTIONS]
-  const onSkillSelect = (value) => {
-    form.setFieldsValue({ skillName: value })
-  }
+  const { onSubmit, form, onPresetSelect, ...rest } = props
 
   // [TEMPLATE]
   return (
-    <Form form={form} onFinish={onSubmit}>
+    <Form
+      form={form}
+      onFinish={onSubmit}
+      size="large"
+      requiredMark={false}
+      {...rest}>
       <Form.Item
-        name="technologyName"
-        label="Technology name: "
+        name="name"
+        label="Name:"
         rules={[
           {
             required: true,
-            message: 'Please input technology name'
+            message: 'Please input technology name.'
           }
         ]}>
         <Input placeholder="Enter name of technology" />
       </Form.Item>
-      <Box display="flex" justifyContent="center">
-        <SkillSingleSelect
-          name="skillName"
-          label="Select skill"
-          rules={[{ required: true }]}
-          onSkillSelect={onSkillSelect}
+      <Form.Item name="type" label="Type">
+        <TypeSingleSelect />
+      </Form.Item>
+      <Form.Item
+        name="levelIds"
+        label="Level preset"
+        rules={[{ required: true, message: 'Select levels preset' }]}>
+        <LevelSelectWithCreate
+          onSelect={(presetId) => presetId && onPresetSelect(presetId)}
         />
-      </Box>
-      <Box marginBottom={2} display="flex" justifyContent="center">
-        <Text>Required technologies: </Text>
-      </Box>
-      <Form.List name="requiredTechnologies">
-        {(fields, { add, remove }) => (
-          <>
-            {fields.map((field, idx) => (
-              <Box display="flex" justifyContent="center">
-                <Space key={field.key} align="baseline">
-                  <TechnologyAdvancedCascader />
-                  <MinusCircleOutlined onClick={() => remove(field.name)} />
-                </Space>
-              </Box>
-            ))}
-            <Form.Item>
-              <Button
-                type="dashed"
-                onClick={() => {
-                  add()
-                }}
-                block
-                icon={<PlusOutlined />}>
-                Add field
-              </Button>
-            </Form.Item>
-          </>
-        )}
-      </Form.List>
-      <Box display="flex" justifyContent="flex-end">
-        <Form.Item>
-          <Save htmlType="submit" text="Save" />
-        </Form.Item>
-      </Box>
+      </Form.Item>
     </Form>
   )
 }

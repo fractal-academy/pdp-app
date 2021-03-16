@@ -23,6 +23,7 @@ export const INTERVIEWS = 'interviews'
 // Level block
 export const LEVELS = 'levels'
 export const SUB_LEVELS = 'subLevels'
+export const LEVEL_PRESETS = 'levelPresets'
 
 // Templates block
 export const TECHNOLOGY_TEMPLATES = 'technologyTemplates'

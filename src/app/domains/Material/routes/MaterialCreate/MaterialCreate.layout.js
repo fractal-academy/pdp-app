@@ -71,6 +71,10 @@ const MaterialCreate = () => {
         switch (error.code) {
           case 'storage/unauthorized': {
             message.error("You don't have permissions.")
+            break
+          }
+          default: {
+            message.error(error.code)
           }
         }
 
@@ -116,7 +120,8 @@ const MaterialCreate = () => {
     return false
   }
 
-  const onBack = () => history.goBack()
+  const onBack = () =>
+    history.replace(history.location.state.prevLocation, history.location.state)
   const onNext = () =>
     history.push(ROUTE_PATHS.INTERVIEW_CREATE, { ...history.state, materials })
 
