@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
 import { Form, Spin, Cascader, Button, Space } from 'antd'
 import { Col, Row, Text, Box, Paragraph } from 'antd-styled'
@@ -14,7 +14,7 @@ import firestore from '~/services/Firebase/firestore'
  *
  * @comment TechnologyCreate - React component.
  *
- * @since 16 Mar 2021 ( v.0.0.4 ) // LAST-EDIT DATE
+ * @since 16 Mar 2021 ( v.0.0.5 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
@@ -32,17 +32,17 @@ const TechnologyCreate = () => {
   const [selectedLevel, setSelectedLevel] = useState(
     history.location.state?.selectedLevel || null
   )
+
   // [HELPER_FUNCTIONS]
   const onSubmit = (value) => {
     console.log(value)
+    history.location.state = null
   }
 
   const onNext = () => {
     // history.push(ROUTE_PATHS.TODO_CREATE)
     form.submit()
   }
-
-  // [HELPER_FUNCTIONS]
 
   // TODO sort in right order
   const onPresetSelect = useCallback(async (value) => {
@@ -66,23 +66,44 @@ const TechnologyCreate = () => {
 
       const levelName = levelSnapshot.data().name
 
-      levelMap.push({ label: levelName, value: level, children: [] })
-
-      for (const subLevel of Object.values(selectedPreset.levelIds[level])) {
-        const subLevelSnapshot = await firestore
-          .collection(COLLECTIONS.SUB_LEVELS)
-          .doc(subLevel)
-          .get()
-
-        const subLevelName = subLevelSnapshot.data().name
-        levelMap
-          .find(({ value }) => value === level)
-          .children.push({ label: subLevelName, value: subLevel })
-      }
+      levelMap.push({
+        label: levelName,
+        value: level,
+        isLeaf: false
+      })
     }
     setLevelTree(levelMap)
     setLevelMapLoading(false)
   }, [])
+
+  const loadLevel = async (selectedOptions) => {
+    const targetOption = selectedOptions[selectedOptions.length - 1]
+    targetOption.loading = true
+
+    const presetSnapshot = await firestore
+      .collection(COLLECTIONS.LEVEL_PRESETS)
+      .doc(form.getFieldValue('levelIds'))
+      .get()
+
+    const selectedPreset = presetSnapshot.data()
+    targetOption.children = []
+
+    for (const subLevel of Object.values(
+      selectedPreset.levelIds[targetOption.value]
+    )) {
+      const subLevelSnapshot = await firestore
+        .collection(COLLECTIONS.SUB_LEVELS)
+        .doc(subLevel)
+        .get()
+
+      const subLevelName = subLevelSnapshot.data().name
+
+      targetOption.children.push({ label: subLevelName, value: subLevel })
+    }
+    targetOption.loading = false
+
+    setLevelTree([...levelTree])
+  }
 
   const onLevelSelect = (value) => {
     if (value.length) {
@@ -91,6 +112,17 @@ const TechnologyCreate = () => {
       setSelectedLevel(false)
     }
   }
+
+  const resetLevel = () => {
+    setSelectedLevel(null)
+    setLevelTree([])
+  }
+
+  useEffect(() => {
+    history.location.state?.formData &&
+      form.setFieldsValue(history.location.state.formData)
+  }, [form, history])
+
   // [TEMPLATE]
   return (
     <PageWrapper
@@ -102,6 +134,8 @@ const TechnologyCreate = () => {
           <TechnologyAdvancedForm
             onSubmit={onSubmit}
             form={form}
+            defaultValues={history.location.state?.formData}
+            resetLevel={resetLevel}
             onPresetSelect={onPresetSelect}
           />
         </Col>
@@ -121,28 +155,32 @@ const TechnologyCreate = () => {
               </Paragraph>
               <Form>
                 <Row gutter={[8, 16]}>
-                  <Col flex={1}>
+                  <Col span={24} display="flex" justifyContent="center">
                     <Cascader
                       size="large"
                       placeholder="Select level"
                       onChange={onLevelSelect}
                       options={levelTree}
+                      loadData={loadLevel}
+                      defaultValue={Object.values(selectedLevel)}
                     />
                   </Col>
                   {selectedLevel && (
                     <>
-                      <Col flex={1}>
+                      <Col span={24} display="flex" justifyContent="center">
                         <Box display="flex" justifyContent="flex-end">
                           <Space>
                             <Button
                               size="large"
-                              onClick={() =>
+                              onClick={() => {
+                                const formData = form.getFieldsValue()
                                 history.push(ROUTE_PATHS.MATERIAL_CREATE, {
                                   selectedLevel,
                                   levelTree,
+                                  formData,
                                   prevLocation: history.location.pathname
                                 })
-                              }>
+                              }}>
                               Add materials
                             </Button>
                             <Button
@@ -155,6 +193,17 @@ const TechnologyCreate = () => {
                                 })
                               }>
                               Add todos
+                            </Button>
+                            <Button
+                              size="large"
+                              onClick={() =>
+                                history.push(ROUTE_PATHS.INTERVIEW_CREATE, {
+                                  selectedLevel,
+                                  levelTree,
+                                  prevLocation: history.location.pathname
+                                })
+                              }>
+                              Add Interview
                             </Button>
                           </Space>
                         </Box>

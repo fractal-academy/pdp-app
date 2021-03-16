@@ -7,13 +7,14 @@ import { LevelModalWithForm } from 'domains/Level/components/combined/modals'
 import { EditOutlined, PlusOutlined } from '@ant-design/icons'
 import firestore from '~/services/Firebase/firestore'
 import { COLLECTIONS } from 'app/constants'
+import { TYPES_VALUES } from '~/constants'
 
 /**
  * @info LevelSelectWithCreate (15 Mar 2021) // CREATION DATE
  *
  * @comment LevelSelectWithCreate - React component.
  *
- * @since 15 Mar 2021 ( v.0.0.2 ) // LAST-EDIT DATE
+ * @since 16 Mar 2021 ( v.0.0.4 ) // LAST-EDIT DATE
  *
  * @return {React.FC}
  */
@@ -53,9 +54,14 @@ const createLevels = async (levelIds) => {
 }
 
 const LevelSelectWithCreate = (props) => {
+  // [INTERFACES]
+  const { value, levelType, ...rest } = props
+
   // [ADDITIONAL_HOOKS]
   const [presets, loading] = useCollectionData(
-    firestore.collection(COLLECTIONS.LEVEL_PRESETS)
+    firestore
+      .collection(COLLECTIONS.LEVEL_PRESETS)
+      .where('type', '==', levelType)
   )
 
   // [COMPONENT_STATE_HOOKS]
@@ -63,7 +69,6 @@ const LevelSelectWithCreate = (props) => {
 
   // [HELPER_FUNCTIONS]
   const onCreate = async (data) => {
-    console.log(data)
     const { name, type, levelIds } = data
     try {
       const fbLevelIds = await createLevels(levelIds)
@@ -101,7 +106,8 @@ const LevelSelectWithCreate = (props) => {
             </Button>
           </Box>
         )}
-        {...props}>
+        value={!loading && value}
+        {...rest}>
         {presets?.map((levelPreset) => (
           <Select.Option
             key={levelPreset.id}
@@ -138,7 +144,9 @@ const LevelSelectWithCreate = (props) => {
 
 // [PROPTYPES]
 LevelSelectWithCreate.propTypes = {
-  props: PropTypes.object
+  value: PropTypes.string,
+  levelType: PropTypes.oneOf(TYPES_VALUES),
+  rest: PropTypes.object
 }
 
 export default LevelSelectWithCreate

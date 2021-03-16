@@ -1,4 +1,5 @@
 import PropTypes from 'prop-types'
+import { useState } from 'react'
 import { Input, Form } from 'antd'
 import { LevelSelectWithCreate } from 'domains/Level/components/combined/selects'
 import { TypeSingleSelect } from 'domains/Type/components/selects'
@@ -15,7 +16,18 @@ import { TypeSingleSelect } from 'domains/Type/components/selects'
 
 const TechnologyAdvancedForm = (props) => {
   // [INTERFACES]
-  const { onSubmit, form, onPresetSelect, ...rest } = props
+  const {
+    onSubmit,
+    form,
+    defaultValues,
+    onPresetSelect,
+    resetLevel,
+    ...rest
+  } = props
+
+  // [COMPONENT_STATE_HOOKS]
+  const [prevPreset, setPrevPreset] = useState('')
+  const [selectedLevel, setSelectedLevel] = useState(defaultValues.type)
 
   // [TEMPLATE]
   return (
@@ -37,14 +49,28 @@ const TechnologyAdvancedForm = (props) => {
         <Input placeholder="Enter name of technology" />
       </Form.Item>
       <Form.Item name="type" label="Type">
-        <TypeSingleSelect />
+        <TypeSingleSelect
+          onSelect={(value) => {
+            if (value) {
+              setSelectedLevel(value)
+              resetLevel()
+              form.resetFields(['levelIds'])
+            }
+          }}
+        />
       </Form.Item>
       <Form.Item
         name="levelIds"
         label="Level preset"
         rules={[{ required: true, message: 'Select levels preset' }]}>
         <LevelSelectWithCreate
-          onSelect={(presetId) => presetId && onPresetSelect(presetId)}
+          levelType={selectedLevel}
+          onSelect={(presetId) => {
+            if (presetId && presetId !== prevPreset) {
+              setPrevPreset(presetId)
+              onPresetSelect(presetId)
+            }
+          }}
         />
       </Form.Item>
     </Form>
@@ -54,7 +80,9 @@ const TechnologyAdvancedForm = (props) => {
 // [PROPTYPES]
 TechnologyAdvancedForm.propTypes = {
   onSubmit: PropTypes.func,
-  Buttons: PropTypes.func
+  defaultValues: PropTypes.object,
+  onPresetSelect: PropTypes.func,
+  resetLevel: PropTypes.func
 }
 
 export default TechnologyAdvancedForm

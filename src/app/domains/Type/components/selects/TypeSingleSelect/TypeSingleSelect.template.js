@@ -1,5 +1,4 @@
 import PropTypes from 'prop-types'
-import { useEffect } from 'react'
 import { Select } from 'antd'
 import { TYPES, TYPES_VALUES } from '~/constants'
 
@@ -8,7 +7,7 @@ import { TYPES, TYPES_VALUES } from '~/constants'
  *
  * @comment TypeSingleSelect - React component.
  *
- * @since 15 Mar 2021 ( v.0.0.2 ) // LAST-EDIT DATE
+ * @since 16 Mar 2021 ( v.0.0.3 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
@@ -16,11 +15,6 @@ import { TYPES, TYPES_VALUES } from '~/constants'
 const TypeSingleSelect = (props) => {
   // [INTERFACES]
   const { type, ...rest } = props
-
-  // [USE_EFFECTS]
-  useEffect(() => {
-    rest.onChange && rest.onChange(type || TYPES_VALUES[0])
-  }, [])
 
   // [TEMPLATE]
   return (
