@@ -19,6 +19,12 @@ import firestore from '~/services/Firebase/firestore'
  * @return {ReactComponent}
  */
 
+const ACTION_BUTTONS_MAP = [
+  { path: ROUTE_PATHS.MATERIAL_CREATE, text: 'Add materials' },
+  { path: ROUTE_PATHS.TODO_CREATE, text: 'Add todos' },
+  { path: ROUTE_PATHS.INTERVIEW_CREATE, text: 'Add interview' }
+]
+
 const TechnologyCreate = () => {
   // [ADDITIONAL_HOOKS]
   const history = useHistory()
@@ -36,13 +42,10 @@ const TechnologyCreate = () => {
   // [HELPER_FUNCTIONS]
   const onSubmit = (value) => {
     console.log(value)
-    history.location.state = null
+    history.push(history.location.pathname, undefined)
   }
 
-  const onNext = () => {
-    // history.push(ROUTE_PATHS.TODO_CREATE)
-    form.submit()
-  }
+  const onNext = () => form.submit()
 
   // TODO sort in right order
   const onPresetSelect = useCallback(async (value) => {
@@ -82,7 +85,7 @@ const TechnologyCreate = () => {
 
     const presetSnapshot = await firestore
       .collection(COLLECTIONS.LEVEL_PRESETS)
-      .doc(form.getFieldValue('levelIds'))
+      .doc(form.getFieldValue('levelPresetId'))
       .get()
 
     const selectedPreset = presetSnapshot.data()
@@ -180,27 +183,14 @@ const TechnologyCreate = () => {
                       <Col span={24} display="flex" justifyContent="center">
                         <Box display="flex" justifyContent="flex-end">
                           <Space>
-                            <Button
-                              size="large"
-                              onClick={() =>
-                                savePageData(ROUTE_PATHS.MATERIAL_CREATE)
-                              }>
-                              Add materials
-                            </Button>
-                            <Button
-                              size="large"
-                              onClick={() =>
-                                savePageData(ROUTE_PATHS.TODO_CREATE)
-                              }>
-                              Add todos
-                            </Button>
-                            <Button
-                              size="large"
-                              onClick={() =>
-                                savePageData(ROUTE_PATHS.INTERVIEW_CREATE)
-                              }>
-                              Add Interview
-                            </Button>
+                            {ACTION_BUTTONS_MAP.map((data) => (
+                              <Button
+                                key={data.path}
+                                size="large"
+                                onClick={() => savePageData(data.path)}>
+                                {data.text}
+                              </Button>
+                            ))}
                           </Space>
                         </Box>
                       </Col>

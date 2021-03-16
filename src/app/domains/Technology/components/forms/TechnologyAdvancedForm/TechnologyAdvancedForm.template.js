@@ -3,13 +3,14 @@ import { useState } from 'react'
 import { Input, Form } from 'antd'
 import { LevelSelectWithCreate } from 'domains/Level/components/combined/selects'
 import { TypeSingleSelect } from 'domains/Type/components/selects'
+import { TYPES_VALUES } from '~/constants'
 
 /**
  * @info TechnologyAdvancedForm (05 Mar 2021) // CREATION DATE
  *
  * @comment TechnologyAdvancedForm - React component.
  *
- * @since 16 Mar 2021 ( v.0.0.6 ) // LAST-EDIT DATE
+ * @since 17 Mar 2021 ( v.0.0.7 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
@@ -27,7 +28,9 @@ const TechnologyAdvancedForm = (props) => {
 
   // [COMPONENT_STATE_HOOKS]
   const [prevPreset, setPrevPreset] = useState('')
-  const [selectedLevel, setSelectedLevel] = useState(defaultValues.type)
+  const [selectedType, setSelectedType] = useState(
+    defaultValues?.type || form.getFieldValue('type') || TYPES_VALUES[0]
+  )
 
   // [TEMPLATE]
   return (
@@ -39,7 +42,7 @@ const TechnologyAdvancedForm = (props) => {
       {...rest}>
       <Form.Item
         name="name"
-        label="Name:"
+        label="Name"
         rules={[
           {
             required: true,
@@ -48,23 +51,23 @@ const TechnologyAdvancedForm = (props) => {
         ]}>
         <Input placeholder="Enter name of technology" />
       </Form.Item>
-      <Form.Item name="type" label="Type">
+      <Form.Item name="type" initialValue={selectedType} label="Type">
         <TypeSingleSelect
-          onSelect={(value) => {
-            if (value) {
-              setSelectedLevel(value)
+          onSelect={(type) => {
+            if (type) {
+              setSelectedType(type)
               resetLevel()
-              form.resetFields(['levelIds'])
+              form.resetFields(['levelPresetId'])
             }
           }}
         />
       </Form.Item>
       <Form.Item
-        name="levelIds"
+        name="levelPresetId"
         label="Level preset"
         rules={[{ required: true, message: 'Select levels preset' }]}>
         <LevelSelectWithCreate
-          levelType={selectedLevel}
+          levelType={selectedType}
           onSelect={(presetId) => {
             if (presetId && presetId !== prevPreset) {
               setPrevPreset(presetId)

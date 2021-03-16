@@ -33,7 +33,9 @@ const RoleSingleSelect = (props) => {
       size="small"
       bordered={false}>
       {accessRoles.map((role) => (
-        <Select.Option value={role}>{role}</Select.Option>
+        <Select.Option value={role} key={role}>
+          {role}
+        </Select.Option>
       ))}
     </Select>
   )

@@ -7,7 +7,7 @@ import { TYPES, TYPES_VALUES } from '~/constants'
  *
  * @comment TypeSingleSelect - React component.
  *
- * @since 16 Mar 2021 ( v.0.0.3 ) // LAST-EDIT DATE
+ * @since 17 Mar 2021 ( v.0.0.4 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
@@ -20,7 +20,9 @@ const TypeSingleSelect = (props) => {
   return (
     <Select defaultValue={TYPES.HARD} {...rest}>
       {TYPES_VALUES.map((skill) => (
-        <Select.Option value={skill}>{skill}</Select.Option>
+        <Select.Option value={skill} key={skill}>
+          {skill}
+        </Select.Option>
       ))}
     </Select>
   )
