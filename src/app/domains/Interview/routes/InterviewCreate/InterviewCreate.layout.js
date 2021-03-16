@@ -41,7 +41,7 @@ const InterviewCreate = (props) => {
     console.log('click')
   }
   const onBack = () => {
-    history.goBack()
+    history.replace(history.location.state.prevLocation, history.location.state)
   }
   // ----------------------------------
 

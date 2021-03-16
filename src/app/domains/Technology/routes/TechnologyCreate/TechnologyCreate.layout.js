@@ -113,6 +113,16 @@ const TechnologyCreate = () => {
     }
   }
 
+  const savePageData = (path) => {
+    const formData = form.getFieldsValue()
+    history.push(path, {
+      selectedLevel,
+      levelTree,
+      formData,
+      prevLocation: history.location.pathname
+    })
+  }
+
   const resetLevel = () => {
     setSelectedLevel(null)
     setLevelTree([])
@@ -172,36 +182,22 @@ const TechnologyCreate = () => {
                           <Space>
                             <Button
                               size="large"
-                              onClick={() => {
-                                const formData = form.getFieldsValue()
-                                history.push(ROUTE_PATHS.MATERIAL_CREATE, {
-                                  selectedLevel,
-                                  levelTree,
-                                  formData,
-                                  prevLocation: history.location.pathname
-                                })
-                              }}>
+                              onClick={() =>
+                                savePageData(ROUTE_PATHS.MATERIAL_CREATE)
+                              }>
                               Add materials
                             </Button>
                             <Button
                               size="large"
                               onClick={() =>
-                                history.push(ROUTE_PATHS.TODO_CREATE, {
-                                  selectedLevel,
-                                  levelTree,
-                                  prevLocation: history.location.pathname
-                                })
+                                savePageData(ROUTE_PATHS.TODO_CREATE)
                               }>
                               Add todos
                             </Button>
                             <Button
                               size="large"
                               onClick={() =>
-                                history.push(ROUTE_PATHS.INTERVIEW_CREATE, {
-                                  selectedLevel,
-                                  levelTree,
-                                  prevLocation: history.location.pathname
-                                })
+                                savePageData(ROUTE_PATHS.INTERVIEW_CREATE)
                               }>
                               Add Interview
                             </Button>

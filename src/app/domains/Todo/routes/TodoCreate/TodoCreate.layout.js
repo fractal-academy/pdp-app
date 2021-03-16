@@ -42,7 +42,7 @@ const TodoCreate = () => {
     history.push(ROUTE_PATHS.MATERIAL_CREATE)
   }
   const onBack = () => {
-    history.goBack()
+    history.replace(history.location.state.prevLocation, history.location.state)
   }
   // -----------------------------
 
