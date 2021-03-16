@@ -1,9 +1,9 @@
 import PropTypes from 'prop-types'
-import { List, Collapse } from 'antd'
-import { Box } from 'antd-styled'
-import { TechnologyAdvancedView } from 'domains/Technology/components/views'
-import { getGrid } from '~/utils'
+import { Collapse } from 'antd'
+import { TechnologyAdvancedList } from 'domains/Technology/components/lists'
 import { PlanAdvancedView } from 'domains/Plan/components/views'
+
+import { COLLECTIONS } from 'app/constants'
 const { Panel } = Collapse
 
 /**
@@ -11,33 +11,32 @@ const { Panel } = Collapse
  *
  * @comment PlanSimpleList - React component.
  *
- * @since 15 Mar 2021 ( v.0.0.3 ) // LAST-EDIT DATE
+ * @since 16 Mar 2021 ( v.0.0.4) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
 
 const PlanSimpleList = (props) => {
   // [INTERFACES]
-  const { data } = props
+  const { plans, setActivePlanId } = props
+
+  // [HELPER_FUNCTIONS]
+  const onPlanChange = (planId) => {
+    setActivePlanId(planId)
+  }
 
   // [TEMPLATE]
   return (
-    <Collapse expandIconPosition="right" ghost accordion>
-      {data.map((plan) => (
+    <Collapse
+      expandIconPosition="right"
+      ghost
+      accordion
+      onChange={onPlanChange}>
+      {plans.map((plan) => (
         <Panel header={<PlanAdvancedView planId={plan.id} />} key={plan.id}>
-          <List
-            grid={{
-              gutter: 16,
-              ...getGrid({ xs: 1 })
-            }}
-            dataSource={Object.keys(plan.technologyIds)}
-            renderItem={(technology) => (
-              <List.Item>
-                <Box p={10}>
-                  <TechnologyAdvancedView technologyId={technology} />
-                </Box>
-              </List.Item>
-            )}
+          <TechnologyAdvancedList
+            refCollectionTechnologies={`${COLLECTIONS.PLANS}/${plan.id}/${COLLECTIONS.TECHNOLOGIES}`}
+            refCollectionMaterials={`${COLLECTIONS.PLANS}/${plan.id}/${COLLECTIONS.MATERIALS}`}
           />
         </Panel>
       ))}
@@ -47,7 +46,8 @@ const PlanSimpleList = (props) => {
 
 // [PROPTYPES]
 PlanSimpleList.propTypes = {
-  data: PropTypes.array.isRequired
+  plans: PropTypes.array.isRequired,
+  setActivePlanId: PropTypes.func.isRequired
 }
 
 export default PlanSimpleList
