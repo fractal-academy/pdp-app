@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import { TodoSimpleForm } from 'domains/Todo/components/forms'
 import { TodoSimpleList } from 'domains/Todo/components/lists'
@@ -12,7 +12,7 @@ import { COLLECTIONS } from 'app/constants'
  *
  * @comment TodoCreate - React component.
  *
- * @since 17 Mar 2021 ( v.0.0.6 ) // LAST-EDIT DATE
+ * @since 17 Mar 2021 ( v.0.0.7 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
@@ -23,7 +23,7 @@ const TodoCreate = () => {
 
   const historyState = history.location.state
   const currentLevels = historyState.selectedLevel
-  let currentLevelTodos = []
+  let currentLevelTodos
 
   // Check if there are already exist todos for currentLevels
   if (historyState?.todoTemplates) {
@@ -34,7 +34,7 @@ const TodoCreate = () => {
   }
 
   // [COMPONENT_STATE_HOOKS]
-  const [todos, setTodos] = useState(currentLevelTodos || [])
+  const [todos, setTodos] = useState([])
   const [todoAddLoading, setTodoAddLoading] = useState(false)
   const [editTodo, setEditTodo] = useState(false)
 
@@ -81,11 +81,13 @@ const TodoCreate = () => {
   const onSave = () => {
     const { levelId, subLevelId } = historyState.selectedLevel
     if (todos.length) {
-      let currentLevelTodos = { [subLevelId]: todos.id }
+      const todoIds = todos.map((todo) => todo.id)
+      let currentLevelTodos = { [subLevelId]: todoIds }
+
       if (historyState?.todoTemplates) {
         currentLevelTodos = {
           ...historyState?.todoTemplates[levelId],
-          [subLevelId]: todos.id
+          [subLevelId]: todoIds
         }
       }
 
@@ -121,6 +123,25 @@ const TodoCreate = () => {
     history.push(historyState.prevLocation, historyState)
   }
   // ----------------------------------
+
+  // [USE_EFFECTS]
+  useEffect(() => {
+    // todo need loading
+    // refactor to custom hook
+    const fetchTodos = async () => {
+      const todosSnapshot = await firestore
+        .collection(COLLECTIONS.TODO_TEMPLATES)
+        .where('id', 'in', currentLevelTodos)
+        .get()
+      const todos = todosSnapshot.docs.map((item) => {
+        const data = item.data()
+        return { id: data.id, name: data.name }
+      })
+      setTodos(todos)
+    }
+
+    currentLevelTodos?.length && fetchTodos()
+  }, [currentLevelTodos])
 
   // [TEMPLATE]
   return (
