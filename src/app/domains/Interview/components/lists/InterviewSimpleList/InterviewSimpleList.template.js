@@ -56,10 +56,16 @@ const InterviewSimpleList = (props) => {
           <List.Item
             actions={[
               <Edit
+                shape="default"
+                tooltip="Edit"
+                type="text"
                 icon={<EditOutlined />}
                 onClick={() => onEdit(question, idx)}
               />,
               <Remove
+                shape="default"
+                tooltip="Remove"
+                type="text"
                 onClick={() => setEditQuestion(false)}
                 icon={<DeleteOutlined />}
                 onSubmit={() => onDeleteQuestion(idx)}

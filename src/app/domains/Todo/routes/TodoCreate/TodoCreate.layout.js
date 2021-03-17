@@ -26,7 +26,7 @@ const TodoCreate = () => {
   // Check if there are already exist todos for currentLevels
   if (historyState?.todoTemplates) {
     currentLevelTodos =
-      historyState.todoTemplates[currentLevels.levelId][
+      historyState.todoTemplates?.[currentLevels.levelId]?.[
         currentLevels.subLevelId
       ]
   }
@@ -49,10 +49,9 @@ const TodoCreate = () => {
   }
 
   // -- Header step button functions --
-  const onNext = () => {
+  const onSave = () => {
+    const { levelId, subLevelId } = historyState.selectedLevel
     if (todos.length) {
-      const { levelId, subLevelId } = historyState.selectedLevel
-
       let currentLevelTodos = { [subLevelId]: todos }
       if (historyState?.todoTemplates) {
         currentLevelTodos = {
@@ -69,6 +68,14 @@ const TodoCreate = () => {
         }
       })
     }
+    // If there are no todos delete empty object from history state
+    if (historyState?.todoTemplates) {
+      delete historyState?.todoTemplates[levelId][subLevelId]
+      // Check if there was last item is this level delete level object
+      if (!Object.values(historyState?.todoTemplates[levelId]).length) {
+        delete historyState?.todoTemplates[levelId]
+      }
+    }
     history.push(historyState.prevLocation, historyState)
   }
   const onBack = () => {
@@ -80,8 +87,8 @@ const TodoCreate = () => {
   return (
     <PageWrapper
       title="Create ToDo"
-      nextBtnProps={{ text: 'Apply' }}
-      onNext={onNext}
+      nextBtnProps={{ text: 'Save' }}
+      onNext={onSave}
       onBack={onBack}>
       <TodoSimpleForm onSubmit={onSubmit} editTodo={editTodo} />
       <TodoSimpleList
@@ -92,8 +99,5 @@ const TodoCreate = () => {
     </PageWrapper>
   )
 }
-
-// [PROPTYPES]
-TodoCreate.propTypes = {}
 
 export default TodoCreate

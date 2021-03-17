@@ -10,17 +10,29 @@ import _ from 'lodash'
  *
  * @comment InterviewCreate - React component.
  *
- * @since 12 Mar 2021 ( v.0.0.3 ) // LAST-EDIT DATE
+ * @since 17 Mar 2021 ( v.0.0.4 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
 
-const InterviewCreate = (props) => {
+const InterviewCreate = () => {
   // [ADDITIONAL_HOOKS]
   const history = useHistory()
 
+  const historyState = history.location.state
+  const currentLevels = historyState.selectedLevel
+  let currentLevelQuestions = []
+
+  // Check if there are already exist todos for currentLevels
+  if (historyState?.interviewTemplates) {
+    currentLevelQuestions =
+      historyState.interviewTemplates?.[currentLevels.levelId]?.[
+        currentLevels.subLevelId
+      ]
+  }
+
   // [COMPONENT_STATE_HOOKS]
-  const [questions, setQuestions] = useState([])
+  const [questions, setQuestions] = useState(currentLevelQuestions || [])
   const [editQuestion, setEditQuestion] = useState(false)
 
   // [HELPER_FUNCTIONS]
@@ -37,11 +49,37 @@ const InterviewCreate = (props) => {
   }
 
   // -- Header step button functions --
-  const onNext = () => {
-    console.log('click')
+  const onSave = () => {
+    const { levelId, subLevelId } = historyState.selectedLevel
+    if (questions.length) {
+      let currentLevelTodos = { [subLevelId]: questions }
+      if (historyState?.interviewTemplates) {
+        currentLevelTodos = {
+          ...historyState?.interviewTemplates[levelId],
+          [subLevelId]: questions
+        }
+      }
+
+      return history.push(historyState.prevLocation, {
+        ...historyState,
+        interviewTemplates: {
+          ...historyState?.interviewTemplates,
+          [levelId]: currentLevelTodos
+        }
+      })
+    }
+    // If there are no interviews delete empty object from history state
+    if (historyState?.interviewTemplates) {
+      delete historyState?.interviewTemplates[levelId][subLevelId]
+      // Check if there was last item is this level delete level object
+      if (!Object.values(historyState?.interviewTemplates[levelId]).length) {
+        delete historyState?.interviewTemplates[levelId]
+      }
+    }
+    history.push(historyState.prevLocation, historyState)
   }
   const onBack = () => {
-    history.replace(history.location.state.prevLocation, history.location.state)
+    history.push(historyState.prevLocation, historyState)
   }
   // ----------------------------------
 
@@ -49,8 +87,9 @@ const InterviewCreate = (props) => {
   return (
     <PageWrapper
       title="Create questions for interview"
-      onBack={onBack}
-      onNext={onNext}>
+      nextBtnProps={{ text: 'Save' }}
+      onNext={onSave}
+      onBack={onBack}>
       <InterviewSimpleForm onSubmit={onSubmit} editQuestion={editQuestion} />
       <InterviewSimpleList
         setQuestions={setQuestions}
@@ -60,8 +99,5 @@ const InterviewCreate = (props) => {
     </PageWrapper>
   )
 }
-
-// [PROPTYPES]
-InterviewCreate.propTypes = {}
 
 export default InterviewCreate
