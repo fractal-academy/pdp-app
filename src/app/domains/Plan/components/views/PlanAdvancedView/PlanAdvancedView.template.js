@@ -1,55 +1,74 @@
 import PropTypes from 'prop-types'
 import { Box } from 'antd-styled'
-import { Typography } from 'antd'
+import { List, Collapse } from 'antd'
+import { Spinner } from '~/components'
+import { TechnologyAdvancedView } from 'domains/Technology/components/views'
+import { getGrid } from '~/utils'
 import { PlanSimpleView } from 'domains/Plan/components/views'
-import { Status } from '~/components'
-import { FieldTimeOutlined } from '@ant-design/icons'
 import firestore from '~/services/Firebase/firestore/index'
-import { useDocumentData } from 'react-firebase-hooks/firestore'
+import { useCollectionData } from 'react-firebase-hooks/firestore'
 import { COLLECTIONS } from 'app/constants'
-import moment from 'moment'
-const { Text } = Typography
+const { Panel } = Collapse
 /**
  * @info PlanAdvancedView (14 Mar 2021) // CREATION DATE
  *
  * @comment PlanAdvancedView - React component.
  *
- * @since 15 Mar 2021 ( v.0.0.3 ) // LAST-EDIT DATE
+ * @since 17 Mar 2021 ( v.0.0.6 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
 
 const PlanAdvancedView = (props) => {
   // [INTERFACES]
-  const { planId } = props
+  const { plan } = props
 
   // [ADDITIONAL_HOOKS]
-  const [plan, loading] = useDocumentData(
-    firestore.collection(COLLECTIONS.PLANS).doc(planId)
+  const [technologies, loadingTechnologies] = useCollectionData(
+    firestore.collection(
+      `${COLLECTIONS.PLANS}/${plan.id}/${COLLECTIONS.TECHNOLOGIES}`
+    )
   )
 
   // [TEMPLATE]
-  if (loading) return <Text type="secondary">loading...</Text>
-
   return (
-    <Box display="flex" justifyContent="space-between">
-      <Box display="flex" alignItems="center">
-        <PlanSimpleView name={plan.name} mr={4} />
-        <Status status={plan.status} />
-      </Box>
-      <Box>
-        <FieldTimeOutlined />
-        <Box ml={1} display="inline-block">
-          <Text>{moment(plan?.period?.end).format('DD.MM.YYYY')}</Text>
-        </Box>
-      </Box>
-    </Box>
+    <Panel
+      header={
+        <PlanSimpleView
+          name={plan.name}
+          status={plan.status}
+          period={plan.period}
+        />
+      }
+      key={plan.id}>
+      {loadingTechnologies ? (
+        <Spinner />
+      ) : (
+        <List
+          grid={{
+            gutter: 16,
+            ...getGrid({ xs: 1 })
+          }}
+          dataSource={Object.values(technologies)}
+          renderItem={(technology) => (
+            <List.Item>
+              <Box p={10}>
+                <TechnologyAdvancedView
+                  technologyId={technology.id}
+                  refDoc={`${COLLECTIONS.PLANS}/${plan.id}/${COLLECTIONS.TECHNOLOGIES}/${technology.id}`}
+                />
+              </Box>
+            </List.Item>
+          )}
+        />
+      )}
+    </Panel>
   )
 }
 
 // [PROPTYPES]
 PlanAdvancedView.propTypes = {
-  planId: PropTypes.string.isRequired
+  plan: PropTypes.object.isRequired
 }
 
 export default PlanAdvancedView

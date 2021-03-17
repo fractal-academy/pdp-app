@@ -8,39 +8,43 @@ import { DeleteOutlined, EditOutlined } from '@ant-design/icons'
  *
  * @comment TechnologySimpleList - React component.
  *
- * @since 14 Mar 2021 ( v.0.0.3 ) // LAST-EDIT DATE
+ * @since 16 Mar 2021 ( v.0.0.5 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
 
 const TechnologySimpleList = (props) => {
   // [INTERFACES]
-  const { data } = props
+  const { technologies, refCollectionMaterials, extra } = props
 
   // [TEMPLATE]
   return (
     <List
-      grid={{ gutter: 10, column: 3 }}
-      dataSource={data}
-      renderItem={(item) => (
+      grid={{ gutter: 10, column: extra ? 3 : 1 }}
+      dataSource={technologies}
+      renderItem={(technology) => (
         <List.Item>
           <TechnologyAdvancedView
-            {...item}
+            name={technology.name}
+            materialIds={Object.keys(technology.materialIds)}
+            refCollectionMaterials={refCollectionMaterials}
             extra={
-              <Space>
-                <Edit
-                  shape="default"
-                  tooltip="Edit"
-                  type="text"
-                  icon={<EditOutlined />}
-                />
-                <Remove
-                  shape="default"
-                  tooltip="Remove"
-                  type="text"
-                  icon={<DeleteOutlined />}
-                />
-              </Space>
+              extra && (
+                <Space>
+                  <Edit
+                    shape="default"
+                    tooltip="Edit"
+                    type="text"
+                    icon={<EditOutlined />}
+                  />
+                  <Remove
+                    shape="default"
+                    tooltip="Remove"
+                    type="text"
+                    icon={<DeleteOutlined />}
+                  />
+                </Space>
+              )
             }
           />
         </List.Item>
@@ -51,7 +55,9 @@ const TechnologySimpleList = (props) => {
 
 // [PROPTYPES]
 TechnologySimpleList.propTypes = {
-  data: PropTypes.array.isRequired
+  technologies: PropTypes.array.isRequired,
+  refCollectionMaterials: PropTypes.string.isRequired,
+  extra: PropTypes.bool
 }
 
 export default TechnologySimpleList
