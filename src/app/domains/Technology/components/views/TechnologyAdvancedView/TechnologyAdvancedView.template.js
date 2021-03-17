@@ -3,64 +3,51 @@ import { TechnologySimpleView } from 'domains/Technology/components/views'
 import { Space } from 'antd'
 import { Card } from 'antd-styled'
 import firestore from '~/services/Firebase/firestore/index'
-import {
-  useCollectionData,
-  useDocumentData
-} from 'react-firebase-hooks/firestore'
-import { COLLECTIONS } from 'app/constants'
+import { useCollectionData } from 'react-firebase-hooks/firestore'
+import { MaterialSimpleView } from 'domains/Material/components/views'
 import { Spinner } from '~/components'
-import { MaterialSimpleView } from '~/app/domains/Material/components/views'
 
 /**
  * @info TechnologyAdvancedView (05 Mar 2021) // CREATION DATE
  *
  * @comment TechnologyAdvancedView - React component.
  *
- * @since 15 Mar 2021 ( v.0.06 ) // LAST-EDIT DATE
+ * @since 16 Mar 2021 ( v.0.0.7 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
 
 const TechnologyAdvancedView = (props) => {
   // [INTERFACES]
-  const { technologyId, extra } = props
+  const { extra, name, materialIds, refCollectionMaterials } = props
 
   // [ADDITIONAL_HOOKS]
-  const [technology, loading] = useDocumentData(
-    firestore.collection(COLLECTIONS.TECHNOLOGIES).doc(technologyId)
+  const [materials, loading] = useCollectionData(
+    firestore.collection(refCollectionMaterials).where('id', 'in', materialIds)
   )
 
-  const [materials, loadingMaterial] = useCollectionData(
-    !loading &&
-      firestore
-        .collection(COLLECTIONS.MATERIALS)
-        .where('id', 'in', Object.keys(technology.materialTemplateIds))
-  )
-
+  // [TEMPLATE]
   return (
-    <>
-      {!loadingMaterial && !loading ? (
-        <Card
-          title={<TechnologySimpleView name={technology.name} />}
-          shadowless
-          extra={extra}>
-          <Space size="large">
-            {materials?.map((item) => (
-              <MaterialSimpleView {...item} />
-            ))}
-          </Space>
-        </Card>
-      ) : (
+    <Card title={<TechnologySimpleView name={name} />} shadowless extra={extra}>
+      {loading ? (
         <Spinner />
+      ) : (
+        <Space size="large">
+          {materials.map((item) => (
+            <MaterialSimpleView {...item} />
+          ))}
+        </Space>
       )}
-    </>
+    </Card>
   )
 }
 
 // [PROPTYPES]
 TechnologyAdvancedView.propTypes = {
-  technologyId: PropTypes.string.isRequired,
-  extra: PropTypes.node
+  refCollectionMaterials: PropTypes.string.isRequired,
+  extra: PropTypes.node,
+  materialIds: PropTypes.array.isRequired,
+  name: PropTypes.string
 }
 
 export default TechnologyAdvancedView

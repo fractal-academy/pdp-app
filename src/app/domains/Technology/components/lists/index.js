@@ -1,2 +1,3 @@
 import { TechnologySimpleList } from './TechnologySimpleList'
-export { TechnologySimpleList }
+import { TechnologyAdvancedList } from './TechnologyAdvancedList'
+export { TechnologySimpleList, TechnologyAdvancedList }

@@ -1,2 +1,3 @@
 import { TodoSimpleList } from './TodoSimpleList'
-export { TodoSimpleList }
+import { TodoAdvancedList } from './TodoAdvancesList'
+export { TodoSimpleList, TodoAdvancedList }

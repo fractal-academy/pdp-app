@@ -1,6 +1,6 @@
-import { TechnologySimpleList } from 'domains/Technology/components/lists'
+import { TechnologyAdvancedList } from 'domains/Technology/components/lists'
 import { useHistory } from 'react-router-dom'
-import { ROUTE_PATHS } from 'app/constants'
+import { ROUTE_PATHS, COLLECTIONS } from 'app/constants'
 import { PageTitle } from '~/components'
 import { Button } from 'antd'
 
@@ -9,7 +9,7 @@ import { Button } from 'antd'
  *
  * @comment TechnologyAll - React component.
  *
- * @since 13 Mar 2021 ( v.0.0.4 ) // LAST-EDIT DATE
+ * @since 17 Mar 2021 ( v.0.0.6 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
@@ -29,11 +29,16 @@ const TechnologyAll = () => {
       </Button>
     )
   }
+
   // [TEMPLATE]
   return (
     <>
       <PageTitle title="Technologies" action={<AddButton />} />
-      <TechnologySimpleList data={[]} />
+      <TechnologyAdvancedList
+        extra
+        refCollectionMaterials={COLLECTIONS.MATERIALS}
+        refCollectionTechnologies={COLLECTIONS.TECHNOLOGIES}
+      />
     </>
   )
 }
