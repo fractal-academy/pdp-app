@@ -5,6 +5,7 @@ import { TodoSimpleList } from 'domains/Todo/components/lists'
 import { PageWrapper } from '~/components/HOC'
 import _ from 'lodash'
 import firestore from '~/services/Firebase/firestore'
+import firebase from 'firebase'
 import { COLLECTIONS } from 'app/constants'
 
 /**
@@ -51,7 +52,8 @@ const TodoCreate = () => {
         const todoData = {
           id: todoRef.id,
           name: value,
-          technologyId: historyState.technologyId
+          technologyId: historyState.technologyId,
+          createAt: firebase.firestore.Timestamp.now()
         }
 
         await collectionRef.doc(todoData.id).set(todoData)
@@ -109,19 +111,6 @@ const TodoCreate = () => {
     }
     history.push(historyState.prevLocation, historyState)
   }
-  const onBack = async () => {
-    try {
-      for (const todo of todos) {
-        await firestore
-          .collection(COLLECTIONS.TODO_TEMPLATES)
-          .doc(todo.id)
-          .delete()
-      }
-    } catch (e) {
-      console.log(e)
-    }
-    history.push(historyState.prevLocation, historyState)
-  }
   // ----------------------------------
 
   // [USE_EFFECTS]
@@ -129,17 +118,25 @@ const TodoCreate = () => {
     // todo need loading
     // refactor to custom hook
     const fetchTodos = async () => {
-      const todosSnapshot = await firestore
-        .collection(COLLECTIONS.TODO_TEMPLATES)
-        .where('id', 'in', currentLevelTodos)
-        .get()
-      const todos = todosSnapshot.docs.map((item) => {
-        const data = item.data()
-        return { id: data.id, name: data.name }
-      })
-      setTodos(todos)
-    }
+      try {
+        const todosSnapshot = await firestore
+          .collection(COLLECTIONS.TODO_TEMPLATES)
+          .where('id', 'in', currentLevelTodos)
+          .get()
+        const todosData = todosSnapshot.docs.map((item) => item.data())
 
+        const todos = _.sortBy(todosData, ({ createAt }) =>
+          createAt.toDate()
+        ).map((item) => ({
+          name: item.name,
+          id: item.id
+        }))
+
+        setTodos(todos)
+      } catch (e) {
+        console.log(e)
+      }
+    }
     currentLevelTodos?.length && fetchTodos()
   }, [currentLevelTodos])
 
@@ -149,7 +146,7 @@ const TodoCreate = () => {
       title="Create ToDo"
       nextBtnProps={{ text: 'Save' }}
       onNext={onSave}
-      onBack={onBack}>
+      onBack={onSave}>
       <TodoSimpleForm
         onSubmit={onSubmit}
         editTodo={editTodo}
