@@ -49,16 +49,32 @@ const SessionSimpleForm = (props) => {
       </Form.Item>
       <Form.Item
         name="password"
+        hasFeedback
         rules={[{ required: true, message: 'Please input your password' }]}>
-        <Input placeholder="Enter password" />
+        <Input.Password placeholder="Enter password" />
       </Form.Item>
       {register && (
         <Form.Item
           name="confirm"
+          dependencies={['password']}
+          hasFeedback
           rules={[
-            { required: true, message: 'Please input your password again' }
+            {
+              required: true,
+              message: 'Please confirm your password!'
+            },
+            ({ getFieldValue }) => ({
+              validator(_, value) {
+                if (!value || getFieldValue('password') === value) {
+                  return Promise.resolve()
+                }
+                return Promise.reject(
+                  new Error('The two passwords that you entered do not match!')
+                )
+              }
+            })
           ]}>
-          <Input placeholder="Enter password again" />
+          <Input.Password placeholder="Enter password again" />
         </Form.Item>
       )}
       <Form.Item>
