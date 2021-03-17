@@ -30,18 +30,14 @@ const TechnologyAll = () => {
     )
   }
 
-  // [COMPUTED_PROPERTIES]
-  const refCollectionMaterials = `${COLLECTIONS.MATERIALS}`
-  const refCollectionTechnologies = `${COLLECTIONS.TECHNOLOGIES}`
-
   // [TEMPLATE]
   return (
     <>
       <PageTitle title="Technologies" action={<AddButton />} />
       <TechnologyAdvancedList
         extra
-        refCollectionMaterials={refCollectionMaterials}
-        refCollectionTechnologies={refCollectionTechnologies}
+        refCollectionMaterials={COLLECTIONS.MATERIALS}
+        refCollectionTechnologies={COLLECTIONS.TECHNOLOGIES}
       />
     </>
   )
