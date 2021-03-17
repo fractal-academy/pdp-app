@@ -11,7 +11,7 @@ import { useDocumentData } from 'react-firebase-hooks/firestore'
  *
  * @comment TodoViewWIthActions - React component.
  *
- * @since 16 Mar 2021 ( v.0.0.3 ) // LAST-EDIT DATE
+ * @since 17 Mar 2021 ( v.0.0.4) // LAST-EDIT DATE
  *
  * @return {React.FC}
  */
@@ -21,7 +21,7 @@ const TodoViewWIthActions = (props) => {
   const { todo, refDocumentTodo, refDocumentTechnology } = props
 
   // [ADDITIONAL_HOOKS]
-  const [technology, loading] = useDocumentData(
+  const [technology] = useDocumentData(
     refDocumentTechnology && firestore.doc(refDocumentTechnology)
   )
 
