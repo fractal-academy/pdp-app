@@ -14,8 +14,6 @@ import { Button } from 'antd'
  * @return {ReactComponent}
  */
 
-const MOCK_DATA = [{ technologyId: 'LCpboRsqU6zvWYRirBOD', skillId: '789' }]
-
 const TechnologyAll = () => {
   // [ADDITIONAL_HOOKS]
   const history = useHistory()
@@ -35,7 +33,7 @@ const TechnologyAll = () => {
   return (
     <>
       <PageTitle title="Technologies" action={<AddButton />} />
-      <TechnologySimpleList data={MOCK_DATA} />
+      <TechnologySimpleList data={[]} />
     </>
   )
 }

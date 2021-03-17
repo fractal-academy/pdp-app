@@ -29,7 +29,7 @@ const ACTION_BUTTONS_MAP = [
 const TechnologyCreate = () => {
   // [ADDITIONAL_HOOKS]
   const history = useHistory()
-  const [form] = Form.useForm()
+  const [mainForm] = Form.useForm()
 
   const historyState = history.location.state
 
@@ -46,7 +46,24 @@ const TechnologyCreate = () => {
     history.push(history.location.pathname, undefined)
   }
 
-  const onNext = () => form.submit()
+  // -- Header step button functions --
+  const onNext = () => mainForm.submit()
+  const onCancel = async () => {
+    try {
+      await firestore
+        .collection(COLLECTIONS.TECHNOLOGIES)
+        .doc(historyState.technologyId)
+        .delete()
+    } catch (e) {
+      console.log(e)
+    }
+    resetLevel()
+
+    //TODO clear todos, interview and materials in FB
+
+    history.push(ROUTE_PATHS.TECHNOLOGIES_ALL, undefined)
+  }
+  // ----------------------------------
 
   // TODO sort in right order
   const onPresetSelect = useCallback(async (value) => {
@@ -86,7 +103,7 @@ const TechnologyCreate = () => {
 
     const presetSnapshot = await firestore
       .collection(COLLECTIONS.LEVEL_PRESETS)
-      .doc(form.getFieldValue('levelPresetId'))
+      .doc(mainForm.getFieldValue('levelPresetId'))
       .get()
 
     const selectedPreset = presetSnapshot.data()
@@ -118,7 +135,7 @@ const TechnologyCreate = () => {
   }
 
   const savePageData = (path) => {
-    const formData = form.getFieldsValue()
+    const formData = mainForm.getFieldsValue()
     history.push(path, {
       ...historyState,
       selectedLevel,
@@ -131,25 +148,46 @@ const TechnologyCreate = () => {
   const resetLevel = () => {
     setSelectedLevel(null)
     setLevelTree([])
+    mainForm.resetFields()
   }
 
+  // [USE_EFFECTS]
   useEffect(() => {
-    historyState?.formData && form.setFieldsValue(historyState.formData)
-  }, [form, historyState])
+    historyState?.formData && mainForm.setFieldsValue(historyState.formData)
+  }, [mainForm, historyState])
 
+  useEffect(() => {
+    //TODO need to set initLoading
+    const initTechnology = async () => {
+      try {
+        const technology = await firestore
+          .collection(COLLECTIONS.TECHNOLOGIES)
+          .add({})
+        history.push(history.location.pathname, {
+          ...historyState,
+          technologyId: technology.id
+        })
+      } catch (e) {
+        console.log(e)
+      }
+    }
+    !historyState?.technologyId && initTechnology()
+  }, [])
   console.log(history)
 
   // [TEMPLATE]
   return (
     <PageWrapper
       title="Create technology"
+      nextBtnProps={{ text: 'Create' }}
+      backBtnProps={{ text: 'Cancel' }}
       onNext={onNext}
-      nextBtnProps={{ text: 'Create' }}>
+      onBack={onCancel}>
       <Row gutter={[8, 16]}>
         <Col span={24}>
           <TechnologyAdvancedForm
             onSubmit={onSubmit}
-            form={form}
+            form={mainForm}
             defaultValues={history.location.state?.formData}
             resetLevel={resetLevel}
             onPresetSelect={onPresetSelect}
@@ -178,7 +216,9 @@ const TechnologyCreate = () => {
                       onChange={onLevelSelect}
                       options={levelTree}
                       loadData={loadLevel}
-                      defaultValue={Object.values(selectedLevel)}
+                      defaultValue={
+                        selectedLevel && Object.values(selectedLevel)
+                      }
                     />
                   </Col>
                   {selectedLevel && (

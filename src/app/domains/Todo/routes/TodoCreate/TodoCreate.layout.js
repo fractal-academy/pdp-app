@@ -4,13 +4,15 @@ import { TodoSimpleForm } from 'domains/Todo/components/forms'
 import { TodoSimpleList } from 'domains/Todo/components/lists'
 import { PageWrapper } from '~/components/HOC'
 import _ from 'lodash'
+import firestore from '~/services/Firebase/firestore'
+import { COLLECTIONS } from 'app/constants'
 
 /**
  * @info TodoCreate (05 Mar 2021) // CREATION DATE
  *
  * @comment TodoCreate - React component.
  *
- * @since 17 Mar 2021 ( v.0.0.5 ) // LAST-EDIT DATE
+ * @since 17 Mar 2021 ( v.0.0.6 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
@@ -33,18 +35,45 @@ const TodoCreate = () => {
 
   // [COMPONENT_STATE_HOOKS]
   const [todos, setTodos] = useState(currentLevelTodos || [])
+  const [todoAddLoading, setTodoAddLoading] = useState(false)
   const [editTodo, setEditTodo] = useState(false)
 
   // [HELPER_FUNCTIONS]
-  const onSubmit = (value) => {
-    value && setTodos([...todos, value])
-    setEditTodo('')
+  const onSubmit = async (value) => {
+    if (value) {
+      setTodoAddLoading(true)
+
+      try {
+        const collectionRef = firestore.collection(COLLECTIONS.TODO_TEMPLATES)
+
+        const todoRef = await collectionRef.add({})
+
+        const todoData = {
+          id: todoRef.id,
+          name: value,
+          technologyId: historyState.technologyId
+        }
+
+        await collectionRef.doc(todoData.id).set(todoData)
+        setTodos([...todos, { name: todoData.name, id: todoData.id }])
+      } catch (e) {
+        console.log(e)
+      }
+      setEditTodo('')
+      setTodoAddLoading(false)
+    }
   }
 
-  const onDeleteTodo = (idx) => {
-    const newTodos = _.remove(todos, (item, index) => {
-      return index !== idx
-    })
+  const onDeleteTodo = async (todoId) => {
+    const newTodos = _.filter(todos, (item) => item.id !== todoId)
+    try {
+      await firestore
+        .collection(COLLECTIONS.TODO_TEMPLATES)
+        .doc(todoId)
+        .delete()
+    } catch (error) {
+      console.log('todo delete', error)
+    }
     setTodos(newTodos)
   }
 
@@ -52,11 +81,11 @@ const TodoCreate = () => {
   const onSave = () => {
     const { levelId, subLevelId } = historyState.selectedLevel
     if (todos.length) {
-      let currentLevelTodos = { [subLevelId]: todos }
+      let currentLevelTodos = { [subLevelId]: todos.id }
       if (historyState?.todoTemplates) {
         currentLevelTodos = {
           ...historyState?.todoTemplates[levelId],
-          [subLevelId]: todos
+          [subLevelId]: todos.id
         }
       }
 
@@ -78,10 +107,20 @@ const TodoCreate = () => {
     }
     history.push(historyState.prevLocation, historyState)
   }
-  const onBack = () => {
+  const onBack = async () => {
+    try {
+      for (const todo of todos) {
+        await firestore
+          .collection(COLLECTIONS.TODO_TEMPLATES)
+          .doc(todo.id)
+          .delete()
+      }
+    } catch (e) {
+      console.log(e)
+    }
     history.push(historyState.prevLocation, historyState)
   }
-  // -----------------------------
+  // ----------------------------------
 
   // [TEMPLATE]
   return (
@@ -90,7 +129,11 @@ const TodoCreate = () => {
       nextBtnProps={{ text: 'Save' }}
       onNext={onSave}
       onBack={onBack}>
-      <TodoSimpleForm onSubmit={onSubmit} editTodo={editTodo} />
+      <TodoSimpleForm
+        onSubmit={onSubmit}
+        editTodo={editTodo}
+        loading={todoAddLoading}
+      />
       <TodoSimpleList
         setTodos={setTodos}
         todos={todos}
