@@ -58,7 +58,7 @@ const TodoAdvancedList = (props) => {
       ) : (
         technologies.map((technology) => (
           <Box py={2}>
-            {technology.todoIds && (
+            {technology.todoIds.length && (
               <>
                 <Title level={5} style={{ color: 'white' }}>
                   {technology.name}
