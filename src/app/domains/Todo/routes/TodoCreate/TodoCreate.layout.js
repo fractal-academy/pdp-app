@@ -53,6 +53,7 @@ const TodoCreate = () => {
           id: todoRef.id,
           name: value,
           technologyId: historyState.technologyId,
+          levelId: currentLevels.subLevelId,
           createAt: firebase.firestore.Timestamp.now()
         }
 
