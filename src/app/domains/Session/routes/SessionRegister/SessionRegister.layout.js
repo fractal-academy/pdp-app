@@ -1,27 +1,22 @@
-import PropTypes from 'prop-types'
-
+import { SessionSimpleForm } from 'domains/Session/components/forms'
+import { Box, Title, Row, Col } from 'antd-styled'
+import { Button } from 'antd'
+import { getGrid } from '~/utils'
+import { useHistory } from 'react-router-dom'
+import { ROUTE_PATHS } from 'app/constants'
 /**
  * @info SessionRegister (05 Mar 2021) // CREATION DATE
  *
  * @comment SessionRegister - React component.
  *
- * @since 05 Mar 2021 ( v.0.0.1 ) // LAST-EDIT DATE
+ * @since 17 Mar 2021 ( v.0.0.1 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
 
-const SessionRegister = (props) => {
-  // [INTERFACES]
-  /*
-  code sample: 
-  const { data } = props
-  */
-
+const SessionRegister = () => {
   // [ADDITIONAL_HOOKS]
-  /*
-  code sample: 
-  const firestore = useFirestore()
-  */
+  const history = useHistory()
 
   // [COMPONENT_STATE_HOOKS]
   /*
@@ -41,10 +36,25 @@ const SessionRegister = (props) => {
   // [USE_EFFECTS]
 
   // [TEMPLATE]
-  return <div>SessionRegister</div>
+  return (
+    <Row gutter={[8, 16]} justify="center">
+      <Col {...getGrid({ xs: 16, sm: 14, md: 10, lg: 9, xl: 7 })}>
+        <Box display="flex" justifyContent="center" flexDirection="column">
+          <Box mb={3}>
+            <Title level={3} display="flex" justifyContent="center">
+              Sign in
+            </Title>
+          </Box>
+          <SessionSimpleForm register />
+          <Button
+            type="link"
+            onClick={() => history.push(ROUTE_PATHS.SESSION_LOGIN)}>
+            Do you have account?
+          </Button>
+        </Box>
+      </Col>
+    </Row>
+  )
 }
-
-// [PROPTYPES]
-SessionRegister.propTypes = {}
 
 export default SessionRegister
