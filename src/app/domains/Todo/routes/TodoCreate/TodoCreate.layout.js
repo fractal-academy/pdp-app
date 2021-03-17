@@ -4,14 +4,13 @@ import { TodoSimpleForm } from 'domains/Todo/components/forms'
 import { TodoSimpleList } from 'domains/Todo/components/lists'
 import { PageWrapper } from '~/components/HOC'
 import _ from 'lodash'
-import { ROUTE_PATHS } from 'app/constants'
 
 /**
  * @info TodoCreate (05 Mar 2021) // CREATION DATE
  *
  * @comment TodoCreate - React component.
  *
- * @since 10 Mar 2021 ( v.0.0.4 ) // LAST-EDIT DATE
+ * @since 17 Mar 2021 ( v.0.0.5 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
@@ -20,8 +19,20 @@ const TodoCreate = () => {
   // [ADDITIONAL_HOOKS]
   const history = useHistory()
 
+  const historyState = history.location.state
+  const currentLevels = historyState.selectedLevel
+  let currentLevelTodos = []
+
+  // Check if there are already exist todos for currentLevels
+  if (historyState?.todoTemplates) {
+    currentLevelTodos =
+      historyState.todoTemplates[currentLevels.levelId][
+        currentLevels.subLevelId
+      ]
+  }
+
   // [COMPONENT_STATE_HOOKS]
-  const [todos, setTodos] = useState([])
+  const [todos, setTodos] = useState(currentLevelTodos || [])
   const [editTodo, setEditTodo] = useState(false)
 
   // [HELPER_FUNCTIONS]
@@ -39,16 +50,39 @@ const TodoCreate = () => {
 
   // -- Header step button functions --
   const onNext = () => {
-    history.push(ROUTE_PATHS.MATERIAL_CREATE)
+    if (todos.length) {
+      const { levelId, subLevelId } = historyState.selectedLevel
+
+      let currentLevelTodos = { [subLevelId]: todos }
+      if (historyState?.todoTemplates) {
+        currentLevelTodos = {
+          ...historyState?.todoTemplates[levelId],
+          [subLevelId]: todos
+        }
+      }
+
+      return history.push(historyState.prevLocation, {
+        ...historyState,
+        todoTemplates: {
+          ...historyState?.todoTemplates,
+          [levelId]: currentLevelTodos
+        }
+      })
+    }
+    history.push(historyState.prevLocation, historyState)
   }
   const onBack = () => {
-    history.replace(history.location.state.prevLocation, history.location.state)
+    history.push(historyState.prevLocation, historyState)
   }
   // -----------------------------
 
   // [TEMPLATE]
   return (
-    <PageWrapper title="Create ToDo" onNext={onNext} onBack={onBack}>
+    <PageWrapper
+      title="Create ToDo"
+      nextBtnProps={{ text: 'Apply' }}
+      onNext={onNext}
+      onBack={onBack}>
       <TodoSimpleForm onSubmit={onSubmit} editTodo={editTodo} />
       <TodoSimpleList
         setTodos={setTodos}

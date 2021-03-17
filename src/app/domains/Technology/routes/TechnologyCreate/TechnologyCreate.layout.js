@@ -6,7 +6,8 @@ import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons'
 import { TechnologyAdvancedForm } from 'domains/Technology/components/forms'
 import { TechnologyAdvancedCascader } from 'domains/Technology/components/combined/cascader'
 import { PageWrapper } from '~/components/HOC'
-import { COLLECTIONS, ROUTE_PATHS } from 'app/constants'
+import { COLLECTIONS } from 'app/constants'
+import * as ROUTE_PATHS from 'app/constants/routePaths'
 import firestore from '~/services/Firebase/firestore'
 
 /**
@@ -14,7 +15,7 @@ import firestore from '~/services/Firebase/firestore'
  *
  * @comment TechnologyCreate - React component.
  *
- * @since 16 Mar 2021 ( v.0.0.5 ) // LAST-EDIT DATE
+ * @since 17 Mar 2021 ( v.0.0.6 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
@@ -30,13 +31,13 @@ const TechnologyCreate = () => {
   const history = useHistory()
   const [form] = Form.useForm()
 
+  const historyState = history.location.state
+
   // [COMPONENT_STATE_HOOKS]
-  const [levelTree, setLevelTree] = useState(
-    history.location.state?.levelTree || []
-  )
+  const [levelTree, setLevelTree] = useState(historyState?.levelTree || [])
   const [levelMapLoading, setLevelMapLoading] = useState(false)
   const [selectedLevel, setSelectedLevel] = useState(
-    history.location.state?.selectedLevel || null
+    historyState?.selectedLevel || null
   )
 
   // [HELPER_FUNCTIONS]
@@ -119,6 +120,7 @@ const TechnologyCreate = () => {
   const savePageData = (path) => {
     const formData = form.getFieldsValue()
     history.push(path, {
+      ...historyState,
       selectedLevel,
       levelTree,
       formData,
@@ -132,9 +134,10 @@ const TechnologyCreate = () => {
   }
 
   useEffect(() => {
-    history.location.state?.formData &&
-      form.setFieldsValue(history.location.state.formData)
-  }, [form, history])
+    historyState?.formData && form.setFieldsValue(historyState.formData)
+  }, [form, historyState])
+
+  console.log(history)
 
   // [TEMPLATE]
   return (
