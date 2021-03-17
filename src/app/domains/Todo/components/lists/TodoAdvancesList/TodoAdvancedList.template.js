@@ -13,7 +13,7 @@ import { Spinner } from '~/components'
  *
  * @comment TodoAdvancedList - React component.
  *
- * @since 17 Mar 2021 ( v.0.0.4) // LAST-EDIT DATE
+ * @since 17 Mar 2021 ( v.0.0.5) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
@@ -58,11 +58,11 @@ const TodoAdvancedList = (props) => {
       ) : (
         technologies.map((technology) => (
           <Box py={2}>
-            {technology.todoIds.length && (
+            <Title level={5} style={{ color: 'white' }}>
+              {technology.name}
+            </Title>
+            {!!Object.keys(technology?.todoIds).length && (
               <>
-                <Title level={5} style={{ color: 'white' }}>
-                  {technology.name}
-                </Title>
                 <TodoList
                   technologyId={technology.id}
                   planId={plan.id}
