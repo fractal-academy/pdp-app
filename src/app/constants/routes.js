@@ -1,4 +1,3 @@
-import { SessionLogin, SessionRegister } from 'domains/Session/routes'
 import { UserAll, UserShow } from 'domains/User/routes'
 import { StudentAll } from 'domains/Student/routes'
 import { CompanyAll, CompanyShow } from 'domains/Company/routes'
@@ -37,14 +36,6 @@ import { ROLES } from '~/constants'
 import * as ROUTE_PATHS from './routePaths'
 
 const ROUTES = {
-  SESSION_LOGIN: {
-    component: SessionLogin,
-    path: ROUTE_PATHS.SESSION_LOGIN
-  },
-  SESSION_REGISTRATION: {
-    component: SessionRegister,
-    path: ROUTE_PATHS.SESSION_REGISTRATION
-  },
   USERS_ALL: {
     component: withContent(withProtect({ roles: [ROLES.ADMIN] })(UserAll)),
     path: ROUTE_PATHS.USERS_ALL,

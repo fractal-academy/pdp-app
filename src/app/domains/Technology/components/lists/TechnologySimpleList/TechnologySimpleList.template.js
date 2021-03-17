@@ -3,12 +3,13 @@ import { List, Space } from 'antd'
 import { TechnologyAdvancedView } from 'domains/Technology/components/views'
 import { Edit, Remove } from 'antd-styled'
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons'
+
 /**
  * @info TechnologySimpleList (05 Mar 2021) // CREATION DATE
  *
  * @comment TechnologySimpleList - React component.
  *
- * @since 16 Mar 2021 ( v.0.0.5 ) // LAST-EDIT DATE
+ * @since 17 Mar 2021 ( v.0.0.6 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
@@ -22,33 +23,35 @@ const TechnologySimpleList = (props) => {
     <List
       grid={{ gutter: 10, column: extra ? 3 : 1 }}
       dataSource={technologies}
-      renderItem={(technology) => (
-        <List.Item>
-          <TechnologyAdvancedView
-            name={technology.name}
-            materialIds={Object.keys(technology.materialIds)}
-            refCollectionMaterials={refCollectionMaterials}
-            extra={
-              extra && (
-                <Space>
-                  <Edit
-                    shape="default"
-                    tooltip="Edit"
-                    type="text"
-                    icon={<EditOutlined />}
-                  />
-                  <Remove
-                    shape="default"
-                    tooltip="Remove"
-                    type="text"
-                    icon={<DeleteOutlined />}
-                  />
-                </Space>
-              )
-            }
-          />
-        </List.Item>
-      )}
+      renderItem={(technology) =>
+        technology.name && (
+          <List.Item>
+            <TechnologyAdvancedView
+              name={technology.name}
+              materialIds={Object.keys(technology.materialIds)}
+              refCollectionMaterials={refCollectionMaterials}
+              extra={
+                extra && (
+                  <Space>
+                    <Edit
+                      shape="default"
+                      tooltip="Edit"
+                      type="text"
+                      icon={<EditOutlined />}
+                    />
+                    <Remove
+                      shape="default"
+                      tooltip="Remove"
+                      type="text"
+                      icon={<DeleteOutlined />}
+                    />
+                  </Space>
+                )
+              }
+            />
+          </List.Item>
+        )
+      }
     />
   )
 }
