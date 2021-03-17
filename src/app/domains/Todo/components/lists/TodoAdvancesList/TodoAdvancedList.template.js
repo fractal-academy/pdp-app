@@ -13,7 +13,7 @@ import { Spinner } from '~/components'
  *
  * @comment TodoAdvancedList - React component.
  *
- * @since 16 Mar 2021 ( v.0.0.3) // LAST-EDIT DATE
+ * @since 17 Mar 2021 ( v.0.0.4) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
@@ -21,13 +21,12 @@ import { Spinner } from '~/components'
 const TodoAdvancedList = (props) => {
   // [INTERFACES]
   const { plan, activePlanId } = props
+  // [COMPUTED_PROPERTIES]
+  const refCollectionTechnologies = `${COLLECTIONS.PLANS}/${plan.id}/${COLLECTIONS.TECHNOLOGIES}`
 
   // [ADDITIONAL_HOOKS]
   const [technologies, loading] = useCollectionData(
-    firestore
-      .collection(COLLECTIONS.PLANS)
-      .doc(plan.id)
-      .collection(COLLECTIONS.TECHNOLOGIES)
+    firestore.collection(refCollectionTechnologies)
   )
 
   // [COMPONENT_STATE_HOOKS]
@@ -35,23 +34,16 @@ const TodoAdvancedList = (props) => {
 
   // [HELPER_FUNCTIONS]
   const addTodo = async (value, technology) => {
-    const id = await firestore
-      .collection(COLLECTIONS.PLANS)
-      .doc(plan.id)
-      .collection(COLLECTIONS.TODOS)
-      .doc().id
-    await firestore
-      .collection(COLLECTIONS.PLANS)
-      .doc(plan.id)
+    const refDocumentPlan = firestore.collection(COLLECTIONS.PLANS).doc(plan.id)
+    const id = await refDocumentPlan.collection(COLLECTIONS.TODOS).doc().id
+    await refDocumentPlan
       .collection(COLLECTIONS.TODOS)
       .doc(id)
       .set({ name: value.target.value, id: id, readOnly: false, isDone: false })
-    firestore
-      .collection(COLLECTIONS.PLANS)
-      .doc(plan.id)
+    refDocumentPlan
       .collection(COLLECTIONS.TECHNOLOGIES)
       .doc(technology.id)
-      .set({ ...technology, todoIds: { ...technology.todoIds, [id]: true } })
+      .set({ todoIds: { ...technology.todoIds, [id]: true } }, { merge: true })
     setNewTodo('')
   }
 
@@ -72,6 +64,7 @@ const TodoAdvancedList = (props) => {
                   {technology.name}
                 </Title>
                 <TodoList
+                  technologyId={technology.id}
                   planId={plan.id}
                   todoIds={Object.keys(technology.todoIds)}
                   ownTodos
@@ -82,6 +75,7 @@ const TodoAdvancedList = (props) => {
                   </Text>
                 )}
                 <TodoList
+                  technologyId={technology.id}
                   planId={plan.id}
                   todoIds={Object.keys(technology.todoIds)}
                 />
@@ -103,15 +97,15 @@ const TodoAdvancedList = (props) => {
 }
 const TodoList = (props) => {
   // [INTERFACES]
-  const { planId, todoIds, ownTodos } = props
+  const { planId, todoIds, ownTodos, technologyId } = props
+
+  // [COMPUTED_PROPERTIES]
+  const refCollectionTodos = `${COLLECTIONS.PLANS}/${planId}/${COLLECTIONS.TODOS}`
+  const refDocumentTechnology = `${COLLECTIONS.PLANS}/${planId}/${COLLECTIONS.TECHNOLOGIES}/${technologyId}`
 
   // [ADDITIONAL_HOOKS]
   const [todos, loading] = useCollectionData(
-    firestore
-      .collection(COLLECTIONS.PLANS)
-      .doc(planId)
-      .collection(COLLECTIONS.TODOS)
-      .where('id', 'in', todoIds)
+    firestore.collection(refCollectionTodos).where('id', 'in', todoIds)
   )
 
   // [TEMPLATE]
@@ -125,7 +119,8 @@ const TodoList = (props) => {
                   todo.readOnly && (
                     <TodoViewWIthActions
                       todo={todo}
-                      refTodoDocument={`${COLLECTIONS.PLANS}/${planId}/${COLLECTIONS.TODOS}/${todo.id}`}
+                      refDocumentTechnology={refDocumentTechnology}
+                      refDocumentTodo={`${refCollectionTodos}/${todo.id}`}
                     />
                   )
               )
@@ -134,7 +129,8 @@ const TodoList = (props) => {
                   !todo.readOnly && (
                     <TodoViewWIthActions
                       todo={todo}
-                      refTodoDocument={`${COLLECTIONS.PLANS}/${planId}/${COLLECTIONS.TODOS}/${todo.id}`}
+                      refDocumentTechnology={refDocumentTechnology}
+                      refDocumentTodo={`${refCollectionTodos}/${todo.id}`}
                     />
                   )
               )}
@@ -154,6 +150,7 @@ TodoAdvancedList.propTypes = {
 TodoList.propTypes = {
   planId: PropTypes.string.isRequired,
   todoIds: PropTypes.string.isRequired,
-  ownTodos: PropTypes.bool
+  ownTodos: PropTypes.bool,
+  technologyId: PropTypes.string
 }
 export default TodoAdvancedList

@@ -4,6 +4,8 @@ import { Checkbox, Space } from 'antd'
 import { Paragraph, Box, Remove } from 'antd-styled'
 import { DeleteOutlined } from '@ant-design/icons'
 import firestore from '~/services/Firebase/firestore/index'
+import { useDocumentData } from 'react-firebase-hooks/firestore'
+
 /**
  * @info TodoViewWIthActions (15 Mar 2021) // CREATION DATE
  *
@@ -16,29 +18,42 @@ import firestore from '~/services/Firebase/firestore/index'
 
 const TodoViewWIthActions = (props) => {
   // [INTERFACES]
-  const { todo, refTodoDocument } = props
+  const { todo, refDocumentTodo, refDocumentTechnology } = props
+
+  // [ADDITIONAL_HOOKS]
+  const [technology, loading] = useDocumentData(
+    refDocumentTechnology && firestore.doc(refDocumentTechnology)
+  )
 
   // [COMPONENT_STATE_HOOKS]
   const [isEdit, setIsEdit] = useState(false)
 
   // [HELPER_FUNCTIONS]
   const onChangeDone = () => {
-    firestore.doc(refTodoDocument).set({
+    firestore.doc(refDocumentTodo).set({
       ...todo,
       isDone: !todo.isDone
     })
   }
 
   const onEditTodo = (name) => {
-    firestore.doc(refTodoDocument).set({
+    firestore.doc(refDocumentTodo).set({
       ...todo,
       name: name
     })
     setIsEdit(false)
   }
 
-  const onDeleteTodo = () => {
-    firestore.doc(refTodoDocument).delete()
+  const onDeleteTodo = async () => {
+    await firestore.doc(refDocumentTodo).delete()
+    const newTodoIds = {}
+
+    for (const item of Object.keys(technology.todoIds)) {
+      if (item !== todo.id) newTodoIds[item] = true
+    }
+    firestore
+      .doc(refDocumentTechnology)
+      .set({ ...technology, todoIds: { ...newTodoIds } })
   }
 
   // [TEMPLATE]
@@ -68,7 +83,7 @@ const TodoViewWIthActions = (props) => {
               tooltip="Remove"
               type="text"
               icon={<DeleteOutlined />}
-              onSubmit={onDeleteTodo}
+              onSubmit={technology && onDeleteTodo}
             />
           )}
         </Box>
@@ -81,7 +96,7 @@ const TodoViewWIthActions = (props) => {
 TodoViewWIthActions.propTypes = {
   todo: PropTypes.string.isRequired,
   technology: PropTypes.string.isRequired,
-  refTodoDocument: PropTypes.string.isRequired
+  refDocumentTodo: PropTypes.string.isRequired
 }
 
 export default TodoViewWIthActions

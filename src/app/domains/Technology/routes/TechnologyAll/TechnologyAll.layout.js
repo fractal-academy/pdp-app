@@ -9,7 +9,7 @@ import { Button } from 'antd'
  *
  * @comment TechnologyAll - React component.
  *
- * @since 16 Mar 2021 ( v.0.0.5 ) // LAST-EDIT DATE
+ * @since 17 Mar 2021 ( v.0.0.6 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
@@ -29,14 +29,19 @@ const TechnologyAll = () => {
       </Button>
     )
   }
+
+  // [COMPUTED_PROPERTIES]
+  const refCollectionMaterials = `${COLLECTIONS.MATERIALS}`
+  const refCollectionTechnologies = `${COLLECTIONS.TECHNOLOGIES}`
+
   // [TEMPLATE]
   return (
     <>
       <PageTitle title="Technologies" action={<AddButton />} />
       <TechnologyAdvancedList
         extra
-        refCollectionMaterials={`${COLLECTIONS.MATERIALS}`}
-        refCollectionTechnologies={`${COLLECTIONS.TECHNOLOGIES}`}
+        refCollectionMaterials={refCollectionMaterials}
+        refCollectionTechnologies={refCollectionTechnologies}
       />
     </>
   )

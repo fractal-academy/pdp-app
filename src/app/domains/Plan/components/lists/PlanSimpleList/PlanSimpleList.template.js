@@ -2,7 +2,6 @@ import PropTypes from 'prop-types'
 import { Collapse } from 'antd'
 import { TechnologyAdvancedList } from 'domains/Technology/components/lists'
 import { PlanAdvancedView } from 'domains/Plan/components/views'
-
 import { COLLECTIONS } from 'app/constants'
 const { Panel } = Collapse
 
@@ -11,7 +10,7 @@ const { Panel } = Collapse
  *
  * @comment PlanSimpleList - React component.
  *
- * @since 16 Mar 2021 ( v.0.0.4) // LAST-EDIT DATE
+ * @since 17 Mar 2021 ( v.0.0.5) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
