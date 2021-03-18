@@ -23,7 +23,7 @@ const InterviewCreate = () => {
 
   const historyState = history.location.state
   const currentLevels = historyState.selectedLevel
-  let currentLevelQuestions = []
+  let currentLevelQuestions
 
   // Check if there are already exist todos for currentLevels
   if (historyState?.interviewTemplates) {

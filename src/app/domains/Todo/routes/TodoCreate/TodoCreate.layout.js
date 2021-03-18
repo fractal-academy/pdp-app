@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import { TodoSimpleForm } from 'domains/Todo/components/forms'
 import { TodoSimpleList } from 'domains/Todo/components/lists'
@@ -13,7 +13,7 @@ import { COLLECTIONS } from 'app/constants'
  *
  * @comment TodoCreate - React component.
  *
- * @since 17 Mar 2021 ( v.0.0.7 ) // LAST-EDIT DATE
+ * @since 18 Mar 2021 ( v.0.0.8 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
@@ -35,7 +35,7 @@ const TodoCreate = () => {
   }
 
   // [COMPONENT_STATE_HOOKS]
-  const [todos, setTodos] = useState([])
+  const [todos, setTodos] = useState(currentLevelTodos || [])
   const [todoAddLoading, setTodoAddLoading] = useState(false)
   const [editTodo, setEditTodo] = useState(false)
 
@@ -84,13 +84,12 @@ const TodoCreate = () => {
   const onSave = () => {
     const { levelId, subLevelId } = historyState.selectedLevel
     if (todos.length) {
-      const todoIds = todos.map((todo) => todo.id)
-      let currentLevelTodos = { [subLevelId]: todoIds }
+      let currentLevelTodos = { [subLevelId]: todos }
 
       if (historyState?.todoTemplates) {
         currentLevelTodos = {
           ...historyState?.todoTemplates[levelId],
-          [subLevelId]: todoIds
+          [subLevelId]: todos
         }
       }
 
@@ -113,33 +112,6 @@ const TodoCreate = () => {
     history.push(historyState.prevLocation, historyState)
   }
   // ----------------------------------
-
-  // [USE_EFFECTS]
-  useEffect(() => {
-    // todo need loading
-    // refactor to custom hook
-    const fetchTodos = async () => {
-      try {
-        const todosSnapshot = await firestore
-          .collection(COLLECTIONS.TODO_TEMPLATES)
-          .where('id', 'in', currentLevelTodos)
-          .get()
-        const todosData = todosSnapshot.docs.map((item) => item.data())
-
-        const todos = _.sortBy(todosData, ({ createAt }) =>
-          createAt.toDate()
-        ).map((item) => ({
-          name: item.name,
-          id: item.id
-        }))
-
-        setTodos(todos)
-      } catch (e) {
-        console.log(e)
-      }
-    }
-    currentLevelTodos?.length && fetchTodos()
-  }, [currentLevelTodos])
 
   // [TEMPLATE]
   return (
