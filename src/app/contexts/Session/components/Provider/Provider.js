@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types'
-import { useReducer } from 'react'
+import { useReducer, useEffect } from 'react'
 import rootReducer from 'contexts/Session/reducer'
 import {
   sessionDispatchContext,
@@ -12,7 +12,7 @@ import { ROLES } from '~/constants'
  *
  * @comment SessionProvider - React context component.
  *
- * @since 08 Mar 2021 ( v.0.0.2 ) // LAST-EDIT DATE
+ * @since 18 Mar 2021 ( v.0.03 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
@@ -29,11 +29,17 @@ const MOCK_SESSION_DATA = {
 
 const SessionProvider = (props) => {
   // [INTERFACES]
-  const { session = MOCK_SESSION_DATA, children, ...rest } = props
+  const { session, children, ...rest } = props
 
   // [COMPONENT_STATE_HOOKS]
-  const [state, dispatch] = useReducer(rootReducer, session)
+  const [state, dispatch] = useReducer(rootReducer, {
+    ...session,
+    loading: false
+  })
 
+  useEffect(() => {
+    console.log(state)
+  }, [state])
   // [TEMPLATES]
   return (
     <sessionDispatchContext.Provider value={dispatch}>

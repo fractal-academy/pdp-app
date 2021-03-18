@@ -18,7 +18,7 @@ import { useState } from 'react'
  *
  * @comment PlanAll - React component.
  *
- * @since 16 Mar 2021 ( v.0.0.4 ) // LAST-EDIT DATE
+ * @since 18 Mar 2021 ( v.0.0.5 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
@@ -30,7 +30,8 @@ const PlanAll = () => {
   // [ADDITIONAL_HOOKS]
   const session = useSession()
   const [plans, loading] = useCollectionData(
-    firestore.collection(COLLECTIONS.PLANS).where('id', 'in', session.planIds)
+    session?.planIds &&
+      firestore.collection(COLLECTIONS.PLANS).where('id', 'in', session.planIds)
   )
   const [activePlan, loadingActivePlan] = useDocumentData(
     activePlanId && firestore.collection(COLLECTIONS.PLANS).doc(activePlanId)
@@ -63,11 +64,13 @@ const PlanAll = () => {
           <Spinner />
         ) : activePlan ? (
           <TodoAdvancedList plan={activePlan} activePlanId={activePlanId} />
-        ) : (
+        ) : plans ? (
           <List
             dataSource={plans}
             renderItem={(plan) => <TodoAdvancedList plan={plan} />}
           />
+        ) : (
+          <Title>You don`t have any plans</Title>
         )}
       </Sider>
     </>

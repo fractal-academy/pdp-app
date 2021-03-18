@@ -7,8 +7,10 @@ import { UserAdvancedView } from 'domains/User/components/views'
 import { ROLES } from '~/constants'
 import * as ROUTE_PATHS from 'app/constants/routePaths'
 import { ROUTE_PATHS as CHAT_ROUTE_PATHS } from 'chat-module/constants'
-import { useSession } from 'contexts/Session/hooks'
+import { useSession, useSessionDispatch } from 'contexts/Session/hooks'
+import TYPES from '~/app/contexts/Session/types'
 import { useRole } from 'contexts/Role/hooks'
+import auth from '~/services/Firebase/auth'
 import * as styles from './Navigation.style'
 
 /**
@@ -16,7 +18,7 @@ import * as styles from './Navigation.style'
  *
  * @comment Navigation - React component.
  *
- * @since 08 Mar 2021 ( v.0.0.5 ) // LAST-EDIT DATE
+ * @since 18 Mar 2021 ( v.0.0.6 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
@@ -72,6 +74,7 @@ const Navigation = () => {
   const session = useSession()
   const { role } = useRole()
   const match = useRouteMatch(ROUTE_PATHS.START_PAGE_MAP[role])
+  const sessionDispatch = useSessionDispatch()
 
   // [COMPONENT_STATE_HOOKS]
   const [selectedMenuItem, setSelectedMenuItem] = useState(
@@ -81,7 +84,17 @@ const Navigation = () => {
   // [HELPER_FUNCTIONS]
   const goToProfile = () =>
     history.push(generatePath(ROUTE_PATHS.USER_SHOW, { id: session.id }))
-
+  const onLogOut = () => {
+    try {
+      auth.signOut()
+    } catch (error) {
+      console.log(error.message)
+    }
+    sessionDispatch({
+      type: TYPES.LOG_OUT
+    })
+    history.push(ROUTE_PATHS.SESSION_LOGIN)
+  }
   // [COMPUTED_PROPERTIES]
   const roleMenu = Object.values(MENU_ITEMS[role])
 
@@ -134,7 +147,8 @@ const Navigation = () => {
               <Menu.Item
                 style={styles.menuItemStyle}
                 icon={<LogoutOutlined />}
-                danger>
+                danger
+                onClick={onLogOut}>
                 Log out
               </Menu.Item>
             </Menu>
