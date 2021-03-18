@@ -13,7 +13,7 @@ import { Form, Input, Button } from 'antd'
 
 const MaterialSimpleForm = (props) => {
   // [INTERFACES]
-  const { onFinish, onFinishFailed } = props
+  const { onFinish, onFinishFailed, loading } = props
 
   // [TEMPLATE]
   return (
@@ -28,11 +28,13 @@ const MaterialSimpleForm = (props) => {
         rules={[
           { required: true, message: 'First enter link to material.' },
           { type: 'url', message: 'You can enter only links here.' }
-        ]}>
-        <Input placeholder="Enter link to material..." />
+        ]}
+        hasFeedback={loading}
+        validateStatus="validating">
+        <Input disabled={loading} placeholder="Enter link to material..." />
       </Form.Item>
       <Form.Item noStyle>
-        <Button htmlType="submit" type="primary">
+        <Button disabled={loading} htmlType="submit" type="primary">
           Add Link
         </Button>
       </Form.Item>
