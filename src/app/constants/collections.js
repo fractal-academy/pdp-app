@@ -19,6 +19,7 @@ export const TECHNOLOGIES = 'technologies'
 export const TODOS = 'todos'
 export const MATERIALS = 'materials'
 export const INTERVIEWS = 'interviews'
+export const QUESTIONS = 'questions'
 
 // Level block
 export const LEVELS = 'levels'

@@ -4,8 +4,8 @@ import { TodoSimpleForm } from 'domains/Todo/components/forms'
 import { TodoSimpleList } from 'domains/Todo/components/lists'
 import { PageWrapper } from '~/components/HOC'
 import _ from 'lodash'
-import firestore from '~/services/Firebase/firestore'
-import firebase from 'firebase'
+import firestore, { getTimestamp } from '~/services/Firebase/firestore'
+
 import { COLLECTIONS } from 'app/constants'
 
 /**
@@ -54,7 +54,7 @@ const TodoCreate = () => {
           name: value,
           technologyId: historyState.technologyId,
           levelId: currentLevels.subLevelId,
-          createAt: firebase.firestore.Timestamp.now()
+          createAt: getTimestamp().now()
         }
 
         await collectionRef.doc(todoData.id).set(todoData)

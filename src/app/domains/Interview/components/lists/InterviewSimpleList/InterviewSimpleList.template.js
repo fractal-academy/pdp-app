@@ -3,13 +3,15 @@ import { List, Input, Form, Col } from 'antd'
 import { Remove, Edit, Box, Text, Row } from 'antd-styled'
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons'
 import { useState, useRef, useEffect } from 'react'
+import firestore from '~/services/Firebase/firestore'
+import { COLLECTIONS } from 'app/constants'
 
 /**
  * @info InterviewSimpleList (05 Mar 2021) // CREATION DATE
  *
  * @comment InterviewSimpleList - React component.
  *
- * @since 11 Mar 2021 ( v.0.0.4 ) // LAST-EDIT DATE
+ * @since 18 Mar 2021 ( v.0.0.5 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
@@ -24,18 +26,31 @@ const InterviewSimpleList = (props) => {
 
   // [COMPONENT_STATE_HOOKS]
   const [editQuestion, setEditQuestion] = useState(false)
+  const [editLoading, setEditLoading] = useState(false)
 
   // [HELPER_FUNCTIONS]
-  const onEdit = (question, idx) => {
-    setEditQuestion({ question, idx })
-  }
-
-  const onSubmit = (value, idx) => {
+  const onSubmit = async (data, id) => {
+    setEditLoading(true)
+    const editQuestionIndex = questions.findIndex(
+      (question) => question.id === id
+    )
     const newQuestions = [...questions]
-    newQuestions[idx] = value.question || editQuestion.question
+    newQuestions[editQuestionIndex] = {
+      name: data.question || editQuestion.name,
+      id
+    }
+
+    try {
+      await firestore
+        .collection(COLLECTIONS.QUESTIONS)
+        .doc(id)
+        .update({ name: data.question })
+    } catch (error) {
+      console.log('question submit', error)
+    }
     setQuestions(newQuestions)
     setEditQuestion(false)
-    form.resetFields()
+    setEditLoading(false)
   }
 
   // [USE_EFFECTS]
@@ -51,7 +66,7 @@ const InterviewSimpleList = (props) => {
     <List
       size="large"
       dataSource={questions}
-      renderItem={(question, idx) => (
+      renderItem={(question) => (
         <Box width="100%">
           <List.Item
             actions={[
@@ -60,7 +75,7 @@ const InterviewSimpleList = (props) => {
                 tooltip="Edit"
                 type="text"
                 icon={<EditOutlined />}
-                onClick={() => onEdit(question, idx)}
+                onClick={() => setEditQuestion(question)}
               />,
               <Remove
                 shape="default"
@@ -68,31 +83,36 @@ const InterviewSimpleList = (props) => {
                 type="text"
                 onClick={() => setEditQuestion(false)}
                 icon={<DeleteOutlined />}
-                onSubmit={() => onDeleteQuestion(idx)}
+                onSubmit={() => onDeleteQuestion(question.id)}
               />
             ]}>
-            {editQuestion.idx === idx ? (
+            {editQuestion.id === question.id ? (
               <Row flex={1}>
                 <Col span={24}>
                   <Form
                     form={form}
-                    onFinish={(question) => onSubmit(question, idx)}>
-                    <Form.Item style={{ flex: 1 }} name="question">
+                    onFinish={(value) => onSubmit(value, question.id)}>
+                    <Form.Item
+                      style={{ flex: 1 }}
+                      name="question"
+                      hasFeedback={editLoading}
+                      validateStatus="validating">
                       <Input.TextArea
+                        disabled={editLoading}
                         onPressEnter={(e) => {
                           e.preventDefault()
                           form.submit()
                         }}
                         rows={1}
                         ref={inputRef}
-                        defaultValue={editQuestion.question}
+                        defaultValue={editQuestion.name}
                       />
                     </Form.Item>
                   </Form>
                 </Col>
               </Row>
             ) : (
-              <Text ellipsis>{question}</Text>
+              <Text ellipsis>{question.name}</Text>
             )}
           </List.Item>
         </Box>

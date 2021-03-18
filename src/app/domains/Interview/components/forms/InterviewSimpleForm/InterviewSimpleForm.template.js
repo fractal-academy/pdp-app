@@ -6,14 +6,14 @@ import { useRef } from 'react'
  *
  * @comment InterviewSimpleForm - React component.
  *
- * @since 11 Mar 2021 ( v.0.0.3 ) // LAST-EDIT DATE
+ * @since 18 Mar 2021 ( v.0.0.4 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
 
 const InterviewSimpleForm = (props) => {
   // [INTERFACES]
-  const { onSubmit } = props
+  const { onSubmit, loading } = props
 
   // [ADDITIONAL_HOOKS]
   const inputRef = useRef(null)
@@ -29,8 +29,16 @@ const InterviewSimpleForm = (props) => {
   // [TEMPLATE]
   return (
     <Form form={form} layout="inline" size="large" onFinish={onFinish}>
-      <Form.Item style={{ flex: 1 }} name="question">
-        <Input placeholder="Enter what student need to know" ref={inputRef} />
+      <Form.Item
+        style={{ flex: 1 }}
+        name="question"
+        hasFeedback={loading}
+        validateStatus="validating">
+        <Input
+          placeholder="Enter what student need to know"
+          ref={inputRef}
+          disabled={loading}
+        />
       </Form.Item>
       <Form.Item noStyle>
         <Button htmlType="submit" type="primary">

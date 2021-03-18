@@ -4,13 +4,15 @@ import { InterviewSimpleList } from 'domains/Interview/components/lists'
 import { InterviewSimpleForm } from 'domains/Interview/components/forms'
 import { PageWrapper } from '~/components/HOC'
 import _ from 'lodash'
+import firestore, { getTimestamp } from '~/services/Firebase/firestore'
+import { COLLECTIONS } from 'app/constants'
 
 /**
  * @info InterviewCreate (05 Mar 2021) // CREATION DATE
  *
  * @comment InterviewCreate - React component.
  *
- * @since 17 Mar 2021 ( v.0.0.4 ) // LAST-EDIT DATE
+ * @since 18 Mar 2021 ( v.0.0.5 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
@@ -34,17 +36,44 @@ const InterviewCreate = () => {
   // [COMPONENT_STATE_HOOKS]
   const [questions, setQuestions] = useState(currentLevelQuestions || [])
   const [editQuestion, setEditQuestion] = useState(false)
+  const [questionAddLoading, setQuestionAddLoading] = useState(false)
 
   // [HELPER_FUNCTIONS]
-  const onSubmit = (value) => {
-    value && setQuestions([...questions, value])
-    setEditQuestion('')
+  const onSubmit = async (value) => {
+    if (value) {
+      setQuestionAddLoading(true)
+
+      try {
+        const collectionRef = firestore.collection(COLLECTIONS.QUESTIONS)
+
+        const questionRef = await collectionRef.add({})
+
+        const questionData = {
+          id: questionRef.id,
+          name: value,
+          createAt: getTimestamp().now()
+        }
+
+        await collectionRef.doc(questionData.id).set(questionData)
+        setQuestions([
+          ...questions,
+          { name: questionData.name, id: questionData.id }
+        ])
+      } catch (e) {
+        console.log(e)
+      }
+      setEditQuestion('')
+      setQuestionAddLoading(false)
+    }
   }
 
-  const onDeleteQuestion = (idx) => {
-    const newQuestions = _.remove(questions, (item, index) => {
-      return index !== idx
-    })
+  const onDeleteQuestion = async (questionId) => {
+    const newQuestions = _.filter(questions, (item) => item.id !== questionId)
+    try {
+      await firestore.collection(COLLECTIONS.QUESTIONS).doc(questionId).delete()
+    } catch (error) {
+      console.log('interview delete', error)
+    }
     setQuestions(newQuestions)
   }
 
@@ -78,9 +107,6 @@ const InterviewCreate = () => {
     }
     history.push(historyState.prevLocation, historyState)
   }
-  const onBack = () => {
-    history.push(historyState.prevLocation, historyState)
-  }
   // ----------------------------------
 
   // [TEMPLATE]
@@ -89,8 +115,12 @@ const InterviewCreate = () => {
       title="Create questions for interview"
       nextBtnProps={{ text: 'Save' }}
       onNext={onSave}
-      onBack={onBack}>
-      <InterviewSimpleForm onSubmit={onSubmit} editQuestion={editQuestion} />
+      onBack={onSave}>
+      <InterviewSimpleForm
+        onSubmit={onSubmit}
+        editQuestion={editQuestion}
+        loading={questionAddLoading}
+      />
       <InterviewSimpleList
         setQuestions={setQuestions}
         questions={questions}
