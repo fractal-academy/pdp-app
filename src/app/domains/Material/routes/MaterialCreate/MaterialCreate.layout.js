@@ -8,14 +8,14 @@ import { MaterialSimpleUpload } from 'domains/Material/components/combined/uploa
 import storage from '~/services/Firebase/storage'
 import firestore from '~/services/Firebase/firestore'
 import { PageWrapper } from '~/components/HOC'
-import { COLLECTIONS, ROUTE_PATHS } from 'app/constants'
+import { COLLECTIONS } from 'app/constants'
 
 /**
  * @info MaterialCreate (05 Mar 2021) // CREATION DATE
  *
  * @comment MaterialCreate - React component.
  *
- * @since 12 Mar 2021 ( v.0.0.7 ) // LAST-EDIT DATE
+ * @since 18 Mar 2021 ( v.0.0.8 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
