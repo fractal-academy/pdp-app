@@ -1,5 +1,6 @@
-import { Content, Sider, Title } from 'antd-styled'
+import { useState } from 'react'
 import { List } from 'antd'
+import { Content, Sider, Title } from 'antd-styled'
 import firestore from '~/services/Firebase/firestore/index'
 import {
   useCollectionData,
@@ -11,8 +12,6 @@ import { TodoAdvancedList } from 'domains/Todo/components/lists'
 import { Spinner } from '~/components'
 import { useSession } from 'contexts/Session/hooks'
 import { PageWrapper } from '~/components/HOC'
-import { useHistory } from 'react-router-dom'
-import { useState } from 'react'
 /**
  * @info PlanAll (05 Mar 2021) // CREATION DATE
  *
@@ -36,7 +35,6 @@ const PlanAll = () => {
   const [activePlan, loadingActivePlan] = useDocumentData(
     activePlanId && firestore.collection(COLLECTIONS.PLANS).doc(activePlanId)
   )
-  const history = useHistory()
 
   // [TEMPLATE]
   return (
@@ -44,15 +42,15 @@ const PlanAll = () => {
       <Content bg="#ffffff" paddingTop={4} paddingX={4}>
         <PageWrapper
           title="My plans"
-          backBtnLeft
           titleProps={{ textAlign: 'left' }}
-          onBack={() => history.goBack()}
           inlineHeader
           fullWidth>
           {loading ? (
             <Spinner />
-          ) : (
+          ) : plans ? (
             <PlanSimpleList plans={plans} setActivePlanId={setActivePlanId} />
+          ) : (
+            <Title level={5}>You don`t have any plans</Title>
           )}
         </PageWrapper>
       </Content>
@@ -64,13 +62,11 @@ const PlanAll = () => {
           <Spinner />
         ) : activePlan ? (
           <TodoAdvancedList plan={activePlan} activePlanId={activePlanId} />
-        ) : plans ? (
+        ) : (
           <List
             dataSource={plans}
             renderItem={(plan) => <TodoAdvancedList plan={plan} />}
           />
-        ) : (
-          <Title>You don`t have any plans</Title>
         )}
       </Sider>
     </>

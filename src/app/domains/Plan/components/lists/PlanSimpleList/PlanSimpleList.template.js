@@ -31,7 +31,7 @@ const PlanSimpleList = (props) => {
       ghost
       accordion
       onChange={onPlanChange}>
-      {plans.map((plan) => (
+      {plans?.map((plan) => (
         <Panel header={<PlanAdvancedView plan={plan} />} key={plan.id}>
           <TechnologyAdvancedList
             refCollectionTechnologies={`${COLLECTIONS.PLANS}/${plan.id}/${COLLECTIONS.TECHNOLOGIES}`}

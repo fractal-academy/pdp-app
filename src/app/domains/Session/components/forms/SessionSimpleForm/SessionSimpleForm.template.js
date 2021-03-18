@@ -30,7 +30,6 @@ const SessionSimpleForm = (props) => {
   const history = useHistory()
   const session = useSession()
   const [form] = Form.useForm()
-  const { setRole } = useRole()
   const sessionDispatch = useSessionDispatch()
 
   // [COMPONENT_STATE_HOOKS]

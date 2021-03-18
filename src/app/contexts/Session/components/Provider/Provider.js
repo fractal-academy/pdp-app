@@ -22,10 +22,7 @@ const SessionProvider = (props) => {
   const { session, children, ...rest } = props
 
   // [COMPONENT_STATE_HOOKS]
-  const [state, dispatch] = useReducer(rootReducer, {
-    ...session,
-    loading: false
-  })
+  const [state, dispatch] = useReducer(rootReducer, session)
 
   useEffect(() => {
     console.log(state)
