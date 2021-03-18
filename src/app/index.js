@@ -28,19 +28,15 @@ const App = () => {
   }
   // [TEMPLATE]
   return (
-    <RoleProvider>
-      <Switch>
-        <Redirect
-          from="/"
-          to={ROUTE_PATHS.START_PAGE_MAP[session.role]}
-          exact
-        />
-        <Route component={SessionLogin} path={ROUTE_PATHS.SESSION_LOGIN} />
-        <Route
-          component={SessionRegister}
-          path={ROUTE_PATHS.SESSION_REGISTRATION}
-        />
-        <Layout>
+    <Switch>
+      <Redirect from="/" to={ROUTE_PATHS.START_PAGE_MAP[session.role]} exact />
+      <Route component={SessionLogin} path={ROUTE_PATHS.SESSION_LOGIN} />
+      <Route
+        component={SessionRegister}
+        path={ROUTE_PATHS.SESSION_REGISTRATION}
+      />
+      <Layout>
+        <RoleProvider>
           <Navigation />
           <Switch>
             {ROUTES_VALUES.map((route) =>
@@ -51,10 +47,10 @@ const App = () => {
               )
             )}
           </Switch>
-        </Layout>
-        <Redirect to={ROUTE_PATHS.NOT_FOUND_PATH} />
-      </Switch>
-    </RoleProvider>
+        </RoleProvider>
+      </Layout>
+      <Redirect to={ROUTE_PATHS.NOT_FOUND_PATH} />
+    </Switch>
   )
 }
 

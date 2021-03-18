@@ -1,6 +1,5 @@
 const TYPES = {
-  LOG_IN: 'log_in',
-  SIGN_UP: 'sign_up',
+  SET_USER: 'set_user',
   SING_OUT: 'sign_out',
   LOADING: 'loading'
 }

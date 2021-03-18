@@ -32,7 +32,6 @@ const SessionSimpleForm = (props) => {
   const [form] = Form.useForm()
   const { setRole } = useRole()
   const sessionDispatch = useSessionDispatch()
-  const [users, loading] = useCollectionData(refCollectionUsers)
 
   // [COMPONENT_STATE_HOOKS]
   /*
@@ -46,23 +45,8 @@ const SessionSimpleForm = (props) => {
     sessionDispatch({ type: TYPES.LOADING, payload: true })
     if (register) {
       try {
-        const userCredential = await auth.createUserWithEmailAndPassword(
-          values.email,
-          values.password
-        )
-        const { email, uid } = userCredential.user
-
-        const role = !loading && users ? ROLES.ADMIN : ROLES.STUDENT
-
-        const user = { email, uid, role }
-        await refCollectionUsers.doc(uid).set(user)
-
-        sessionDispatch({
-          type: TYPES.SIGN_UP,
-          payload: user
-        })
-
-        history.push(ROUTE_PATHS.USER_SHOW)
+        localStorage.setItem('isNewUser', true)
+        await auth.createUserWithEmailAndPassword(values.email, values.password)
       } catch (error) {
         message.error(error.message)
         if (error.code === 'auth/email-already-in-use') {
@@ -71,26 +55,11 @@ const SessionSimpleForm = (props) => {
       }
     } else {
       try {
-        const userCredential = await auth.signInWithEmailAndPassword(
-          values.email,
-          values.password
-        )
-        const user = await refCollectionUsers.doc(userCredential.user.uid).get()
-
-        sessionDispatch({
-          type: TYPES.LOG_IN,
-          payload: user.data()
-        })
-        setRole(user.data().role)
-
-        history.push(
-          ROUTE_PATHS.START_PAGE_MAP[ROLES[user.data().role.toUpperCase()]]
-        )
+        await auth.signInWithEmailAndPassword(values.email, values.password)
       } catch (error) {
-        console.log(error.message)
+        console.log('error message', error.message)
       }
     }
-    sessionDispatch({ type: TYPES.LOADING, payload: false })
   }
   const onReset = () => {
     form.resetFields()

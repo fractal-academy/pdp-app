@@ -12,20 +12,10 @@ import { ROLES } from '~/constants'
  *
  * @comment SessionProvider - React context component.
  *
- * @since 18 Mar 2021 ( v.0.03 ) // LAST-EDIT DATE
+ * @since 18 Mar 2021 ( v.0.0.3 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
-
-const MOCK_SESSION_DATA = {
-  role: ROLES.ADMIN,
-  id: '71qafnU7dNefBs8NkpQR',
-  planIds: [
-    'wMiOdTzJOJddd3DZVYSD',
-    'Sz6TIO185wdPQeEtrWhI',
-    '7hhCm0ZiTmD9FJhwDQ8q'
-  ]
-}
 
 const SessionProvider = (props) => {
   // [INTERFACES]
