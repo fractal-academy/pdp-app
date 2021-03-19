@@ -11,12 +11,12 @@ import {
 import TYPES from '~/app/contexts/Session/types'
 import { ROUTE_PATHS, COLLECTIONS } from 'app/constants'
 import { ROLES } from '~/constants'
+import { message } from 'antd'
 
 const useAuthListener = () => {
   // [ADDITIONAL_HOOKS]
   const [user, userLoading] = useAuthState(auth)
   const history = useHistory()
-  const session = useSession()
   const sessionDispatch = useSessionDispatch()
 
   // [STATE_HOOKS]
@@ -42,13 +42,13 @@ const useAuthListener = () => {
 
         sessionDispatch({ type: TYPES.SET_USER, payload: userData })
 
-        //FIXME redirection on manual route change
         if (!!localStorage.getItem('signIn')) {
           history.push('/')
           localStorage.removeItem('signIn')
         }
       } catch (error) {
-        console.log(error)
+        message.error(error.message)
+        setLoading(false)
       }
       setLoading(false)
     }
@@ -59,10 +59,9 @@ const useAuthListener = () => {
       setLoading(userLoading)
     }
     user && !userLoading && fetchUser()
-    user && Object.keys(session).length && setLoading(false)
   }, [user, userLoading])
 
-  return { loading }
+  return { user, loading }
 }
 
 export default useAuthListener
