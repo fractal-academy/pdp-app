@@ -51,7 +51,7 @@ const TodoCreate = () => {
           id: todoRef.id,
           name: value,
           technologyId: historyState.technologyId,
-          levelId: currentLevels.subLevelId,
+          levelId: currentLevels,
           createAt: getTimestamp().now(),
           readOnly: true
         }

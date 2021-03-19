@@ -27,11 +27,12 @@ const ACTION_BUTTONS_MAP = [
 ]
 
 const getIds = (ref) => {
+  const ids = []
   if (ref) {
     for (const subLevel of Object.keys(ref)) {
-      ref[subLevel] = ref[subLevel].map(({ id }) => id)
+      ids.push(...ref[subLevel].map(({ id }) => id))
     }
-    return ref
+    return ids
   }
 }
 
@@ -55,7 +56,13 @@ const TechnologyCreate = () => {
     setCreationLoading(true)
 
     savePageData(history.location.pathname, value)
-    let technology = { name: value.name, type: value.type }
+    let technology = {
+      name: value.name,
+      type: value.type,
+      materialIds: {},
+      todoIds: {},
+      interviewIds: {}
+    }
     try {
       // Deep copy of object for disconnected from the historyState
       const prepareData = JSON.parse(JSON.stringify(historyState))
@@ -74,7 +81,16 @@ const TechnologyCreate = () => {
         const interviewRef = prepareData?.questionIds?.[level]
 
         getIds(materialsRef)
-        getIds(todosRef)
+
+        if (materialsRef) {
+          getIds(materialsRef).forEach(
+            (id) => (technology.materialIds[id] = true)
+          )
+        }
+        if (todosRef) {
+          getIds(todosRef).forEach((id) => (technology.todoIds[id] = true))
+        }
+
         if (interviewRef) {
           let interview = {
             technologyId: historyState.technologyId,
@@ -93,19 +109,10 @@ const TechnologyCreate = () => {
               .collection(COLLECTIONS.INTERVIEWS)
               .doc(interview.id)
               .set(interview)
-            prepareData.interviewIds[level][subLevel] = interview.id
+
+            technology.interviewIds[interview.id] = true
           }
         }
-      }
-
-      if (historyState?.materialIds) {
-        technology.materialIds = prepareData.materialIds
-      }
-      if (historyState?.todoIds) {
-        technology.todoIds = prepareData.todoIds
-      }
-      if (historyState?.questionIds) {
-        technology.interviewIds = prepareData.interviewIds
       }
 
       await firestore
@@ -249,7 +256,6 @@ const TechnologyCreate = () => {
     !historyState?.technologyId && initTechnology()
   }, [])
 
-  console.log(history)
 
   // [TEMPLATE]
   return (

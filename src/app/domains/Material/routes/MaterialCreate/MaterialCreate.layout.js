@@ -57,6 +57,7 @@ const MaterialCreate = () => {
         name: url,
         type: 'url',
         id: materialRef.id,
+        levelIds: currentLevels,
         readOnly: true
       }
       await collectionRef.doc(materialRef.id).set(link)
@@ -132,6 +133,7 @@ const MaterialCreate = () => {
           url: materialURL,
           type: file.type,
           size: file.size,
+          levelIds: currentLevels,
           readOnly: true
         }
 
