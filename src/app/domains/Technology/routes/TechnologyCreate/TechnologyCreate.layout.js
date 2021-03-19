@@ -69,9 +69,9 @@ const TechnologyCreate = () => {
       technology.levelIds = levelPreset.levelIds
 
       for (const level of Object.keys(levelPreset.levelIds)) {
-        const materialsRef = prepareData?.materialTemplates?.[level]
-        const todosRef = prepareData?.todoTemplates?.[level]
-        const interviewRef = prepareData?.interviewTemplates?.[level]
+        const materialsRef = prepareData?.materialIds?.[level]
+        const todosRef = prepareData?.todoIds?.[level]
+        const interviewRef = prepareData?.questionIds?.[level]
 
         getIds(materialsRef)
         getIds(todosRef)
@@ -80,30 +80,32 @@ const TechnologyCreate = () => {
             technologyId: historyState.technologyId,
             levelIds: { levelId: level }
           }
+          prepareData.interviewIds = {}
+          prepareData.interviewIds[level] = {}
           for (const subLevel of Object.keys(interviewRef)) {
             interview.questionIds = interviewRef[subLevel].map(({ id }) => id)
             interview.levelIds = { ...interview.levelIds, subLevelId: subLevel }
             const interviewSnapshot = await firestore
-              .collection(COLLECTIONS.INTERVIEW_TEMPLATES)
+              .collection(COLLECTIONS.INTERVIEWS)
               .add({})
             interview.id = interviewSnapshot.id
             await firestore
-              .collection(COLLECTIONS.INTERVIEW_TEMPLATES)
+              .collection(COLLECTIONS.INTERVIEWS)
               .doc(interview.id)
               .set(interview)
-            interviewRef[subLevel] = interview.id
+            prepareData.interviewIds[level][subLevel] = interview.id
           }
         }
       }
 
-      if (historyState?.materialTemplates) {
-        technology.materialTemplates = prepareData.materialTemplates
+      if (historyState?.materialIds) {
+        technology.materialIds = prepareData.materialIds
       }
-      if (historyState?.todoTemplates) {
-        technology.todoTemplates = prepareData.todoTemplates
+      if (historyState?.todoIds) {
+        technology.todoIds = prepareData.todoIds
       }
-      if (historyState?.interviewTemplates) {
-        technology.interviewTemplates = prepareData.interviewTemplates
+      if (historyState?.questionIds) {
+        technology.interviewIds = prepareData.interviewIds
       }
 
       await firestore
@@ -112,7 +114,7 @@ const TechnologyCreate = () => {
         .set(technology)
       history.replace(ROUTE_PATHS.TECHNOLOGIES_ALL, undefined)
     } catch (error) {
-      console.log(error)
+      console.log('create technology', error)
     }
 
     // history.push(history.location.pathname, undefined)
@@ -240,12 +242,13 @@ const TechnologyCreate = () => {
           ...historyState,
           technologyId: technology.id
         })
-      } catch (e) {
-        console.log(e)
+      } catch (error) {
+        console.log('init technology', error)
       }
     }
     !historyState?.technologyId && initTechnology()
   }, [])
+
   console.log(history)
 
   // [TEMPLATE]

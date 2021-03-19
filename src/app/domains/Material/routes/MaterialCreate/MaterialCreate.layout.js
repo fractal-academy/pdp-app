@@ -15,7 +15,7 @@ import { COLLECTIONS } from 'app/constants'
  *
  * @comment MaterialCreate - React component.
  *
- * @since 18 Mar 2021 ( v.0.0.8 ) // LAST-EDIT DATE
+ * @since 19 Mar 2021 ( v.0.0.9 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
@@ -31,9 +31,9 @@ const MaterialCreate = () => {
   let currentLevelMaterials
 
   // Check if there are already exist materials for currentLevels
-  if (historyState?.materialTemplates) {
+  if (historyState?.materialIds) {
     currentLevelMaterials =
-      historyState.materialTemplates?.[currentLevels.levelId]?.[
+      historyState.materialIds?.[currentLevels.levelId]?.[
         currentLevels.subLevelId
       ]
   }
@@ -48,11 +48,17 @@ const MaterialCreate = () => {
     setLinkLoading(true)
 
     try {
-      const collectionRef = firestore.collection(COLLECTIONS.MATERIAL_TEMPLATES)
+      const collectionRef = firestore.collection(COLLECTIONS.MATERIALS)
 
       const materialRef = await collectionRef.add({})
 
-      const link = { url, name: url, type: 'url', id: materialRef.id }
+      const link = {
+        url,
+        name: url,
+        type: 'url',
+        id: materialRef.id,
+        readOnly: true
+      }
       await collectionRef.doc(materialRef.id).set(link)
 
       setMaterials([...materials, link])
@@ -116,9 +122,7 @@ const MaterialCreate = () => {
       async () => {
         // Set result material data to list
         const materialURL = await uploadTask.snapshot.ref.getDownloadURL()
-        const collectionRef = firestore.collection(
-          COLLECTIONS.MATERIAL_TEMPLATES
-        )
+        const collectionRef = firestore.collection(COLLECTIONS.MATERIALS)
 
         const materialRef = await collectionRef.add({})
 
@@ -127,7 +131,8 @@ const MaterialCreate = () => {
           name: file.name,
           url: materialURL,
           type: file.type,
-          size: file.size
+          size: file.size,
+          readOnly: true
         }
 
         await collectionRef.doc(materialRef.id).set(material)
@@ -146,14 +151,14 @@ const MaterialCreate = () => {
       try {
         await storageRef.delete()
         await firestore
-          .collection(COLLECTIONS.MATERIAL_TEMPLATES)
+          .collection(COLLECTIONS.MATERIALS)
           .doc(removedItem.id)
           .delete()
 
         setMaterials(buffer)
         message.success('Material was successfully deleted.')
       } catch (error) {
-        message.error(error.message)
+        message.error('material delete', error.message)
       }
     } else {
       setMaterials(buffer)
@@ -168,27 +173,27 @@ const MaterialCreate = () => {
     if (materials.length) {
       let currentLevelMaterials = { [subLevelId]: materials }
 
-      if (historyState?.materialTemplates) {
+      if (historyState?.materialIds) {
         currentLevelMaterials = {
-          ...historyState?.materialTemplates[levelId],
+          ...historyState?.materialIds[levelId],
           [subLevelId]: materials
         }
       }
 
       return history.push(historyState.prevLocation, {
         ...historyState,
-        materialTemplates: {
-          ...historyState?.materialTemplates,
+        materialIds: {
+          ...historyState?.materialIds,
           [levelId]: currentLevelMaterials
         }
       })
     }
     // If there are no todos delete empty object from history state
-    if (historyState?.materialTemplates) {
-      delete historyState?.materialTemplates[levelId][subLevelId]
+    if (historyState?.materialIds) {
+      delete historyState?.materialIds[levelId][subLevelId]
       // Check if there was last item is this level delete level object
-      if (!Object.values(historyState?.materialTemplates[levelId]).length) {
-        delete historyState?.materialTemplates[levelId]
+      if (!Object.values(historyState?.materialIds[levelId]).length) {
+        delete historyState?.materialIds[levelId]
       }
     }
     history.push(historyState.prevLocation, historyState)

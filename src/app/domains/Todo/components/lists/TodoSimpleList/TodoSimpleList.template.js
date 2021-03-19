@@ -39,7 +39,7 @@ const TodoSimpleList = (props) => {
 
     try {
       await firestore
-        .collection(COLLECTIONS.TODO_TEMPLATES)
+        .collection(COLLECTIONS.TODOS)
         .doc(id)
         .update({ name: data.todo })
     } catch (error) {

@@ -26,9 +26,9 @@ const InterviewCreate = () => {
   let currentLevelQuestions
 
   // Check if there are already exist todos for currentLevels
-  if (historyState?.interviewTemplates) {
+  if (historyState?.questionIds) {
     currentLevelQuestions =
-      historyState.interviewTemplates?.[currentLevels.levelId]?.[
+      historyState.questionIds?.[currentLevels.levelId]?.[
         currentLevels.subLevelId
       ]
   }
@@ -82,27 +82,27 @@ const InterviewCreate = () => {
     const { levelId, subLevelId } = historyState.selectedLevel
     if (questions.length) {
       let currentLevelTodos = { [subLevelId]: questions }
-      if (historyState?.interviewTemplates) {
+      if (historyState?.questionIds) {
         currentLevelTodos = {
-          ...historyState?.interviewTemplates[levelId],
+          ...historyState?.questionIds[levelId],
           [subLevelId]: questions
         }
       }
 
       return history.push(historyState.prevLocation, {
         ...historyState,
-        interviewTemplates: {
-          ...historyState?.interviewTemplates,
+        questionIds: {
+          ...historyState?.questionIds,
           [levelId]: currentLevelTodos
         }
       })
     }
     // If there are no interviews delete empty object from history state
-    if (historyState?.interviewTemplates) {
-      delete historyState?.interviewTemplates[levelId][subLevelId]
+    if (historyState?.questionIds) {
+      delete historyState?.questionIds[levelId][subLevelId]
       // Check if there was last item is this level delete level object
-      if (!Object.values(historyState?.interviewTemplates[levelId]).length) {
-        delete historyState?.interviewTemplates[levelId]
+      if (!Object.values(historyState?.questionIds[levelId]).length) {
+        delete historyState?.questionIds[levelId]
       }
     }
     history.push(historyState.prevLocation, historyState)

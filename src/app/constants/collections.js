@@ -26,12 +26,6 @@ export const LEVELS = 'levels'
 export const SUB_LEVELS = 'subLevels'
 export const LEVEL_PRESETS = 'levelPresets'
 
-// Templates block
-export const TECHNOLOGY_TEMPLATES = 'technologyTemplates'
-export const MATERIAL_TEMPLATES = 'materialTemplates'
-export const TODO_TEMPLATES = 'todoTemplates'
-export const INTERVIEW_TEMPLATES = 'interviewTemplates'
-
 /* Feature block
 
 // maybe RTDB(not firestore) collections

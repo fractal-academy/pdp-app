@@ -13,7 +13,7 @@ import { COLLECTIONS } from 'app/constants'
  *
  * @comment TodoCreate - React component.
  *
- * @since 18 Mar 2021 ( v.0.0.8 ) // LAST-EDIT DATE
+ * @since 19 Mar 2021 ( v.0.0.9 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
@@ -27,11 +27,9 @@ const TodoCreate = () => {
   let currentLevelTodos
 
   // Check if there are already exist todos for currentLevels
-  if (historyState?.todoTemplates) {
+  if (historyState?.todoIds) {
     currentLevelTodos =
-      historyState.todoTemplates?.[currentLevels.levelId]?.[
-        currentLevels.subLevelId
-      ]
+      historyState.todoIds?.[currentLevels.levelId]?.[currentLevels.subLevelId]
   }
 
   // [COMPONENT_STATE_HOOKS]
@@ -45,7 +43,7 @@ const TodoCreate = () => {
       setTodoAddLoading(true)
 
       try {
-        const collectionRef = firestore.collection(COLLECTIONS.TODO_TEMPLATES)
+        const collectionRef = firestore.collection(COLLECTIONS.TODOS)
 
         const todoRef = await collectionRef.add({})
 
@@ -54,13 +52,14 @@ const TodoCreate = () => {
           name: value,
           technologyId: historyState.technologyId,
           levelId: currentLevels.subLevelId,
-          createAt: getTimestamp().now()
+          createAt: getTimestamp().now(),
+          readOnly: true
         }
 
         await collectionRef.doc(todoData.id).set(todoData)
         setTodos([...todos, { name: todoData.name, id: todoData.id }])
-      } catch (e) {
-        console.log(e)
+      } catch (error) {
+        console.log('todo create', error)
       }
       setEditTodo('')
       setTodoAddLoading(false)
@@ -70,10 +69,7 @@ const TodoCreate = () => {
   const onDeleteTodo = async (todoId) => {
     const newTodos = _.filter(todos, (item) => item.id !== todoId)
     try {
-      await firestore
-        .collection(COLLECTIONS.TODO_TEMPLATES)
-        .doc(todoId)
-        .delete()
+      await firestore.collection(COLLECTIONS.TODOS).doc(todoId).delete()
     } catch (error) {
       console.log('todo delete', error)
     }
@@ -86,27 +82,27 @@ const TodoCreate = () => {
     if (todos.length) {
       let currentLevelTodos = { [subLevelId]: todos }
 
-      if (historyState?.todoTemplates) {
+      if (historyState?.todoIds) {
         currentLevelTodos = {
-          ...historyState?.todoTemplates[levelId],
+          ...historyState?.todoIds[levelId],
           [subLevelId]: todos
         }
       }
 
       return history.push(historyState.prevLocation, {
         ...historyState,
-        todoTemplates: {
-          ...historyState?.todoTemplates,
+        todoIds: {
+          ...historyState?.todoIds,
           [levelId]: currentLevelTodos
         }
       })
     }
     // If there are no todos delete empty object from history state
-    if (historyState?.todoTemplates) {
-      delete historyState?.todoTemplates[levelId][subLevelId]
+    if (historyState?.todoIds) {
+      delete historyState?.todoIds[levelId][subLevelId]
       // Check if there was last item is this level delete level object
-      if (!Object.values(historyState?.todoTemplates[levelId]).length) {
-        delete historyState?.todoTemplates[levelId]
+      if (!Object.values(historyState?.todoIds[levelId]).length) {
+        delete historyState?.todoIds[levelId]
       }
     }
     history.push(historyState.prevLocation, historyState)
