@@ -1,9 +1,10 @@
 import PropTypes from 'prop-types'
-import { List, Input, Form, Col } from 'antd'
-import { Remove, Edit, Box, Text, Row } from 'antd-styled'
+import { useState } from 'react'
+import { List } from 'antd'
+import { Remove, Edit } from 'antd-styled'
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons'
-import { useState, useRef, useEffect } from 'react'
-import firestore from '~/services/Firebase/firestore'
+import { QuestionViewWithForm } from 'domains/Question/components/combined/views'
+import { updateDocument } from '~/services/Firebase/firestore'
 import { COLLECTIONS } from 'app/constants'
 
 /**
@@ -11,7 +12,7 @@ import { COLLECTIONS } from 'app/constants'
  *
  * @comment InterviewSimpleList - React component.
  *
- * @since 18 Mar 2021 ( v.0.0.5 ) // LAST-EDIT DATE
+ * @since 19 Mar 2021 ( v.0.0.6 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
@@ -20,46 +21,28 @@ const InterviewSimpleList = (props) => {
   // [INTERFACES]
   const { setQuestions, questions, onDeleteQuestion } = props
 
-  // [ADDITIONAL_HOOKS]
-  const inputRef = useRef(null)
-  const [form] = Form.useForm()
-
   // [COMPONENT_STATE_HOOKS]
-  const [editQuestion, setEditQuestion] = useState(false)
-  const [editLoading, setEditLoading] = useState(false)
+  const [editQuestion, setEditQuestion] = useState('')
 
   // [HELPER_FUNCTIONS]
-  const onSubmit = async (data, id) => {
-    setEditLoading(true)
+  const onEditSubmit = async (data, id) => {
     const editQuestionIndex = questions.findIndex(
       (question) => question.id === id
     )
     const newQuestions = [...questions]
     newQuestions[editQuestionIndex] = {
-      name: data.question || editQuestion.name,
+      name: data.question,
       id
     }
 
     try {
-      await firestore
-        .collection(COLLECTIONS.QUESTIONS)
-        .doc(id)
-        .update({ name: data.question })
+      await updateDocument(COLLECTIONS.QUESTIONS, id, { name: data.question })
     } catch (error) {
       console.log('question submit', error)
     }
+    setEditQuestion('')
     setQuestions(newQuestions)
-    setEditQuestion(false)
-    setEditLoading(false)
   }
-
-  // [USE_EFFECTS]
-  useEffect(() => {
-    editQuestion &&
-      inputRef.current.focus({
-        cursor: 'end'
-      })
-  }, [editQuestion])
 
   // [TEMPLATE]
   return (
@@ -67,55 +50,30 @@ const InterviewSimpleList = (props) => {
       size="large"
       dataSource={questions}
       renderItem={(question) => (
-        <Box width="100%">
-          <List.Item
-            actions={[
-              <Edit
-                shape="default"
-                tooltip="Edit"
-                type="text"
-                icon={<EditOutlined />}
-                onClick={() => setEditQuestion(question)}
-              />,
-              <Remove
-                shape="default"
-                tooltip="Remove"
-                type="text"
-                onClick={() => setEditQuestion(false)}
-                icon={<DeleteOutlined />}
-                onSubmit={() => onDeleteQuestion(question.id)}
-              />
-            ]}>
-            {editQuestion.id === question.id ? (
-              <Row flex={1}>
-                <Col span={24}>
-                  <Form
-                    form={form}
-                    onFinish={(value) => onSubmit(value, question.id)}>
-                    <Form.Item
-                      style={{ flex: 1 }}
-                      name="question"
-                      hasFeedback={editLoading}
-                      validateStatus="validating">
-                      <Input.TextArea
-                        disabled={editLoading}
-                        onPressEnter={(e) => {
-                          e.preventDefault()
-                          form.submit()
-                        }}
-                        rows={1}
-                        ref={inputRef}
-                        defaultValue={editQuestion.name}
-                      />
-                    </Form.Item>
-                  </Form>
-                </Col>
-              </Row>
-            ) : (
-              <Text ellipsis>{question.name}</Text>
-            )}
-          </List.Item>
-        </Box>
+        <List.Item
+          actions={[
+            <Edit
+              shape="default"
+              tooltip="Edit"
+              type="text"
+              icon={<EditOutlined />}
+              onClick={() => setEditQuestion(question.id)}
+            />,
+            <Remove
+              shape="default"
+              tooltip="Remove"
+              type="text"
+              icon={<DeleteOutlined />}
+              onSubmit={() => onDeleteQuestion(question.id)}
+            />
+          ]}>
+          <QuestionViewWithForm
+            question={question}
+            isEdit={question.id === editQuestion}
+            changeEditState={setEditQuestion}
+            onFinish={onEditSubmit}
+          />
+        </List.Item>
       )}
     />
   )

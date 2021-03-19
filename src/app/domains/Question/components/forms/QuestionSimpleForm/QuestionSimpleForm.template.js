@@ -1,50 +1,70 @@
 import PropTypes from 'prop-types'
+import { useEffect, useRef, useState } from 'react'
+import { Form, Input } from 'antd'
 
 /**
  * @info QuestionSimpleForm (05 Mar 2021) // CREATION DATE
  *
  * @comment QuestionSimpleForm - React component.
  *
- * @since 05 Mar 2021 ( v.0.0.1 ) // LAST-EDIT DATE
+ * @since 19 Mar 2021 ( v.0.0.2 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
 
 const QuestionSimpleForm = (props) => {
   // [INTERFACES]
-  /*
-  code sample: 
-  const { data } = props
-  */
+  const { onFinish, data, defaultValue } = props
 
   // [ADDITIONAL_HOOKS]
-  /*
-  code sample: 
-  const firestore = useFirestore()
-  */
+  const inputRef = useRef(null)
+  const [questionForm] = Form.useForm()
 
   // [COMPONENT_STATE_HOOKS]
-  /*
-  code sample:
-  const singleton = useRef(true) // references also put here
-  const [state, setState] = useState({})
-  */
+  const [editLoading, setEditLoading] = useState(false)
 
   // [HELPER_FUNCTIONS]
-
-  // [COMPUTED_PROPERTIES]
-  /* 
-    code sample: 
-    const userDisplayName = user.firstName + user.lastName
-  */
+  const onSubmit = async (value) => {
+    setEditLoading(true)
+    await onFinish(value, data.id)
+    setEditLoading(false)
+  }
 
   // [USE_EFFECTS]
+  useEffect(() => {
+    inputRef.current.focus({
+      cursor: 'end'
+    })
+  }, [])
 
   // [TEMPLATE]
-  return <div>QuestionSimpleForm</div>
+  return (
+    <Form
+      form={questionForm}
+      initialValues={{ question: defaultValue }}
+      onFinish={onSubmit}>
+      <Form.Item
+        style={{ flex: 1, marginBottom: 0 }}
+        name="question"
+        hasFeedback={editLoading}
+        validateStatus="validating">
+        <Input.TextArea
+          disabled={editLoading}
+          // onBlur={() => questionForm.submit()}
+          onPressEnter={() => questionForm.submit()}
+          rows={1}
+          ref={inputRef}
+        />
+      </Form.Item>
+    </Form>
+  )
 }
 
 // [PROPTYPES]
-QuestionSimpleForm.propTypes = {}
+QuestionSimpleForm.propTypes = {
+  onFinish: PropTypes.func,
+  defaultValue: PropTypes.string,
+  data: PropTypes.object
+}
 
 export default QuestionSimpleForm
