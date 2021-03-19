@@ -5,9 +5,10 @@ import firestore from '~/services/Firebase/firestore'
  *
  * @comment getDocumentData - function for get data from document
  *
- * @since 19 Mar 2021 ( v.0.0.1 ) // LAST-EDIT DATE
+ * @since 19 Mar 2021 ( v.0.0.2 ) // LAST-EDIT DATE
  *
- * @param {string}          props.path                Path to document
+ * @param {string}          props.path                Path to collection
+ * @param {string}          props.id                  Path of document
  *
  * @return {object} object of document's data
  */
