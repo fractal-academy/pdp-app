@@ -4,7 +4,12 @@ import { InterviewSimpleList } from 'domains/Interview/components/lists'
 import { InterviewSimpleForm } from 'domains/Interview/components/forms'
 import { PageWrapper } from '~/components/HOC'
 import _ from 'lodash'
-import firestore, { getTimestamp } from '~/services/Firebase/firestore'
+import {
+  getTimestamp,
+  deleteDocument,
+  setDocument,
+  getDocumentRef
+} from '~/services/Firebase/firestore'
 import { COLLECTIONS } from 'app/constants'
 
 /**
@@ -35,7 +40,6 @@ const InterviewCreate = () => {
 
   // [COMPONENT_STATE_HOOKS]
   const [questions, setQuestions] = useState(currentLevelQuestions || [])
-  const [editQuestion, setEditQuestion] = useState(false)
   const [questionAddLoading, setQuestionAddLoading] = useState(false)
 
   // [HELPER_FUNCTIONS]
@@ -44,25 +48,22 @@ const InterviewCreate = () => {
       setQuestionAddLoading(true)
 
       try {
-        const collectionRef = firestore.collection(COLLECTIONS.QUESTIONS)
-
-        const questionRef = await collectionRef.add({})
+        const questionId = getDocumentRef(COLLECTIONS.QUESTIONS).id
 
         const questionData = {
-          id: questionRef.id,
+          id: questionId,
           name: value,
-          createAt: getTimestamp().now()
+          createdAt: getTimestamp().now()
         }
 
-        await collectionRef.doc(questionData.id).set(questionData)
+        await setDocument(COLLECTIONS.QUESTIONS, questionId, questionData)
         setQuestions([
           ...questions,
-          { name: questionData.name, id: questionData.id }
+          { name: questionData.name, id: questionId }
         ])
       } catch (e) {
         console.log(e)
       }
-      setEditQuestion('')
       setQuestionAddLoading(false)
     }
   }
@@ -70,7 +71,7 @@ const InterviewCreate = () => {
   const onDeleteQuestion = async (questionId) => {
     const newQuestions = _.filter(questions, (item) => item.id !== questionId)
     try {
-      await firestore.collection(COLLECTIONS.QUESTIONS).doc(questionId).delete()
+      await deleteDocument(COLLECTIONS.QUESTIONS, questionId)
     } catch (error) {
       console.log('interview delete', error)
     }
@@ -116,11 +117,7 @@ const InterviewCreate = () => {
       nextBtnProps={{ text: 'Save' }}
       onNext={onSave}
       onBack={onSave}>
-      <InterviewSimpleForm
-        onSubmit={onSubmit}
-        editQuestion={editQuestion}
-        loading={questionAddLoading}
-      />
+      <InterviewSimpleForm onSubmit={onSubmit} loading={questionAddLoading} />
       <InterviewSimpleList
         setQuestions={setQuestions}
         questions={questions}
