@@ -256,7 +256,6 @@ const TechnologyCreate = () => {
     !historyState?.technologyId && initTechnology()
   }, [])
 
-
   // [TEMPLATE]
   return (
     <PageWrapper
