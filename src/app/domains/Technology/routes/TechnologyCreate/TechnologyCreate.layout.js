@@ -15,7 +15,7 @@ import firestore from '~/services/Firebase/firestore'
  *
  * @comment TechnologyCreate - React component.
  *
- * @since 17 Mar 2021 ( v.0.0.6 ) // LAST-EDIT DATE
+ * @since 18 Mar 2021 ( v.0.0.7 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
@@ -25,6 +25,15 @@ const ACTION_BUTTONS_MAP = [
   { path: ROUTE_PATHS.TODO_CREATE, text: 'Add todos' },
   { path: ROUTE_PATHS.INTERVIEW_CREATE, text: 'Add interview' }
 ]
+
+const getIds = (ref) => {
+  if (ref) {
+    for (const subLevel of Object.keys(ref)) {
+      ref[subLevel] = ref[subLevel].map(({ id }) => id)
+    }
+    return ref
+  }
+}
 
 const TechnologyCreate = () => {
   // [ADDITIONAL_HOOKS]
@@ -36,14 +45,78 @@ const TechnologyCreate = () => {
   // [COMPONENT_STATE_HOOKS]
   const [levelTree, setLevelTree] = useState(historyState?.levelTree || [])
   const [levelMapLoading, setLevelMapLoading] = useState(false)
+  const [creationLoading, setCreationLoading] = useState(false)
   const [selectedLevel, setSelectedLevel] = useState(
     historyState?.selectedLevel || null
   )
 
   // [HELPER_FUNCTIONS]
-  const onSubmit = (value) => {
-    console.log(value)
-    history.push(history.location.pathname, undefined)
+  const onSubmit = async (value) => {
+    setCreationLoading(true)
+
+    savePageData(history.location.pathname, value)
+    let technology = { name: value.name, type: value.type }
+    try {
+      // Deep copy of object for disconnected from the historyState
+      const prepareData = JSON.parse(JSON.stringify(historyState))
+
+      const levelPresetSnapshot = await firestore
+        .collection(COLLECTIONS.LEVEL_PRESETS)
+        .doc(value.levelPresetId)
+        .get()
+      const levelPreset = levelPresetSnapshot.data()
+
+      technology.levelIds = levelPreset.levelIds
+
+      for (const level of Object.keys(levelPreset.levelIds)) {
+        const materialsRef = prepareData?.materialTemplates?.[level]
+        const todosRef = prepareData?.todoTemplates?.[level]
+        const interviewRef = prepareData?.interviewTemplates?.[level]
+
+        getIds(materialsRef)
+        getIds(todosRef)
+        if (interviewRef) {
+          let interview = {
+            technologyId: historyState.technologyId,
+            levelIds: { levelId: level }
+          }
+          for (const subLevel of Object.keys(interviewRef)) {
+            interview.questionIds = interviewRef[subLevel].map(({ id }) => id)
+            interview.levelIds = { ...interview.levelIds, subLevelId: subLevel }
+            const interviewSnapshot = await firestore
+              .collection(COLLECTIONS.INTERVIEW_TEMPLATES)
+              .add({})
+            interview.id = interviewSnapshot.id
+            await firestore
+              .collection(COLLECTIONS.INTERVIEW_TEMPLATES)
+              .doc(interview.id)
+              .set(interview)
+            interviewRef[subLevel] = interview.id
+          }
+        }
+      }
+
+      if (historyState?.materialTemplates) {
+        technology.materialTemplates = prepareData.materialTemplates
+      }
+      if (historyState?.todoTemplates) {
+        technology.todoTemplates = prepareData.todoTemplates
+      }
+      if (historyState?.interviewTemplates) {
+        technology.interviewTemplates = prepareData.interviewTemplates
+      }
+
+      await firestore
+        .collection(COLLECTIONS.TECHNOLOGIES)
+        .doc(historyState.technologyId)
+        .set(technology)
+      history.replace(ROUTE_PATHS.TECHNOLOGIES_ALL, undefined)
+    } catch (error) {
+      console.log(error)
+    }
+
+    // history.push(history.location.pathname, undefined)
+    setCreationLoading(false)
   }
 
   // -- Header step button functions --
@@ -134,8 +207,8 @@ const TechnologyCreate = () => {
     }
   }
 
-  const savePageData = (path) => {
-    const formData = mainForm.getFieldsValue()
+  const savePageData = (path, data) => {
+    const formData = data || mainForm.getFieldsValue()
     history.push(path, {
       ...historyState,
       selectedLevel,
@@ -179,7 +252,7 @@ const TechnologyCreate = () => {
   return (
     <PageWrapper
       title="Create technology"
-      nextBtnProps={{ text: 'Create' }}
+      nextBtnProps={{ text: 'Create', loading: creationLoading }}
       backBtnProps={{ text: 'Cancel' }}
       onNext={onNext}
       onBack={onCancel}>
