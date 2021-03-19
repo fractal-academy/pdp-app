@@ -15,7 +15,7 @@ import { QuestionSimpleView } from 'domains/Question/components/views'
 
 const QuestionViewWithForm = (props) => {
   // [INTERFACES]
-  const { question, isEdit, changeEditState, ...rest } = props
+  const { question, isEdit, ...rest } = props
 
   // [TEMPLATE]
   return (
@@ -39,7 +39,6 @@ const QuestionViewWithForm = (props) => {
 QuestionViewWithForm.propTypes = {
   question: PropTypes.object,
   isEdit: PropTypes.bool,
-  changeEditState: PropTypes.func,
   onFinish: PropTypes.func
 }
 

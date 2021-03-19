@@ -50,7 +50,6 @@ const QuestionSimpleForm = (props) => {
         validateStatus="validating">
         <Input.TextArea
           disabled={editLoading}
-          // onBlur={() => questionForm.submit()}
           onPressEnter={() => questionForm.submit()}
           rows={1}
           ref={inputRef}
