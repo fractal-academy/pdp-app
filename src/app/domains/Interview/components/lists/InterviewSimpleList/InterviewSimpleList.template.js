@@ -70,7 +70,6 @@ const InterviewSimpleList = (props) => {
           <QuestionViewWithForm
             question={question}
             isEdit={question.id === editQuestion}
-            changeEditState={setEditQuestion}
             onFinish={onEditSubmit}
           />
         </List.Item>
