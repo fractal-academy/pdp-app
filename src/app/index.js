@@ -1,16 +1,18 @@
 import { Switch, Route, Redirect } from 'react-router-dom'
 import { Layout } from 'antd-styled'
-import { Navigation } from '~/components'
+import { Navigation, Spinner } from '~/components'
 import { ROUTES_VALUES, ROUTE_PATHS } from 'app/constants'
 import { useSession } from 'contexts/Session/hooks'
 import { SessionLogin, SessionRegister } from 'domains/Session/routes'
+import RoleProvider from './contexts/Role/components'
+import { useAuthListener } from '~/hooks'
 
 /**
  * @info App (05 Mar 2021) // CREATION DATE
  *
  * @comment App - React component.
  *
- * @since 17 Mar 2021 ( v.0.0.5 ) // LAST-EDIT DATE
+ * @since 18 Mar 2021 ( v.0.0.6 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
@@ -19,6 +21,11 @@ const App = () => {
   // [ADDITIONAL_HOOKS]
   const session = useSession()
 
+  const { loading } = useAuthListener()
+
+  if (loading) {
+    return <Spinner />
+  }
   // [TEMPLATE]
   return (
     <Switch>
@@ -29,16 +36,18 @@ const App = () => {
         path={ROUTE_PATHS.SESSION_REGISTRATION}
       />
       <Layout>
-        <Navigation />
-        <Switch>
-          {ROUTES_VALUES.map((route) =>
-            route.Component ? (
-              <route.Component key={route.Component.name} />
-            ) : (
-              <Route key={route.path} {...route} />
-            )
-          )}
-        </Switch>
+        <RoleProvider>
+          <Navigation />
+          <Switch>
+            {ROUTES_VALUES.map((route) =>
+              route.Component ? (
+                <route.Component key={route.Component.name} />
+              ) : (
+                <Route key={route.path} {...route} />
+              )
+            )}
+          </Switch>
+        </RoleProvider>
       </Layout>
       <Redirect to={ROUTE_PATHS.NOT_FOUND_PATH} />
     </Switch>

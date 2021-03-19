@@ -1,5 +1,6 @@
-import { Content, Sider, Title } from 'antd-styled'
+import { useState } from 'react'
 import { List } from 'antd'
+import { Content, Sider, Title } from 'antd-styled'
 import firestore from '~/services/Firebase/firestore/index'
 import {
   useCollectionData,
@@ -11,14 +12,12 @@ import { TodoAdvancedList } from 'domains/Todo/components/lists'
 import { Spinner } from '~/components'
 import { useSession } from 'contexts/Session/hooks'
 import { PageWrapper } from '~/components/HOC'
-import { useHistory } from 'react-router-dom'
-import { useState } from 'react'
 /**
  * @info PlanAll (05 Mar 2021) // CREATION DATE
  *
  * @comment PlanAll - React component.
  *
- * @since 16 Mar 2021 ( v.0.0.4 ) // LAST-EDIT DATE
+ * @since 18 Mar 2021 ( v.0.0.5 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
@@ -30,12 +29,12 @@ const PlanAll = () => {
   // [ADDITIONAL_HOOKS]
   const session = useSession()
   const [plans, loading] = useCollectionData(
-    firestore.collection(COLLECTIONS.PLANS).where('id', 'in', session.planIds)
+    session?.planIds &&
+      firestore.collection(COLLECTIONS.PLANS).where('id', 'in', session.planIds)
   )
   const [activePlan, loadingActivePlan] = useDocumentData(
     activePlanId && firestore.collection(COLLECTIONS.PLANS).doc(activePlanId)
   )
-  const history = useHistory()
 
   // [TEMPLATE]
   return (
@@ -43,15 +42,15 @@ const PlanAll = () => {
       <Content bg="#ffffff" paddingTop={4} paddingX={4}>
         <PageWrapper
           title="My plans"
-          backBtnLeft
           titleProps={{ textAlign: 'left' }}
-          onBack={() => history.goBack()}
           inlineHeader
           fullWidth>
           {loading ? (
             <Spinner />
-          ) : (
+          ) : plans ? (
             <PlanSimpleList plans={plans} setActivePlanId={setActivePlanId} />
+          ) : (
+            <Title level={5}>You don`t have any plans</Title>
           )}
         </PageWrapper>
       </Content>

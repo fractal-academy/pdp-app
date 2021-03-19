@@ -1,13 +1,18 @@
 import PropTypes from 'prop-types'
-import { Form, Input, Button, Space } from 'antd'
+import { Form, Input, Button, Space, message } from 'antd'
 import { Box } from 'antd-styled'
+import TYPES from '~/app/contexts/Session/types'
+import { useHistory } from 'react-router-dom'
+import auth from '~/services/Firebase/auth'
+import { ROUTE_PATHS } from 'app/constants'
+import { useSessionDispatch } from 'contexts/Session/hooks'
 
 /**
  * @info SessionSimpleForm (05 Mar 2021) // CREATION DATE
  *
  * @comment SessionSimpleForm - React component.
  *
- * @since 17 Mar 2021 ( v.0.0.1 ) // LAST-EDIT DATE
+ * @since 19 Mar 2021 ( v.0.0.3 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
@@ -17,27 +22,36 @@ const SessionSimpleForm = (props) => {
   const { register } = props
 
   // [ADDITIONAL_HOOKS]
+  const history = useHistory()
   const [form] = Form.useForm()
-
-  // [COMPONENT_STATE_HOOKS]
-  /*
-  code sample:
-  const singleton = useRef(true) // references also put here
-  const [state, setState] = useState({})
-  */
+  const sessionDispatch = useSessionDispatch()
 
   // [HELPER_FUNCTIONS]
-  const onFinish = (values) => {}
+  const onFinish = async (values) => {
+    sessionDispatch({ type: TYPES.LOADING, payload: true })
+    if (register) {
+      try {
+        localStorage.setItem('isNewUser', true)
+        await auth.createUserWithEmailAndPassword(values.email, values.password)
+      } catch (error) {
+        message.error(error.message)
+        if (error.code === 'auth/email-already-in-use') {
+          history.push(ROUTE_PATHS.SESSION_LOGIN)
+        }
+      }
+    } else {
+      try {
+        localStorage.setItem('signIn', true)
+        await auth.signInWithEmailAndPassword(values.email, values.password)
+      } catch (error) {
+        message.error(error.message)
+        onReset()
+      }
+    }
+  }
   const onReset = () => {
     form.resetFields()
   }
-  // [COMPUTED_PROPERTIES]
-  /* 
-    code sample: 
-    const userDisplayName = user.firstName + user.lastName
-  */
-
-  // [USE_EFFECTS]
 
   // [TEMPLATE]
   return (
