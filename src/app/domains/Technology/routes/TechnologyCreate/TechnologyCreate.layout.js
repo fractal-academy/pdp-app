@@ -56,15 +56,19 @@ const TechnologyCreate = () => {
     setCreationLoading(true)
 
     savePageData(history.location.pathname, value)
+
+    // Init technology data object
     let technology = {
+      id: historyState.technologyId,
       name: value.name,
       type: value.type,
       materialIds: {},
       todoIds: {},
       interviewIds: {}
     }
+
     try {
-      // Deep copy of object for disconnected from the historyState
+      // Deep copy of object for disconnect from the historyState
       const prepareData = JSON.parse(JSON.stringify(historyState))
 
       const levelPresetSnapshot = await firestore
