@@ -61,7 +61,7 @@ const useAuthListener = () => {
     user && !userLoading && fetchUser()
   }, [user, userLoading])
 
-  return { user, loading }
+  return { loading }
 }
 
 export default useAuthListener
