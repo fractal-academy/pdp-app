@@ -4,8 +4,12 @@ import { TodoSimpleForm } from 'domains/Todo/components/forms'
 import { TodoSimpleList } from 'domains/Todo/components/lists'
 import { PageWrapper } from '~/components/HOC'
 import _ from 'lodash'
-import firestore, { getTimestamp } from '~/services/Firebase/firestore'
-
+import {
+  deleteDocument,
+  getDocumentRef,
+  getTimestamp,
+  setDocument
+} from '~/services/Firebase/firestore'
 import { COLLECTIONS } from 'app/constants'
 
 /**
@@ -43,20 +47,18 @@ const TodoCreate = () => {
       setTodoAddLoading(true)
 
       try {
-        const collectionRef = firestore.collection(COLLECTIONS.TODOS)
-
-        const todoRef = await collectionRef.add({})
+        const todoId = getDocumentRef(COLLECTIONS.TODOS).id
 
         const todoData = {
-          id: todoRef.id,
+          id: todoId,
           name: value,
           technologyId: historyState.technologyId,
           levelId: currentLevels,
-          createAt: getTimestamp().now(),
+          createdAt: getTimestamp().now(),
           readOnly: true
         }
 
-        await collectionRef.doc(todoData.id).set(todoData)
+        await setDocument(COLLECTIONS.TODOS, todoData.id, todoData)
         setTodos([...todos, { name: todoData.name, id: todoData.id }])
       } catch (error) {
         console.log('todo create', error)
@@ -69,7 +71,7 @@ const TodoCreate = () => {
   const onDeleteTodo = async (todoId) => {
     const newTodos = _.filter(todos, (item) => item.id !== todoId)
     try {
-      await firestore.collection(COLLECTIONS.TODOS).doc(todoId).delete()
+      await deleteDocument(COLLECTIONS.TODOS, todoId)
     } catch (error) {
       console.log('todo delete', error)
     }
