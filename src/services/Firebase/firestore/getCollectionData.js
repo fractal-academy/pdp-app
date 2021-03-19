@@ -5,7 +5,7 @@ import firestore from '~/services/Firebase/firestore'
  *
  * @comment getCollectionData - function for get data from collection
  *
- * @since 19 Mar 2021 ( v.0.0.1 ) // LAST-EDIT DATE
+ * @since 19 Mar 2021 ( v.0.0.2) // LAST-EDIT DATE
  *
  * @param {string}          props.path                Path to collection
  *
@@ -14,6 +14,6 @@ import firestore from '~/services/Firebase/firestore'
 
 const getCollectionData = async (path) => {
   const data = await firestore.collection(path).get()
-  return data.map((item) => item.data())
+  return data.docs.map((item) => item.data())
 }
 export default getCollectionData
