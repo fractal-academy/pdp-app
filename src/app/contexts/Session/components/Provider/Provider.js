@@ -18,12 +18,10 @@ import {
 
 const SessionProvider = (props) => {
   // [INTERFACES]
-  const { session, children, ...rest } = props
+  const { session = {}, children, ...rest } = props
 
   // [COMPONENT_STATE_HOOKS]
-  const [state, dispatch] = useReducer(rootReducer, {
-    ...session
-  })
+  const [state, dispatch] = useReducer(rootReducer, session)
 
   // [TEMPLATES]
   return (
