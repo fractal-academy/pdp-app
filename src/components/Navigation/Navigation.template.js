@@ -18,7 +18,7 @@ import * as styles from './Navigation.style'
  *
  * @comment Navigation - React component.
  *
- * @since 18 Mar 2021 ( v.0.0.6 ) // LAST-EDIT DATE
+ * @since 19 Mar 2021 ( v.0.0.7 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
@@ -87,12 +87,12 @@ const Navigation = () => {
   const onLogOut = () => {
     try {
       auth.signOut()
+      sessionDispatch({
+        type: TYPES.LOG_OUT
+      })
     } catch (error) {
       console.log(error.message)
     }
-    sessionDispatch({
-      type: TYPES.LOG_OUT
-    })
     history.push(ROUTE_PATHS.SESSION_LOGIN)
   }
   // [COMPUTED_PROPERTIES]
