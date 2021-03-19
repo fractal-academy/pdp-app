@@ -4,19 +4,15 @@ import { Box } from 'antd-styled'
 import TYPES from '~/app/contexts/Session/types'
 import { useHistory } from 'react-router-dom'
 import auth from '~/services/Firebase/auth'
-import firestore from '~/services/Firebase/firestore'
-import { ROLES } from '~/constants'
-import { ROUTE_PATHS, COLLECTIONS } from 'app/constants'
-import { useCollectionData } from 'react-firebase-hooks/firestore'
-import { useSessionDispatch, useSession } from 'contexts/Session/hooks'
-import { useRole } from 'contexts/Role/hooks'
+import { ROUTE_PATHS } from 'app/constants'
+import { useSessionDispatch } from 'contexts/Session/hooks'
 
 /**
  * @info SessionSimpleForm (05 Mar 2021) // CREATION DATE
  *
  * @comment SessionSimpleForm - React component.
  *
- * @since 18 Mar 2021 ( v.0.0.2 ) // LAST-EDIT DATE
+ * @since 19 Mar 2021 ( v.0.0.3 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
@@ -24,20 +20,11 @@ import { useRole } from 'contexts/Role/hooks'
 const SessionSimpleForm = (props) => {
   // [INTERFACES]
   const { register } = props
-  const refCollectionUsers = firestore.collection(COLLECTIONS.USERS)
 
   // [ADDITIONAL_HOOKS]
   const history = useHistory()
-  const session = useSession()
   const [form] = Form.useForm()
   const sessionDispatch = useSessionDispatch()
-
-  // [COMPONENT_STATE_HOOKS]
-  /*
-  code sample:
-  const singleton = useRef(true) // references also put here
-  const [state, setState] = useState({})
-  */
 
   // [HELPER_FUNCTIONS]
   const onFinish = async (values) => {
@@ -54,22 +41,17 @@ const SessionSimpleForm = (props) => {
       }
     } else {
       try {
+        localStorage.setItem('signIn', true)
         await auth.signInWithEmailAndPassword(values.email, values.password)
       } catch (error) {
-        console.log('error message', error.message)
+        message.error(error.message)
+        onReset()
       }
     }
   }
   const onReset = () => {
     form.resetFields()
   }
-  // [COMPUTED_PROPERTIES]
-  /* 
-    code sample: 
-    const userDisplayName = user.firstName + user.lastName
-  */
-
-  // [USE_EFFECTS]
 
   // [TEMPLATE]
   return (
@@ -112,7 +94,7 @@ const SessionSimpleForm = (props) => {
       <Form.Item>
         <Box display="flex" justifyContent="center">
           <Space size="large">
-            <Button type="primary" htmlType="submit" loading={session.loading}>
+            <Button type="primary" htmlType="submit">
               {register ? 'Sign in' : 'Log in'}
             </Button>
             <Button htmlType="button" onClick={onReset}>
