@@ -17,9 +17,9 @@ import { COLLECTIONS } from 'app/constants'
  * @return {ReactComponent}
  */
 
-const deleteData = async (field, collection) => {
-  if (field) {
-    for (const id of Object.keys(field)) {
+const deleteData = async (iterableList, collection) => {
+  if (iterableList) {
+    for (const id of Object.keys(iterableList)) {
       await deleteDocument(collection, id)
     }
   }
