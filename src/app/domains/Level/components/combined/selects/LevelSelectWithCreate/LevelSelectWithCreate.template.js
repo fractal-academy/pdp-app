@@ -83,8 +83,10 @@ const LevelSelectWithCreate = (props) => {
         id
       }
       await firestore.collection(COLLECTIONS.LEVEL_PRESETS).doc(id).set(data)
-    } catch (e) {}
-    setVisible(false)
+      setVisible(false)
+    } catch (error) {
+      console.log('level preset create', error)
+    }
   }
 
   // [TEMPLATE]

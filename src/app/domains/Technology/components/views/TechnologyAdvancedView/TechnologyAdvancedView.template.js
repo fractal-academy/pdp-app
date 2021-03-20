@@ -1,10 +1,10 @@
 import PropTypes from 'prop-types'
-import { TechnologySimpleView } from 'domains/Technology/components/views'
 import { Space } from 'antd'
 import { Card } from 'antd-styled'
-import firestore from '~/services/Firebase/firestore/index'
 import { useCollectionData } from 'react-firebase-hooks/firestore'
+import { TechnologySimpleView } from 'domains/Technology/components/views'
 import { MaterialSimpleView } from 'domains/Material/components/views'
+import firestore from '~/services/Firebase/firestore/index'
 import { Spinner } from '~/components'
 
 /**
@@ -23,7 +23,10 @@ const TechnologyAdvancedView = (props) => {
 
   // [ADDITIONAL_HOOKS]
   const [materials, loading] = useCollectionData(
-    firestore.collection(refCollectionMaterials).where('id', 'in', materialIds)
+    materialIds &&
+      firestore
+        .collection(refCollectionMaterials)
+        .where('id', 'in', materialIds)
   )
 
   // [TEMPLATE]
@@ -33,7 +36,7 @@ const TechnologyAdvancedView = (props) => {
         <Spinner />
       ) : (
         <Space size="large">
-          {materials.map((item) => (
+          {materials?.map((item) => (
             <MaterialSimpleView {...item} />
           ))}
         </Space>

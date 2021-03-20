@@ -6,16 +6,20 @@ import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons'
 import { TechnologyAdvancedForm } from 'domains/Technology/components/forms'
 import { TechnologyAdvancedCascader } from 'domains/Technology/components/combined/cascader'
 import { PageWrapper } from '~/components/HOC'
+import {
+  getDocumentData,
+  getDocumentRef,
+  setDocument
+} from '~/services/Firebase/firestore'
 import { COLLECTIONS } from 'app/constants'
 import * as ROUTE_PATHS from 'app/constants/routePaths'
-import firestore from '~/services/Firebase/firestore'
 
 /**
  * @info TechnologyCreate (05 Mar 2021) // CREATION DATE
  *
  * @comment TechnologyCreate - React component.
  *
- * @since 18 Mar 2021 ( v.0.0.7 ) // LAST-EDIT DATE
+ * @since 20 Mar 2021 ( v.0.0.8 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
@@ -61,21 +65,17 @@ const TechnologyCreate = () => {
     let technology = {
       id: historyState.technologyId,
       name: value.name,
-      type: value.type,
-      materialIds: {},
-      todoIds: {},
-      interviewIds: {}
+      type: value.type
     }
 
     try {
       // Deep copy of object for disconnect from the historyState
       const prepareData = JSON.parse(JSON.stringify(historyState))
 
-      const levelPresetSnapshot = await firestore
-        .collection(COLLECTIONS.LEVEL_PRESETS)
-        .doc(value.levelPresetId)
-        .get()
-      const levelPreset = levelPresetSnapshot.data()
+      const levelPreset = await getDocumentData(
+        COLLECTIONS.LEVEL_PRESETS,
+        value.levelPresetId
+      )
 
       technology.levelIds = levelPreset.levelIds
 
@@ -87,15 +87,18 @@ const TechnologyCreate = () => {
         getIds(materialsRef)
 
         if (materialsRef) {
+          technology.materialIds = {}
           getIds(materialsRef).forEach(
             (id) => (technology.materialIds[id] = true)
           )
         }
         if (todosRef) {
+          technology.todoIds = {}
           getIds(todosRef).forEach((id) => (technology.todoIds[id] = true))
         }
 
         if (interviewRef) {
+          technology.interviewIds = {}
           let interview = {
             technologyId: historyState.technologyId,
             levelIds: { levelId: level }
@@ -105,44 +108,33 @@ const TechnologyCreate = () => {
           for (const subLevel of Object.keys(interviewRef)) {
             interview.questionIds = interviewRef[subLevel].map(({ id }) => id)
             interview.levelIds = { ...interview.levelIds, subLevelId: subLevel }
-            const interviewSnapshot = await firestore
-              .collection(COLLECTIONS.INTERVIEWS)
-              .add({})
-            interview.id = interviewSnapshot.id
-            await firestore
-              .collection(COLLECTIONS.INTERVIEWS)
-              .doc(interview.id)
-              .set(interview)
+
+            interview.id = getDocumentRef(COLLECTIONS.INTERVIEWS).id
+
+            await setDocument(COLLECTIONS.INTERVIEWS, interview.id, interview)
 
             technology.interviewIds[interview.id] = true
           }
         }
       }
 
-      await firestore
-        .collection(COLLECTIONS.TECHNOLOGIES)
-        .doc(historyState.technologyId)
-        .set(technology)
+      await setDocument(
+        COLLECTIONS.TECHNOLOGIES,
+        historyState.technologyId,
+        technology
+      )
+
       history.replace(ROUTE_PATHS.TECHNOLOGIES_ALL, undefined)
     } catch (error) {
       console.log('create technology', error)
     }
 
-    // history.push(history.location.pathname, undefined)
     setCreationLoading(false)
   }
 
   // -- Header step button functions --
   const onNext = () => mainForm.submit()
   const onCancel = async () => {
-    try {
-      await firestore
-        .collection(COLLECTIONS.TECHNOLOGIES)
-        .doc(historyState.technologyId)
-        .delete()
-    } catch (e) {
-      console.log(e)
-    }
     resetLevel()
 
     //TODO clear todos, interview and materials in FB
@@ -156,25 +148,19 @@ const TechnologyCreate = () => {
     setLevelMapLoading(true)
     setLevelTree([])
     setSelectedLevel(false)
-    const presetSnapshot = await firestore
-      .collection(COLLECTIONS.LEVEL_PRESETS)
-      .doc(value)
-      .get()
 
-    const selectedPreset = presetSnapshot.data()
+    const selectedPreset = await getDocumentData(
+      COLLECTIONS.LEVEL_PRESETS,
+      value
+    )
 
     const levelMap = []
 
     for (const level of Object.keys(selectedPreset.levelIds)) {
-      const levelSnapshot = await firestore
-        .collection(COLLECTIONS.LEVELS)
-        .doc(level)
-        .get()
-
-      const levelName = levelSnapshot.data().name
+      const levelData = await getDocumentData(COLLECTIONS.LEVELS, level)
 
       levelMap.push({
-        label: levelName,
+        label: levelData.name,
         value: level,
         isLeaf: false
       })
@@ -187,25 +173,20 @@ const TechnologyCreate = () => {
     const targetOption = selectedOptions[selectedOptions.length - 1]
     targetOption.loading = true
 
-    const presetSnapshot = await firestore
-      .collection(COLLECTIONS.LEVEL_PRESETS)
-      .doc(mainForm.getFieldValue('levelPresetId'))
-      .get()
-
-    const selectedPreset = presetSnapshot.data()
+    const selectedPreset = await getDocumentData(
+      COLLECTIONS.LEVEL_PRESETS,
+      mainForm.getFieldValue('levelPresetId')
+    )
     targetOption.children = []
 
     for (const subLevel of Object.values(
       selectedPreset.levelIds[targetOption.value]
     )) {
-      const subLevelSnapshot = await firestore
-        .collection(COLLECTIONS.SUB_LEVELS)
-        .doc(subLevel)
-        .get()
-
-      const subLevelName = subLevelSnapshot.data().name
-
-      targetOption.children.push({ label: subLevelName, value: subLevel })
+      const subLevelData = await getDocumentData(
+        COLLECTIONS.SUB_LEVELS,
+        subLevel
+      )
+      targetOption.children.push({ label: subLevelData.name, value: subLevel })
     }
     targetOption.loading = false
 
@@ -246,12 +227,10 @@ const TechnologyCreate = () => {
     //TODO need to set initLoading
     const initTechnology = async () => {
       try {
-        const technology = await firestore
-          .collection(COLLECTIONS.TECHNOLOGIES)
-          .add({})
+        const technologyId = await getDocumentRef(COLLECTIONS.TECHNOLOGIES).id
         history.push(history.location.pathname, {
           ...historyState,
-          technologyId: technology.id
+          technologyId: technologyId
         })
       } catch (error) {
         console.log('init technology', error)

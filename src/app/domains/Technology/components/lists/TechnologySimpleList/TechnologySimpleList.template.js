@@ -4,7 +4,7 @@ import { List, Space } from 'antd'
 import { Edit, Remove } from 'antd-styled'
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons'
 import { TechnologyAdvancedView } from 'domains/Technology/components/views'
-import firestore from '~/services/Firebase/firestore'
+import { deleteDocument, getDocumentData } from '~/services/Firebase/firestore'
 import { COLLECTIONS } from 'app/constants'
 
 /**
@@ -12,14 +12,16 @@ import { COLLECTIONS } from 'app/constants'
  *
  * @comment TechnologySimpleList - React component.
  *
- * @since 19 Mar 2021 ( v.0.0.7 ) // LAST-EDIT DATE
+ * @since 20 Mar 2021 ( v.0.0.8 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
 
-const deleteData = async (field, collection) => {
-  for (const id of Object.keys(field)) {
-    await firestore.collection(collection).doc(id).delete()
+const deleteData = async (iterableList, collection) => {
+  if (iterableList) {
+    for (const id of Object.keys(iterableList)) {
+      await deleteDocument(collection, id)
+    }
   }
 }
 
@@ -34,23 +36,16 @@ const TechnologySimpleList = (props) => {
   const deleteTechnology = async (technologyId) => {
     setDeleteLoading(true)
     try {
-      const technologySnapshot = await firestore
-        .collection(COLLECTIONS.TECHNOLOGIES)
-        .doc(technologyId)
-        .get()
+      const technology = await getDocumentData(
+        COLLECTIONS.TECHNOLOGIES,
+        technologyId
+      )
 
-      console.log(technologyId)
+      await deleteData(technology?.materialIds, COLLECTIONS.MATERIALS)
+      await deleteData(technology?.todoIds, COLLECTIONS.TODOS)
+      await deleteData(technology?.interviewIds, COLLECTIONS.INTERVIEWS)
 
-      const technology = technologySnapshot.data()
-
-      await deleteData(technology.materialIds, COLLECTIONS.MATERIALS)
-      await deleteData(technology.todoIds, COLLECTIONS.TODOS)
-      await deleteData(technology.interviewIds, COLLECTIONS.INTERVIEWS)
-
-      await firestore
-        .collection(COLLECTIONS.TECHNOLOGIES)
-        .doc(technologyId)
-        .delete()
+      await deleteDocument(COLLECTIONS.TECHNOLOGIES, technologyId)
     } catch (error) {
       console.log('delete technology', error)
     }
@@ -67,7 +62,9 @@ const TechnologySimpleList = (props) => {
           <List.Item>
             <TechnologyAdvancedView
               name={technology.name}
-              materialIds={Object.keys(technology.materialIds)}
+              materialIds={
+                technology?.materialIds && Object.keys(technology.materialIds)
+              }
               refCollectionMaterials={refCollectionMaterials}
               extra={
                 extra && (

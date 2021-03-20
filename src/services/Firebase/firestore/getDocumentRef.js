@@ -9,7 +9,7 @@ import firestore from '~/services/Firebase/firestore'
  *
  * @param {string}     path      Path to collection
  *
- * @return {object} object of document's data
+ * @return {DocumentReference<DocumentData>} object of document's data
  */
 
 const getDocumentRef = (path) => firestore.collection(path).doc()
