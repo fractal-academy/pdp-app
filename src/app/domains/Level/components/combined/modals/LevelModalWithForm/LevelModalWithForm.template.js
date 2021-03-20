@@ -2,8 +2,8 @@ import PropTypes from 'prop-types'
 import { useState } from 'react'
 import { Form, Modal, Space, Tree, Empty, message } from 'antd'
 import { Remove, Text, Row, Col } from 'antd-styled'
-import { LevelSimpleForm } from 'domains/Level/components/forms'
 import { DeleteOutlined } from '@ant-design/icons'
+import { LevelSimpleForm } from 'domains/Level/components/forms'
 import _ from 'lodash'
 
 /**
@@ -11,7 +11,7 @@ import _ from 'lodash'
  *
  * @comment LevelModalWithForm - React component.
  *
- * @since 15 Mar 2021 ( v.0.0.3 ) // LAST-EDIT DATE
+ * @since 20 Mar 2021 ( v.0.0.4 ) // LAST-EDIT DATE
  *
  * @return {React.FC}
  */
@@ -32,10 +32,15 @@ const LevelModalWithForm = (props) => {
   const onFinish = async (data, levelIds) => {
     setLoading(true)
 
-    await onCreate({ ...data, levelIds })
+    try {
+      await onCreate({ ...data, levelIds })
 
-    form.resetFields()
-    setLevelTree([])
+      form.resetFields()
+      setLevelTree([])
+    } catch (error) {
+      console.log('level create', error)
+    }
+
     setLoading(false)
   }
 
@@ -101,11 +106,9 @@ const LevelModalWithForm = (props) => {
       confirmLoading={loading}
       onCancel={onCancel}
       onOk={() => {
-        if (levelTree.length) {
-          form.submit()
-        } else {
-          message.error('Create at least one level')
-        }
+        levelTree.length
+          ? form.submit()
+          : message.error('Create at least one level')
       }}>
       <Row gutter={[8, 16]}>
         <Col span={24}>

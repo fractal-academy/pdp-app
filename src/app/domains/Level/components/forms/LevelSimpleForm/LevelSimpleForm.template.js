@@ -10,7 +10,7 @@ import _ from 'lodash'
  *
  * @comment LevelSimpleForm - React component using for creating presets of level.
  *
- * @since 15 Mar 2021 ( v.0.0.4 ) // LAST-EDIT DATE
+ * @since 20 Mar 2021 ( v.0.0.5 ) // LAST-EDIT DATE
  *
  * @param {boolean}       props.disable           Use to disable all fields in this form(Ex. when submit is async).
  * @param {function}      props.onFinish          Run when form is submitted.
@@ -42,16 +42,9 @@ const LevelSimpleForm = (props) => {
     const buf = { ...values }
     buf[level] = buf[level] ?? []
 
-    // Added sub levels to level
-    if (subLevel) {
-      // Exclusion sub level duplicates
-      if (!buf[level].includes(subLevel)) {
-        if (buf[level].length) {
-          buf[level] = [...buf[level], subLevel]
-        } else {
-          buf[level] = [subLevel]
-        }
-      }
+    // Add sub levels to level & Exclusion sub level duplicates
+    if (subLevel && !buf[level].includes(subLevel)) {
+      buf[level] = buf[level].length ? [...buf[level], subLevel] : [subLevel]
     }
 
     setValues(buf)
@@ -80,7 +73,7 @@ const LevelSimpleForm = (props) => {
             </Form.Item>
           </Col>
           <Col flex={1}>
-            <Form.Item name="type" label="Type">
+            <Form.Item name="type" label="Type" rules={[{ required: true }]}>
               <TypeSingleSelect disabled={disable} />
             </Form.Item>
           </Col>
