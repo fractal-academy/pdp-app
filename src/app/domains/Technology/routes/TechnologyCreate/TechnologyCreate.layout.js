@@ -7,7 +7,6 @@ import { TechnologyAdvancedForm } from 'domains/Technology/components/forms'
 import { TechnologyAdvancedCascader } from 'domains/Technology/components/combined/cascader'
 import { PageWrapper } from '~/components/HOC'
 import {
-  deleteDocument,
   getDocumentData,
   getDocumentRef,
   setDocument
@@ -20,7 +19,7 @@ import * as ROUTE_PATHS from 'app/constants/routePaths'
  *
  * @comment TechnologyCreate - React component.
  *
- * @since 19 Mar 2021 ( v.0.0.8 ) // LAST-EDIT DATE
+ * @since 20 Mar 2021 ( v.0.0.8 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
@@ -66,10 +65,7 @@ const TechnologyCreate = () => {
     let technology = {
       id: historyState.technologyId,
       name: value.name,
-      type: value.type,
-      materialIds: {},
-      todoIds: {},
-      interviewIds: {}
+      type: value.type
     }
 
     try {
@@ -91,15 +87,18 @@ const TechnologyCreate = () => {
         getIds(materialsRef)
 
         if (materialsRef) {
+          technology.materialIds = {}
           getIds(materialsRef).forEach(
             (id) => (technology.materialIds[id] = true)
           )
         }
         if (todosRef) {
+          technology.todoIds = {}
           getIds(todosRef).forEach((id) => (technology.todoIds[id] = true))
         }
 
         if (interviewRef) {
+          technology.interviewIds = {}
           let interview = {
             technologyId: historyState.technologyId,
             levelIds: { levelId: level }
@@ -239,8 +238,6 @@ const TechnologyCreate = () => {
     }
     !historyState?.technologyId && initTechnology()
   }, [])
-
-  console.log(history)
 
   // [TEMPLATE]
   return (
