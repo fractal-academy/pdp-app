@@ -73,7 +73,7 @@ const LevelSimpleForm = (props) => {
             </Form.Item>
           </Col>
           <Col flex={1}>
-            <Form.Item name="type" label="Type" rules={[{ required: true }]}>
+            <Form.Item name="type" label="Type">
               <TypeSingleSelect disabled={disable} />
             </Form.Item>
           </Col>
