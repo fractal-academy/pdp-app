@@ -1,50 +1,45 @@
 import PropTypes from 'prop-types'
+import { Row, Col } from 'antd-styled'
+import { QuestionSimpleForm } from 'domains/Question/components/forms'
+import { QuestionSimpleView } from 'domains/Question/components/views'
 
 /**
  * @info QuestionViewWithForm (05 Mar 2021) // CREATION DATE
  *
  * @comment QuestionViewWithForm - React component.
  *
- * @since 05 Mar 2021 ( v.0.0.1 ) // LAST-EDIT DATE
+ * @since 19 Mar 2021 ( v.0.0.2 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
 
 const QuestionViewWithForm = (props) => {
   // [INTERFACES]
-  /*
-  code sample: 
-  const { data } = props
-  */
-
-  // [ADDITIONAL_HOOKS]
-  /*
-  code sample: 
-  const firestore = useFirestore()
-  */
-
-  // [COMPONENT_STATE_HOOKS]
-  /*
-  code sample:
-  const singleton = useRef(true) // references also put here
-  const [state, setState] = useState({})
-  */
-
-  // [HELPER_FUNCTIONS]
-
-  // [COMPUTED_PROPERTIES]
-  /* 
-    code sample: 
-    const userDisplayName = user.firstName + user.lastName
-  */
-
-  // [USE_EFFECTS]
+  const { question, isEdit, ...rest } = props
 
   // [TEMPLATE]
-  return <div>QuestionViewWithForm</div>
+  return (
+    <Row flex={1}>
+      <Col span={24}>
+        {isEdit ? (
+          <QuestionSimpleForm
+            data={question}
+            defaultValue={question.name}
+            {...rest}
+          />
+        ) : (
+          <QuestionSimpleView text={question.name} />
+        )}
+      </Col>
+    </Row>
+  )
 }
 
 // [PROPTYPES]
-QuestionViewWithForm.propTypes = {}
+QuestionViewWithForm.propTypes = {
+  question: PropTypes.object,
+  isEdit: PropTypes.bool,
+  onFinish: PropTypes.func
+}
 
 export default QuestionViewWithForm

@@ -3,6 +3,9 @@ import { List, Typography, Input, Form, Col } from 'antd'
 import { Remove, Edit, Box, Row } from 'antd-styled'
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons'
 import { useState, useRef, useEffect } from 'react'
+import firestore from '~/services/Firebase/firestore'
+import { COLLECTIONS } from 'app/constants'
+
 const { Text } = Typography
 
 /**
@@ -10,7 +13,7 @@ const { Text } = Typography
  *
  * @comment TodoSimpleList - React component.
  *
- * @since 14 Mar 2021 ( v.0.0.4 ) // LAST-EDIT DATE
+ * @since 17 Mar 2021 ( v.0.0.5 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
@@ -25,17 +28,26 @@ const TodoSimpleList = (props) => {
 
   // [COMPONENT_STATE_HOOKS]
   const [editTodo, setEditTodo] = useState(false)
+  const [editLoading, setEditLoading] = useState(false)
 
   // [HELPER_FUNCTIONS]
-  const onEdit = (todo, idx) => {
-    setEditTodo({ todo, idx })
-  }
-
-  const onSubmit = (value, idx) => {
+  const onSubmit = async (data, id) => {
+    setEditLoading(true)
+    const editTodoIndex = todos.findIndex((todo) => todo.id === id)
     const newTodos = [...todos]
-    newTodos[idx] = value.todo || editTodo.todo
+    newTodos[editTodoIndex] = { name: data.todo || editTodo.name, id }
+
+    try {
+      await firestore
+        .collection(COLLECTIONS.TODOS)
+        .doc(id)
+        .update({ name: data.todo })
+    } catch (error) {
+      console.log('todo submit', error)
+    }
     setTodos(newTodos)
     setEditTodo(false)
+    setEditLoading(false)
   }
 
   // [USE_EFFECTS]
@@ -51,7 +63,7 @@ const TodoSimpleList = (props) => {
     <List
       size="large"
       dataSource={todos}
-      renderItem={(todo, idx) => (
+      renderItem={(todo) => (
         <Box width="100%">
           <List.Item
             actions={[
@@ -60,7 +72,7 @@ const TodoSimpleList = (props) => {
                 tooltip="Edit"
                 type="text"
                 icon={<EditOutlined />}
-                onClick={() => onEdit(todo, idx)}
+                onClick={() => setEditTodo(todo)}
               />,
               <Remove
                 shape="default"
@@ -68,29 +80,37 @@ const TodoSimpleList = (props) => {
                 type="text"
                 onClick={() => setEditTodo(false)}
                 icon={<DeleteOutlined />}
-                onSubmit={() => onDeleteTodo(idx)}
+                onSubmit={() => onDeleteTodo(todo.id)}
               />
             ]}>
-            {editTodo.idx === idx ? (
+            {editTodo.id === todo.id ? (
               <Row flex={1}>
                 <Col span={24}>
-                  <Form form={form} onFinish={(todo) => onSubmit(todo, idx)}>
-                    <Form.Item style={{ flex: 1 }} name="todo" noStyle>
+                  <Form
+                    form={form}
+                    onFinish={(value) => onSubmit(value, todo.id)}>
+                    <Form.Item
+                      style={{ flex: 1 }}
+                      name="todo"
+                      noStyle
+                      hasFeedback={editLoading}
+                      validateStatus="validating">
                       <Input.TextArea
+                        disabled={editLoading}
                         onPressEnter={(e) => {
                           e.preventDefault()
                           form.submit()
                         }}
                         autoSize={{ minRows: 1 }}
                         ref={inputRef}
-                        defaultValue={editTodo.todo}
+                        defaultValue={editTodo.name}
                       />
                     </Form.Item>
                   </Form>
                 </Col>
               </Row>
             ) : (
-              <Text ellipsis>{todo}</Text>
+              <Text ellipsis>{todo.name}</Text>
             )}
           </List.Item>
         </Box>

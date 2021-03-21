@@ -7,6 +7,8 @@ const metadata = {
 }
 export default metadata
 
-export const TodoViewWIthActionsStory = (args) => <TodoViewWIthActions {...args} />
+export const TodoViewWIthActionsStory = (args) => (
+  <TodoViewWIthActions {...args} />
+)
 
 TodoViewWIthActionsStory.args = {}

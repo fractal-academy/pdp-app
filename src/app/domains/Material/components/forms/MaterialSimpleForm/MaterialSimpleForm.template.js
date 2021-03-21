@@ -6,14 +6,14 @@ import { Form, Input, Button } from 'antd'
  *
  * @comment MaterialSimpleForm - React component.
  *
- * @since 11 Mar 2021 ( v.0.0.3 ) // LAST-EDIT DATE
+ * @since 18 Mar 2021 ( v.0.0.4 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
 
 const MaterialSimpleForm = (props) => {
   // [INTERFACES]
-  const { onFinish, onFinishFailed } = props
+  const { onFinish, onFinishFailed, loading } = props
 
   // [TEMPLATE]
   return (
@@ -28,11 +28,13 @@ const MaterialSimpleForm = (props) => {
         rules={[
           { required: true, message: 'First enter link to material.' },
           { type: 'url', message: 'You can enter only links here.' }
-        ]}>
-        <Input placeholder="Enter link to material..." />
+        ]}
+        hasFeedback={loading}
+        validateStatus="validating">
+        <Input disabled={loading} placeholder="Enter link to material..." />
       </Form.Item>
       <Form.Item noStyle>
-        <Button htmlType="submit" type="primary">
+        <Button disabled={loading} htmlType="submit" type="primary">
           Add Link
         </Button>
       </Form.Item>
@@ -43,7 +45,8 @@ const MaterialSimpleForm = (props) => {
 // [PROPTYPES]
 MaterialSimpleForm.propTypes = {
   onFinish: PropTypes.func,
-  onFinishFailed: PropTypes.func
+  onFinishFailed: PropTypes.func,
+  loading: PropTypes.bool
 }
 
 export default MaterialSimpleForm

@@ -1,19 +1,20 @@
 import PropTypes from 'prop-types'
-import { Button, Form, Input } from 'antd'
 import { useRef } from 'react'
+import { Button, Form, Input } from 'antd'
+
 /**
  * @info TodoSimpleForm (05 Mar 2021) // CREATION DATE
  *
  * @comment TodoSimpleForm - React component.
  *
- * @since 11 Mar 2021 ( v.0.0.4 ) // LAST-EDIT DATE
+ * @since 17 Mar 2021 ( v.0.0.5 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
 
 const TodoSimpleForm = (props) => {
   // [INTERFACES]
-  const { onSubmit } = props
+  const { onSubmit, loading, ...rest } = props
 
   // [ADDITIONAL_HOOKS]
   const inputRef = useRef(null)
@@ -28,9 +29,22 @@ const TodoSimpleForm = (props) => {
 
   // [TEMPLATE]
   return (
-    <Form form={form} layout="inline" size="large" onFinish={onFinish}>
-      <Form.Item style={{ flex: 1 }} name="todo">
-        <Input placeholder="Enter what student need to do..." ref={inputRef} />
+    <Form
+      form={form}
+      layout="inline"
+      size="large"
+      onFinish={onFinish}
+      {...rest}>
+      <Form.Item
+        style={{ flex: 1 }}
+        name="todo"
+        hasFeedback={loading}
+        validateStatus="validating">
+        <Input
+          placeholder="Enter what student need to do..."
+          ref={inputRef}
+          disabled={loading}
+        />
       </Form.Item>
       <Form.Item noStyle>
         <Button htmlType="submit" type="primary">
@@ -43,7 +57,9 @@ const TodoSimpleForm = (props) => {
 
 // [PROPTYPES]
 TodoSimpleForm.propTypes = {
-  onSubmit: PropTypes.func.isRequired
+  onSubmit: PropTypes.func.isRequired,
+  loading: PropTypes.bool,
+  rest: PropTypes.object
 }
 
 export default TodoSimpleForm

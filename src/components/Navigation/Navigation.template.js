@@ -129,15 +129,17 @@ const Navigation = () => {
           <Divider>Menu</Divider>
         </Box>
         <Menu
+          mode="inline"
           selectedKeys={[selectedMenuItem]}
           style={styles.menuStyle}
           onClick={({ key }) => setSelectedMenuItem(key)}>
           {roleMenu.map((menuItem) => (
-            <styles.MenuItem
+            <Menu.Item
+              style={styles.menuItemStyle}
               key={menuItem.route}
               onClick={() => history.push(menuItem.route)}>
               {menuItem.title}
-            </styles.MenuItem>
+            </Menu.Item>
           ))}
         </Menu>
 

@@ -1,19 +1,20 @@
 import PropTypes from 'prop-types'
-import { Button, Form, Input } from 'antd'
 import { useRef } from 'react'
+import { Button, Form, Input } from 'antd'
+
 /**
  * @info InterviewSimpleForm (10 Mar 2021) // CREATION DATE
  *
  * @comment InterviewSimpleForm - React component.
  *
- * @since 11 Mar 2021 ( v.0.0.3 ) // LAST-EDIT DATE
+ * @since 19 Mar 2021 ( v.0.0.5 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
 
 const InterviewSimpleForm = (props) => {
   // [INTERFACES]
-  const { onSubmit } = props
+  const { onSubmit, loading } = props
 
   // [ADDITIONAL_HOOKS]
   const inputRef = useRef(null)
@@ -29,8 +30,16 @@ const InterviewSimpleForm = (props) => {
   // [TEMPLATE]
   return (
     <Form form={form} layout="inline" size="large" onFinish={onFinish}>
-      <Form.Item style={{ flex: 1 }} name="question">
-        <Input placeholder="Enter what student need to know" ref={inputRef} />
+      <Form.Item
+        style={{ flex: 1 }}
+        name="question"
+        hasFeedback={loading}
+        validateStatus="validating">
+        <Input
+          placeholder="Enter what student needs to know"
+          ref={inputRef}
+          disabled={loading}
+        />
       </Form.Item>
       <Form.Item noStyle>
         <Button htmlType="submit" type="primary">
@@ -43,7 +52,8 @@ const InterviewSimpleForm = (props) => {
 
 // [PROPTYPES]
 InterviewSimpleForm.propTypes = {
-  onSubmit: PropTypes.func.isRequired
+  onSubmit: PropTypes.func.isRequired,
+  loading: PropTypes.bool
 }
 
 export default InterviewSimpleForm

@@ -6,15 +6,16 @@ import { Divider, message, Empty } from 'antd'
 import { MaterialSimpleForm } from 'domains/Material/components/forms'
 import { MaterialSimpleUpload } from 'domains/Material/components/combined/uploads'
 import storage from '~/services/Firebase/storage'
+import firestore from '~/services/Firebase/firestore'
 import { PageWrapper } from '~/components/HOC'
-import { ROUTE_PATHS } from 'app/constants'
+import { COLLECTIONS } from 'app/constants'
 
 /**
  * @info MaterialCreate (05 Mar 2021) // CREATION DATE
  *
  * @comment MaterialCreate - React component.
  *
- * @since 12 Mar 2021 ( v.0.0.7 ) // LAST-EDIT DATE
+ * @since 19 Mar 2021 ( v.0.0.9 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
@@ -24,14 +25,49 @@ const STORAGE_URL = 'materials/'
 const MaterialCreate = () => {
   // [ADDITIONAL_HOOKS]
   const history = useHistory()
+
+  const historyState = history.location.state
+  const currentLevels = historyState.selectedLevel
+  let currentLevelMaterials
+
+  // Check if there are already exist materials for currentLevels
+  if (historyState?.materialIds) {
+    currentLevelMaterials =
+      historyState.materialIds?.[currentLevels.levelId]?.[
+        currentLevels.subLevelId
+      ]
+  }
+
   // [COMPONENT_STATE_HOOKS]
-  const [materials, setMaterials] = useState([])
+  const [materials, setMaterials] = useState(currentLevelMaterials || [])
+  const [linkLoading, setLinkLoading] = useState(false)
 
   // [HELPER_FUNCTIONS]
-  const onLinkAdd = (data) => {
+  const onLinkAdd = async (data) => {
     const { url } = data
-    const link = { url, name: url, type: 'url' }
-    setMaterials([...materials, link])
+    setLinkLoading(true)
+
+    try {
+      const collectionRef = firestore.collection(COLLECTIONS.MATERIALS)
+
+      const materialRef = await collectionRef.add({})
+
+      const link = {
+        url,
+        name: url,
+        type: 'url',
+        id: materialRef.id,
+        levelIds: currentLevels,
+        readOnly: true
+      }
+      await collectionRef.doc(materialRef.id).set(link)
+
+      setMaterials([...materials, link])
+    } catch (error) {
+      console.log('link Add', error)
+    }
+
+    setLinkLoading(false)
   }
 
   const onMaterialUpload = (data) => {
@@ -71,6 +107,10 @@ const MaterialCreate = () => {
         switch (error.code) {
           case 'storage/unauthorized': {
             message.error("You don't have permissions.")
+            break
+          }
+          default: {
+            message.error(error.code)
           }
         }
 
@@ -80,17 +120,26 @@ const MaterialCreate = () => {
         }
         setMaterials([...materials, material])
       },
-      () => {
+      async () => {
         // Set result material data to list
-        uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
-          const material = {
-            name: file.name,
-            url: downloadURL,
-            type: file.type,
-            size: file.size
-          }
-          setMaterials([...materials, material])
-        })
+        const materialURL = await uploadTask.snapshot.ref.getDownloadURL()
+        const collectionRef = firestore.collection(COLLECTIONS.MATERIALS)
+
+        const materialRef = await collectionRef.add({})
+
+        const material = {
+          id: materialRef.id,
+          name: file.name,
+          url: materialURL,
+          type: file.type,
+          size: file.size,
+          levelIds: currentLevels,
+          readOnly: true
+        }
+
+        await collectionRef.doc(materialRef.id).set(material)
+
+        setMaterials([...materials, material])
       }
     )
   }
@@ -103,10 +152,15 @@ const MaterialCreate = () => {
       const storageRef = storage.refFromURL(removedItem.url)
       try {
         await storageRef.delete()
+        await firestore
+          .collection(COLLECTIONS.MATERIALS)
+          .doc(removedItem.id)
+          .delete()
+
         setMaterials(buffer)
         message.success('Material was successfully deleted.')
       } catch (error) {
-        message.error(error.message)
+        message.error('material delete', error.message)
       }
     } else {
       setMaterials(buffer)
@@ -116,14 +170,45 @@ const MaterialCreate = () => {
     return false
   }
 
-  const onBack = () => history.goBack()
-  const onNext = () =>
-    history.push(ROUTE_PATHS.INTERVIEW_CREATE, { ...history.state, materials })
+  const onSave = () => {
+    const { levelId, subLevelId } = historyState.selectedLevel
+    if (materials.length) {
+      let currentLevelMaterials = { [subLevelId]: materials }
+
+      if (historyState?.materialIds) {
+        currentLevelMaterials = {
+          ...historyState?.materialIds[levelId],
+          [subLevelId]: materials
+        }
+      }
+
+      return history.push(historyState.prevLocation, {
+        ...historyState,
+        materialIds: {
+          ...historyState?.materialIds,
+          [levelId]: currentLevelMaterials
+        }
+      })
+    }
+    // If there are no todos delete empty object from history state
+    if (historyState?.materialIds) {
+      delete historyState?.materialIds[levelId][subLevelId]
+      // Check if there was last item is this level delete level object
+      if (!Object.values(historyState?.materialIds[levelId]).length) {
+        delete historyState?.materialIds[levelId]
+      }
+    }
+    history.push(historyState.prevLocation, historyState)
+  }
 
   // [TEMPLATE]
   return (
-    <PageWrapper title="Add useful materials" onBack={onBack} onNext={onNext}>
-      <MaterialSimpleForm onFinish={onLinkAdd} />
+    <PageWrapper
+      title="Add useful materials"
+      nextBtnProps={{ text: 'Save' }}
+      onNext={onSave}
+      onBack={onSave}>
+      <MaterialSimpleForm onFinish={onLinkAdd} loading={linkLoading} />
       <Divider>Or</Divider>
       <MaterialSimpleUpload
         materials={materials}
