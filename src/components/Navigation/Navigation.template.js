@@ -87,13 +87,13 @@ const Navigation = () => {
   const onLogOut = () => {
     try {
       auth.signOut()
+      history.push(ROUTE_PATHS.SESSION_LOGIN)
       sessionDispatch({
         type: TYPES.LOG_OUT
       })
     } catch (error) {
       console.log(error.message)
     }
-    history.push(ROUTE_PATHS.SESSION_LOGIN)
   }
   // [COMPUTED_PROPERTIES]
   const roleMenu = Object.values(MENU_ITEMS[role])

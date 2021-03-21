@@ -1,4 +1,5 @@
-import { Switch, Route, Redirect } from 'react-router-dom'
+import { useEffect } from 'react'
+import { Switch, Route, Redirect, useHistory } from 'react-router-dom'
 import { Layout } from 'antd-styled'
 import { Navigation, Spinner } from '~/components'
 import { ROUTES_VALUES, ROUTE_PATHS } from 'app/constants'
@@ -20,8 +21,15 @@ import { useAuthListener } from '~/hooks'
 const App = () => {
   // [ADDITIONAL_HOOKS]
   const session = useSession()
+  const history = useHistory()
 
   const { loading } = useAuthListener()
+
+  useEffect(() => {
+    if (session?.role) {
+      history.replace(ROUTE_PATHS.START_PAGE_MAP[session?.role])
+    }
+  }, [history, session])
 
   if (loading) {
     return <Spinner />
@@ -29,12 +37,13 @@ const App = () => {
   // [TEMPLATE]
   return (
     <Switch>
-      <Redirect from="/" to={ROUTE_PATHS.START_PAGE_MAP[session.role]} exact />
       <Route component={SessionLogin} path={ROUTE_PATHS.SESSION_LOGIN} />
       <Route
         component={SessionRegister}
         path={ROUTE_PATHS.SESSION_REGISTRATION}
       />
+      <Redirect from="/" to={ROUTE_PATHS.START_PAGE_MAP[session?.role]} exact />
+
       <Layout>
         <RoleProvider>
           <Navigation />
@@ -49,6 +58,7 @@ const App = () => {
           </Switch>
         </RoleProvider>
       </Layout>
+
       <Redirect to={ROUTE_PATHS.NOT_FOUND_PATH} />
     </Switch>
   )
