@@ -13,12 +13,13 @@ import firestore, {
 } from '~/services/Firebase/firestore'
 import { COLLECTIONS } from 'app/constants'
 import { TYPES_VALUES } from '~/constants'
+
 /**
  * @info LevelSelectWithCreate (15 Mar 2021) // CREATION DATE
  *
  * @comment LevelSelectWithCreate - React component.
  *
- * @since 21 Mar 2021 ( v.0.0.5 ) // LAST-EDIT DATE
+ * @since 22 Mar 2021 ( v.0.0.5 ) // LAST-EDIT DATE
  *
  * @return {React.FC}
  */

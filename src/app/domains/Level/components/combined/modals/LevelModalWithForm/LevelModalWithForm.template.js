@@ -11,7 +11,7 @@ import _ from 'lodash'
  *
  * @comment LevelModalWithForm - React component.
  *
- * @since 20 Mar 2021 ( v.0.0.4 ) // LAST-EDIT DATE
+ * @since 22 Mar 2021 ( v.0.0.5 ) // LAST-EDIT DATE
  *
  * @return {React.FC}
  */
@@ -110,6 +110,9 @@ const LevelModalWithForm = (props) => {
 
   // [COMPUTED_PROPERTIES]
   const actionName = edit ? 'Edit' : 'Create'
+  const modalTitle = edit
+    ? `${actionName} a level preset`
+    : `${actionName} a new level preset`
   const actionButtons = (
     <>
       <Button onClick={onCancel}>Cancel</Button>
@@ -148,7 +151,7 @@ const LevelModalWithForm = (props) => {
   return (
     <Modal
       visible={visible}
-      title={`${actionName} a new level preset`}
+      title={modalTitle}
       okText={actionName}
       width="650px"
       onCancel={onCancel}
