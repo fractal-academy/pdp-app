@@ -11,7 +11,7 @@ const { Text } = Typography
  *
  * @comment StudentSimpleTable - React component.
  *
- * @since 15 Mar 2021 ( v.0.0.3 ) // LAST-EDIT DATE
+ * @since 22 Mar 2021 ( v.0.0.4 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
@@ -20,7 +20,7 @@ let columns = [
   {
     title: 'Student',
     key: 'student',
-    render: (text, data) => <UserSimpleView {...data} />
+    render: (text, data) => <UserSimpleView withAvatar {...data} />
   },
   {
     title: 'Email',

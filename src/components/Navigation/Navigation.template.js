@@ -18,7 +18,7 @@ import * as styles from './Navigation.style'
  *
  * @comment Navigation - React component.
  *
- * @since 19 Mar 2021 ( v.0.0.7 ) // LAST-EDIT DATE
+ * @since 22 Mar 2021 ( v.0.0.8 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
@@ -58,14 +58,6 @@ const MENU_ITEMS = {
       route: generatePath(CHAT_ROUTE_PATHS.CHATS_ALL, { role: ROLES.STUDENT })
     }
   }
-}
-
-const MOCK_USER = {
-  firstName: 'Fractal',
-  secondName: 'Band',
-  email: 'fractal@gmail.com',
-  avatarURL:
-    'https://firebasestorage.googleapis.com/v0/b/expenses-senseteq.appspot.com/o/photo_2020-11-27_19-32-45.jpg?alt=media&token=75958d4d-46ab-458f-b413-e81696c8c16d'
 }
 
 const Navigation = () => {
@@ -116,9 +108,8 @@ const Navigation = () => {
       <Box display="flex" flexDirection="column" height="100%">
         <Box paddingX={4} marginBottom={4}>
           <UserAdvancedView
-            {...MOCK_USER}
+            {...session}
             onAvatarClick={goToProfile}
-            role={role}
             withRoleSelect={(value) => {
               history.push(ROUTE_PATHS.START_PAGE_MAP[value])
             }}
