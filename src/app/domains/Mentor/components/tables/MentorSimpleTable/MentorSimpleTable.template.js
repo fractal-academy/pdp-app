@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Table, Typography } from 'antd'
+import { Table } from 'antd'
 import { useHistory, generatePath } from 'react-router-dom'
 import { UserSimpleView } from 'domains/User/components/views'
 import { CompanySimpleView } from 'domains/Company/components/views'
@@ -7,6 +7,7 @@ import { CompetenceSimpleView } from 'domains/Competence/components/views'
 import { useCollectionData } from 'react-firebase-hooks/firestore'
 import firestore from '~/services/Firebase/firestore'
 import { Spinner } from '~/components'
+import { ROLES } from '~/constants'
 import { COLLECTIONS, ROUTE_PATHS } from 'app/constants'
 import _ from 'lodash'
 /**
@@ -41,9 +42,7 @@ let columns = [
     dataIndex: 'competence',
     key: 'competence',
     render: (text, data) => (
-      <CompetenceSimpleView
-        competenceId={data?.competenceIds?.length && data.competenceIds[0]}
-      />
+      <CompetenceSimpleView competenceId={data?.competenceIds?.[0]} />
     )
   }
 ]
@@ -66,7 +65,7 @@ const MentorSimpleTable = () => {
         setUsersLoading(true)
         const usersSnapshot = await firestore
           .collection(COLLECTIONS.USERS)
-          .where('role', '==', 'mentor')
+          .where('role', '==', ROLES.MENTOR)
           .get()
 
         const users = usersSnapshot.docs.map((snapshot) => snapshot.data())

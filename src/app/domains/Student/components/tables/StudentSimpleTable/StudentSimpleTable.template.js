@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Button, Table, Typography } from 'antd'
+import { Button, Table } from 'antd'
 import { useHistory, generatePath } from 'react-router-dom'
 import { UserSimpleView } from 'domains/User/components/views'
 import { CompanySimpleView } from 'domains/Company/components/views'
@@ -7,6 +7,7 @@ import { useCollectionData } from 'react-firebase-hooks/firestore'
 import { ROUTE_PATHS, COLLECTIONS } from 'app/constants'
 import firestore from '~/services/Firebase/firestore'
 import { Spinner } from '~/components'
+import { ROLES } from '~/constants'
 import _ from 'lodash'
 
 /**
@@ -14,7 +15,7 @@ import _ from 'lodash'
  *
  * @comment StudentSimpleTable - React component.
  *
- * @since 22 Mar 2021 ( v.0.0.6 ) // LAST-EDIT DATE
+ * @since 22 Mar 2021 ( v.0.0.7) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
@@ -77,7 +78,7 @@ const StudentSimpleTable = () => {
         setUsersLoading(true)
         const usersSnapshot = await firestore
           .collection(COLLECTIONS.USERS)
-          .where('role', '==', 'student')
+          .where('role', '==', ROLES.STUDENT)
           .get()
 
         const users = usersSnapshot.docs.map((snapshot) => snapshot.data())
