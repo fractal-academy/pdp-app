@@ -20,16 +20,7 @@ let columns = [
   {
     title: 'User',
     key: 'user',
-    render: (text, data) => (
-      <UserSimpleView
-        withAvatar
-        id={data.id}
-        avatarURL={data.avatarURL}
-        firstName={data.firstName}
-        secondName={data.secondName}
-        email={data.email}
-      />
-    )
+    render: (text, data) => <UserSimpleView withAvatar {...data} />
   },
   {
     title: 'Email',
