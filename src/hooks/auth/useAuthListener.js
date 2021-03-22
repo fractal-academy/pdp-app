@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import { useAuthState } from 'react-firebase-hooks/auth'
-import { useSessionDispatch, useSession } from 'app/contexts/Session/hooks'
+import { useSessionDispatch } from 'app/contexts/Session/hooks'
 import auth from '~/services/Firebase/auth'
 import {
   getCollectionData,

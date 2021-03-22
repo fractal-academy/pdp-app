@@ -1,5 +1,9 @@
 import { UserAdvancedTable } from 'domains/User/components/tables'
 import { Button, Typography } from 'antd'
+import { useCollectionData } from 'react-firebase-hooks/firestore'
+import firestore from '~/services/Firebase/firestore'
+import { COLLECTIONS } from 'app/constants'
+import { Spinner } from '~/components'
 const { Title } = Typography
 
 /**
@@ -7,54 +11,31 @@ const { Title } = Typography
  *
  * @comment UserAll - React component.
  *
- * @since 05 Mar 2021 ( v.0.0.1 ) // LAST-EDIT DATE
+ * @since 22 Mar 2021 ( v.0.0.2 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
 
-const MOCK_DATA = [
-  {
-    key: '1',
-    idUser: 8,
-    avatarURL: '',
-    firstName: 'Fractal',
-    secondName: 'Band2',
-    email: 'email@gmail.com',
-    role: 'student',
-    companyId: '123',
-    specialityId: '456'
-  },
-  {
-    key: '2',
-    idUser: 8,
-    avatarURL:
-      'https://firebasestorage.googleapis.com/v0/b/expenses-senseteq.appspot.com/o/photo_2020-11-27_19-32-45.jpg?alt=media&token=75958d4d-46ab-458f-b413-e81696c8c16d',
-    firstName: 'Fractal',
-    secondName: 'Band2',
-    email: 'email@gmail.com',
-    role: 'admin',
-    companyId: '123',
-    specialityId: '456'
-  }
-]
-
 const UserAll = () => {
+  // [ADDITIONAL_HOOKS]
+  const [usersData, loading] = useCollectionData(
+    firestore.collection(`${COLLECTIONS.USERS}`)
+  )
+
   // [TEMPLATE]
 
   const AddButton = <Button type="primary">Add user</Button>
 
+  if (loading) return <Spinner />
   return (
     <>
       <Title>Users</Title>
       <UserAdvancedTable
-        data={MOCK_DATA}
+        data={usersData}
         tabBarExtraContent={{ right: AddButton }}
       />
     </>
   )
 }
-
-// [PROPTYPES]
-UserAll.propTypes = {}
 
 export default UserAll
