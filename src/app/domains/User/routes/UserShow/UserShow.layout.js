@@ -42,10 +42,12 @@ const UserShow = () => {
   const title =
     session.id === id
       ? 'My profile'
-      : `${session.role[0].toUpperCase()}${session.role.slice(1)}'s profile`
+      : !loading &&
+        `${userData.role[0].toUpperCase()}${userData.role.slice(1)}'s profile`
 
   // [TEMPLATE]
   if (loading) return <Spinner />
+
   return (
     <PageWrapper
       title={title}
