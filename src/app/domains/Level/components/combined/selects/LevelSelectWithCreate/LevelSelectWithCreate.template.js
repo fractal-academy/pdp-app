@@ -3,18 +3,22 @@ import { useState } from 'react'
 import { Button, Select } from 'antd'
 import { Box, Edit, Text } from 'antd-styled'
 import { useCollectionData } from 'react-firebase-hooks/firestore'
-import { LevelModalWithForm } from 'domains/Level/components/combined/modals'
+import _ from 'lodash'
 import { EditOutlined, PlusOutlined } from '@ant-design/icons'
-import firestore from '~/services/Firebase/firestore'
+import { LevelModalWithForm } from 'domains/Level/components/combined/modals'
+import firestore, {
+  deleteDocument,
+  getDocumentRef,
+  setDocument
+} from '~/services/Firebase/firestore'
 import { COLLECTIONS } from 'app/constants'
 import { TYPES_VALUES } from '~/constants'
-
 /**
  * @info LevelSelectWithCreate (15 Mar 2021) // CREATION DATE
  *
  * @comment LevelSelectWithCreate - React component.
  *
- * @since 16 Mar 2021 ( v.0.0.4 ) // LAST-EDIT DATE
+ * @since 21 Mar 2021 ( v.0.0.5 ) // LAST-EDIT DATE
  *
  * @return {React.FC}
  */
@@ -23,12 +27,9 @@ const createLevels = async (levelIds) => {
   const fbLevelIds = {}
 
   for (const level of Object.keys(levelIds)) {
-    const { id } = await firestore.collection(COLLECTIONS.LEVELS).add({})
-    fbLevelIds[id] = []
-    await firestore
-      .collection(COLLECTIONS.LEVELS)
-      .doc(id)
-      .set({ id, name: level })
+    const levelId = await getDocumentRef(COLLECTIONS.LEVELS).id
+    fbLevelIds[levelId] = []
+    await setDocument(COLLECTIONS.LEVELS, levelId, { id: levelId, name: level })
   }
 
   let i = 0
@@ -37,15 +38,16 @@ const createLevels = async (levelIds) => {
 
   for (const subLevels of Object.values(levelIds)) {
     for (const subLevel of subLevels) {
-      const { id } = await firestore.collection(COLLECTIONS.SUB_LEVELS).add({})
+      const subLevelId = await getDocumentRef(COLLECTIONS.SUB_LEVELS).id
 
-      fbLevelIds[fbLevelsKeys[i]].push(id)
-      await firestore
-        .collection(COLLECTIONS.SUB_LEVELS)
-        .doc(id)
-        .set({ id, name: subLevel, requiredLevel: prevSubLevel ?? null })
+      fbLevelIds[fbLevelsKeys[i]].push(subLevelId)
+      await setDocument(COLLECTIONS.SUB_LEVELS, subLevelId, {
+        id: subLevelId,
+        name: subLevel,
+        requiredLevel: prevSubLevel ?? null
+      })
 
-      prevSubLevel = id
+      prevSubLevel = subLevelId
     }
     i++
   }
@@ -66,27 +68,43 @@ const LevelSelectWithCreate = (props) => {
 
   // [COMPONENT_STATE_HOOKS]
   const [visible, setVisible] = useState(false)
+  const [editItem, setEditItem] = useState('')
 
   // [HELPER_FUNCTIONS]
-  const onCreate = async (data) => {
+  const onLevelCreate = async (data) => {
     const { name, type, levelIds } = data
     try {
       const fbLevelIds = await createLevels(levelIds)
 
-      const { id } = await firestore
-        .collection(COLLECTIONS.LEVEL_PRESETS)
-        .add({})
+      const levelPresetId = await getDocumentRef(COLLECTIONS.LEVEL_PRESETS).id
       const data = {
         levelIds: fbLevelIds,
         name,
         type,
-        id
+        id: levelPresetId
       }
-      await firestore.collection(COLLECTIONS.LEVEL_PRESETS).doc(id).set(data)
+      await setDocument(COLLECTIONS.LEVEL_PRESETS, levelPresetId, data)
       setVisible(false)
+      setEditItem('')
     } catch (error) {
       console.log('level preset create', error)
     }
+  }
+
+  const onLevelDelete = async () => {
+    const editedPreset = _.find(presets, ({ id }) => id === editItem)
+
+    const levelIds = editedPreset.levelIds
+    for (const level of Object.keys(levelIds)) {
+      for (const subLevelId of editedPreset.levelIds[level]) {
+        await deleteDocument(COLLECTIONS.SUB_LEVELS, subLevelId)
+      }
+      await deleteDocument(COLLECTIONS.LEVELS, level)
+    }
+    await deleteDocument(COLLECTIONS.LEVEL_PRESETS, editItem)
+
+    setVisible(false)
+    setEditItem('')
   }
 
   // [TEMPLATE]
@@ -127,7 +145,10 @@ const LevelSelectWithCreate = (props) => {
                 type="text"
                 size="small"
                 icon={<EditOutlined />}
-                onClick={() => setVisible(true)}
+                onClick={() => {
+                  setEditItem(levelPreset.id)
+                  setVisible(true)
+                }}
               />
             </Box>
           </Select.Option>
@@ -135,9 +156,12 @@ const LevelSelectWithCreate = (props) => {
       </Select>
       <LevelModalWithForm
         visible={visible}
-        onCreate={onCreate}
+        onCreate={onLevelCreate}
+        edit={editItem}
+        onDelete={onLevelDelete}
         onCancel={() => {
           setVisible(false)
+          setEditItem('')
         }}
       />
     </>
