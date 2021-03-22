@@ -39,14 +39,22 @@ let columns = [
     key: 'company',
     dataIndex: 'companyId',
     render: (companyId) =>
-      companyId && <CompanySimpleView companyId={companyId} />
+      companyId ? (
+        <CompanySimpleView companyId={companyId} />
+      ) : (
+        <Text type="secondary">None</Text>
+      )
   },
   {
     title: 'Speciality',
     key: 'speciality',
     dataIndex: 'specialityId',
     render: (specialityId) =>
-      specialityId && <SpecialitySimpleView specialityId={specialityId} />
+      specialityId ? (
+        <SpecialitySimpleView specialityId={specialityId} />
+      ) : (
+        <Text type="secondary">None</Text>
+      )
   }
 ]
 
