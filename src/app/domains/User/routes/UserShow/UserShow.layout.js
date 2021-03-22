@@ -1,49 +1,33 @@
-import PropTypes from 'prop-types'
-import { useHistory } from 'react-router-dom'
+import { useHistory, useParams } from 'react-router-dom'
 import { Space, Button, Avatar } from 'antd'
 import { Row, Col, Card, Title, Text } from 'antd-styled'
 import { PageWrapper } from '~/components/HOC'
 import { ROUTE_PATHS } from 'app/constants'
+import { useDocumentData } from 'react-firebase-hooks/firestore'
+import firestore from '~/services/Firebase/firestore'
+import { COLLECTIONS } from 'app/constants'
+import { Spinner } from '~/components'
+import { UserSimpleView } from 'domains/User/components/views'
+import { UserOutlined } from '@ant-design/icons'
+import { useSession } from 'contexts/Session/hooks'
 /**
  * @info UserShow (05 Mar 2021) // CREATION DATE
  *
  * @comment UserShow - React component.
  *
- * @since 14 Mar 2021 ( v.0.0.2 ) // LAST-EDIT DATE
+ * @since 22 Mar 2021 ( v.0.0.3 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
 
-const MOCK_USER = {
-  key: '2',
-  id: 'asdf',
-  avatarURL:
-    'https://firebasestorage.googleapis.com/v0/b/expenses-senseteq.appspot.com/o/photo_2020-11-27_19-32-45.jpg?alt=media&token=75958d4d-46ab-458f-b413-e81696c8c16d',
-  firstName: 'Fractal',
-  secondName: 'Band2',
-  email: 'email@gmail.com',
-  role: 'admin',
-  companyId: 'Senseteq'
-}
-
-const UserShow = (props) => {
-  // [INTERFACES]
-  /*
-  code sample:
-  const { data } = props
-  */
-
+const UserShow = () => {
   // [ADDITIONAL_HOOKS]
   const history = useHistory()
-
-  // [COMPONENT_STATE_HOOKS]
-  /*
-  code sample:
-  const singleton = useRef(true) // references also put here
-  const [state, setState] = useState({})
-  */
-
-  // [HELPER_FUNCTIONS]
+  const { id } = useParams()
+  const session = useSession()
+  const [userData, loading] = useDocumentData(
+    firestore.doc(`${COLLECTIONS.USERS}/${id}`)
+  )
 
   // [COMPUTED_PROPERTIES]
   const action = (
@@ -55,13 +39,16 @@ const UserShow = (props) => {
       </Button>
     </Space>
   )
-
-  // [USE_EFFECTS]
+  const title =
+    session.id === id
+      ? 'My profile'
+      : `${session.role[0].toUpperCase()}${session.role.slice(1)}'s profile`
 
   // [TEMPLATE]
+  if (loading) return <Spinner />
   return (
     <PageWrapper
-      title="Student profile"
+      title={title}
       action={action}
       onBack={() => history.goBack()}
       backBtnLeft
@@ -72,44 +59,51 @@ const UserShow = (props) => {
           <Row gutter={[0, 16]}>
             <Col flex={1}>
               <Card>
-                <Row gutter={[0, 16]}>
-                  <Col display="flex" justifyContent="center" flex={1}>
+                <Row gutter={[0, 16]} justifyContent="space-between">
+                  <Col
+                    display="flex"
+                    justifyContent="center"
+                    xxl={{ span: 11 }}>
                     <Avatar
                       size={{
                         xs: 24,
                         sm: 32,
                         md: 40,
-                        lg: 64,
-                        xl: 168,
-                        xxl: 192
+                        lg: 54,
+                        xl: 72,
+                        xxl: 98
                       }}
-                      src={MOCK_USER.avatarURL}
+                      icon={<UserOutlined />}
+                      src={userData.avatarURL}
                     />
                   </Col>
-                  <Col flex={1}>
-                    <Title level={5}>Name</Title>
-                    <Text type="secondary" strong>
-                      {MOCK_USER.firstName} {MOCK_USER.secondName}
-                    </Text>
-                  </Col>
-                  <Col flex={1}>
-                    <Title level={5}>Company</Title>
-                    <Space size={4} split={<Text type="secondary">•</Text>}>
-                      <Text type="secondary" strong>
-                        {MOCK_USER.companyId}
-                      </Text>
-                      <Text
-                        type="secondary"
-                        style={{ textTransform: 'capitalize' }}>
-                        {MOCK_USER.role}
-                      </Text>
-                    </Space>
-                  </Col>
-                  <Col flex={1}>
-                    <Title level={5}>Email</Title>
-                    <Text type="secondary" strong>
-                      {MOCK_USER.email}
-                    </Text>
+                  <Col xxl={{ span: 11 }}>
+                    <Row>
+                      <Col xs={{ span: 24 }}>
+                        <UserSimpleView
+                          firstName={userData.firstName}
+                          secondName={userData.secondName}
+                        />
+                      </Col>
+                      <Col xs={{ span: 24 }}>
+                        <Text
+                          type="secondary"
+                          style={{ textTransform: 'capitalize' }}>
+                          {userData.role}
+                        </Text>
+                      </Col>
+                      {userData?.companyId && (
+                        <Col xs={{ span: 24 }}>
+                          <Space
+                            size={4}
+                            split={<Text type="secondary">•</Text>}>
+                            <Text type="secondary" strong>
+                              {userData.companyId}
+                            </Text>
+                          </Space>
+                        </Col>
+                      )}
+                    </Row>
                   </Col>
                 </Row>
               </Card>
@@ -136,8 +130,5 @@ const UserShow = (props) => {
     </PageWrapper>
   )
 }
-
-// [PROPTYPES]
-UserShow.propTypes = {}
 
 export default UserShow
