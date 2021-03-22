@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types'
-import { Avatar, Row, Typography, Col } from 'antd'
+import { Avatar, Row, Typography } from 'antd'
+import { Col } from 'antd-styled'
 import { UserOutlined } from '@ant-design/icons'
 import { useHistory, generatePath } from 'react-router-dom'
 import { ROUTE_PATHS } from 'app/constants'
@@ -36,12 +37,10 @@ const UserSimpleView = (props) => {
     <Row
       gutter={[16, 0]}
       align="middle"
-      onClick={() =>
-        history.push(generatePath(ROUTE_PATHS.USER_SHOW, { id: id }))
-      }>
+      onClick={() => history.push(generatePath(ROUTE_PATHS.USER_SHOW, { id }))}>
       {withAvatar && (
-        <Col cursor={'pointer'}>
-          <Avatar src={avatarURL} size={'large'} icon={<UserOutlined />} />
+        <Col cursor="pointer">
+          <Avatar src={avatarURL} size="large" icon={<UserOutlined />} />
         </Col>
       )}
       <Col>

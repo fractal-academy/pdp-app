@@ -19,7 +19,7 @@ const { Title } = Typography
 const UserAll = () => {
   // [ADDITIONAL_HOOKS]
   const [usersData, loading] = useCollectionData(
-    firestore.collection(`${COLLECTIONS.USERS}`)
+    firestore.collection(COLLECTIONS.USERS)
   )
 
   // [TEMPLATE]
