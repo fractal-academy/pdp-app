@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types'
 import { useState } from 'react'
-import { Form, Modal, Space, Tree, Empty, message } from 'antd'
+import { Form, Modal, Space, Tree, Empty, message, Button } from 'antd'
 import { Remove, Text, Row, Col } from 'antd-styled'
 import { DeleteOutlined } from '@ant-design/icons'
 import { LevelSimpleForm } from 'domains/Level/components/forms'
@@ -11,29 +11,41 @@ import _ from 'lodash'
  *
  * @comment LevelModalWithForm - React component.
  *
- * @since 20 Mar 2021 ( v.0.0.4 ) // LAST-EDIT DATE
+ * @since 22 Mar 2021 ( v.0.0.5 ) // LAST-EDIT DATE
  *
  * @return {React.FC}
  */
 
 const LevelModalWithForm = (props) => {
   // [INTERFACES]
-  const { visible, onCreate, onCancel } = props
+  const {
+    visible,
+    onCreate,
+    edit,
+    onEdit,
+    onDelete,
+    defaultValues,
+    onCancel
+  } = props
 
   // [ADDITIONAL_HOOKS]
   const [form] = Form.useForm()
 
   // [COMPONENT_STATE_HOOKS]
-  const [loading, setLoading] = useState(false)
+  const [createLoading, setCreateLoading] = useState(false)
   const [levelTree, setLevelTree] = useState([])
   const [expandedKeys, setExpandedKeys] = useState([])
-
+  const [deleteLoading, setDeleteLoading] = useState(false)
   // [HELPER_FUNCTIONS]
-  const onFinish = async (data, levelIds) => {
-    setLoading(true)
+  const onFinishCreate = async (data, levelIds) => {
+    setCreateLoading(true)
 
     try {
-      await onCreate({ ...data, levelIds })
+      if (edit) {
+        await onEdit({ ...data, levelIds })
+      } else {
+        await onCreate({ ...data, levelIds })
+      }
 
       form.resetFields()
       setLevelTree([])
@@ -41,7 +53,7 @@ const LevelModalWithForm = (props) => {
       console.log('level create', error)
     }
 
-    setLoading(false)
+    setCreateLoading(false)
   }
 
   const onLevelAdd = (data, setValues) => {
@@ -81,7 +93,7 @@ const LevelModalWithForm = (props) => {
               tooltip="Remove"
               type="text"
               size="small"
-              disabled={loading}
+              disabled={createLoading || deleteLoading}
               icon={<DeleteOutlined />}
               onSubmit={deleteSubLevel}
             />
@@ -96,27 +108,62 @@ const LevelModalWithForm = (props) => {
     setLevelTree(tree)
   }
 
+  // [COMPUTED_PROPERTIES]
+  const actionName = edit ? 'Edit' : 'Create'
+  const modalTitle = edit
+    ? `${actionName} a level preset`
+    : `${actionName} a new level preset`
+  const actionButtons = (
+    <>
+      <Button onClick={onCancel}>Cancel</Button>
+      {edit && (
+        <Remove
+          text="Delete"
+          onSubmit={async () => {
+            setDeleteLoading(true)
+            try {
+              await onDelete()
+              message.success('Level preset was successfully deleted.')
+            } catch (error) {
+              console.log('delete levelPreset', error)
+            }
+
+            setDeleteLoading(false)
+          }}
+          loading={deleteLoading}
+        />
+      )}
+
+      <Button
+        onClick={() => {
+          levelTree.length
+            ? form.submit()
+            : message.error('Create at least one level')
+        }}
+        type="primary"
+        loading={createLoading}
+        disabled={deleteLoading}>
+        {actionName}
+      </Button>
+    </>
+  )
   // [TEMPLATE]
   return (
     <Modal
       visible={visible}
-      title="Create a new level preset"
-      okText="Create"
+      title={modalTitle}
+      okText={actionName}
       width="650px"
-      confirmLoading={loading}
       onCancel={onCancel}
-      onOk={() => {
-        levelTree.length
-          ? form.submit()
-          : message.error('Create at least one level')
-      }}>
+      footer={actionButtons}>
       <Row gutter={[8, 16]}>
         <Col span={24}>
           <LevelSimpleForm
             form={form}
-            onFinish={onFinish}
+            onFinish={onFinishCreate}
             onLevelAdd={onLevelAdd}
-            disable={loading}
+            initialValues={defaultValues}
+            disable={createLoading || deleteLoading}
           />
         </Col>
 
@@ -145,7 +192,10 @@ const LevelModalWithForm = (props) => {
 LevelModalWithForm.propTypes = {
   visible: PropTypes.bool,
   onCreate: PropTypes.func,
-  onCancel: PropTypes.func
+  onCancel: PropTypes.func,
+  edit: PropTypes.bool,
+  onEdit: PropTypes.func,
+  onDelete: PropTypes.func
 }
 
 export default LevelModalWithForm
