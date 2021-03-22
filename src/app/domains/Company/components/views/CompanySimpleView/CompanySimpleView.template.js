@@ -10,7 +10,7 @@ const { Text } = Typography
  *
  * @comment CompanySimpleView - React component.
  *
- * @since 22 Mar 2021 ( v.0.0.4 ) // LAST-EDIT DATE
+ * @since 22 Mar 2021 ( v.0.0.5 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
@@ -21,7 +21,7 @@ const CompanySimpleView = (props) => {
 
   // [ADDITIONAL_HOOKS]
   const [company, loading] = useDocumentData(
-    name && firestore.collection(COLLECTIONS.COMPANIES).doc(companyId)
+    !name && firestore.collection(COLLECTIONS.COMPANIES).doc(companyId ?? ' ')
   )
 
   // [TEMPLATE]

@@ -9,7 +9,7 @@ const { Text } = Typography
  *
  * @comment CompetenceSimpleView - React component.
  *
- * @since 22 Mar 2021 ( v.0.0.4 ) // LAST-EDIT DATE
+ * @since 22 Mar 2021 ( v.0.0.5 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
@@ -20,13 +20,14 @@ const CompetenceSimpleView = (props) => {
 
   // [ADDITIONAL_HOOKS]
   const [competence, loading] = useDocumentData(
-    !name && firestore.collection(COLLECTIONS.COMPANIES).doc(competenceId)
+    !name &&
+      firestore.collection(COLLECTIONS.COMPETENCES).doc(competenceId ?? ' ')
   )
 
   // [TEMPLATE]
   if (loading) return <Text type="secondary">loading...</Text>
-
-  return <Text type="secondary">{name || competence.name}</Text>
+  if (!competence) return <Text type="secondary">no competence</Text>
+  return <Text type="secondary">{name || competence?.name}</Text>
 }
 
 // [PROPTYPES]
