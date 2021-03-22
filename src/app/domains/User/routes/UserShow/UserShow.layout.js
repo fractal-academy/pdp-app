@@ -15,7 +15,7 @@ import { useSession } from 'contexts/Session/hooks'
  *
  * @comment UserShow - React component.
  *
- * @since 22 Mar 2021 ( v.0.0.3 ) // LAST-EDIT DATE
+ * @since 22 Mar 2021 ( v.0.0.4 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
@@ -82,7 +82,7 @@ const UserShow = () => {
                   <Col xxl={{ span: 11 }}>
                     <Row>
                       <Col xs={{ span: 24 }}>
-                        <UserSimpleView {...userData} />
+                        <UserSimpleView id={userData.id} />
                       </Col>
                       <Col xs={{ span: 24 }}>
                         <Text

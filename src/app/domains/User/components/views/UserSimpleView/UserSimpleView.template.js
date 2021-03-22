@@ -1,52 +1,63 @@
 import PropTypes from 'prop-types'
-import { Avatar, Row, Typography, Col } from 'antd'
+import { Avatar, Row, Typography } from 'antd'
+import { Col } from 'antd-styled'
 import { UserOutlined } from '@ant-design/icons'
 import { useHistory, generatePath } from 'react-router-dom'
-import { ROUTE_PATHS } from 'app/constants'
-const { Title } = Typography
+import { ROUTE_PATHS, COLLECTIONS } from 'app/constants'
+import { useDocumentData } from 'react-firebase-hooks/firestore'
+import firestore from '~/services/Firebase/firestore'
+import { Spinner } from '~/components'
+const { Title, Text } = Typography
 /**
  * @info UserSimpleView (05 Mar 2021) // CREATION DATE
  *
  * @comment UserSimpleView - React component.
  *
- * @since 22 Mar 2021 ( v.0.0.4 ) // LAST-EDIT DATE
+ * @since 22 Mar 2021 ( v.0.0.5 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
 
 const UserSimpleView = (props) => {
   // [INTERFACES]
-  const { id, avatarURL, firstName, secondName, email, withAvatar } = props
+  const { id, withAvatar, withEmail } = props
 
   // [ADDITIONAL_HOOKS]
   const history = useHistory()
+  const [userData, loading] = useDocumentData(
+    firestore.doc(`${COLLECTIONS.USERS}/${id}`)
+  )
 
   // [COMPUTED_PROPERTIES]
   const userDisplayName =
-    firstName && secondName
-      ? `${firstName} ${secondName}`
-      : firstName
-      ? firstName
-      : secondName
-      ? secondName
-      : email
+    userData?.firstName || userData?.secondName
+      ? `${userData?.firstName} ${userData?.secondName}`
+      : userData?.email
 
   // [TEMPLATE]
+  if (loading) return <Spinner />
+
   return (
     <Row
       gutter={[16, 0]}
       align="middle"
-      onClick={() =>
-        history.push(generatePath(ROUTE_PATHS.USER_SHOW, { id: id }))
-      }>
+      onClick={() => history.push(generatePath(ROUTE_PATHS.USER_SHOW, { id }))}>
       {withAvatar && (
-        <Col cursor={'pointer'}>
-          <Avatar src={avatarURL} size={'large'} icon={<UserOutlined />} />
+        <Col cursor="pointer">
+          <Avatar
+            src={userData?.avatarURL}
+            size="large"
+            icon={<UserOutlined />}
+          />
         </Col>
       )}
-      <Col>
-        <Title level={5}>{userDisplayName}</Title>
-      </Col>
+      {withEmail ? (
+        <Text type="secondary">{userData.email}</Text>
+      ) : (
+        <Col>
+          <Title level={5}>{userDisplayName}</Title>
+        </Col>
+      )}
     </Row>
   )
 }
@@ -54,11 +65,8 @@ const UserSimpleView = (props) => {
 // [PROPTYPES]
 UserSimpleView.propTypes = {
   id: PropTypes.string,
-  avatarURL: PropTypes.string,
-  firstName: PropTypes.string,
-  secondName: PropTypes.string,
-  email: PropTypes.string.isRequired,
-  withAvatar: PropTypes.bool
+  withAvatar: PropTypes.bool,
+  withEmail: PropTypes.bool
 }
 
 export default UserSimpleView

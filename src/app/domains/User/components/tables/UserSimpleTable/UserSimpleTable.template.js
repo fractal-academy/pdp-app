@@ -1,18 +1,18 @@
-import PropTypes from 'prop-types'
 import { Table, Typography } from 'antd'
 import { UserSimpleView } from 'domains/User/components/views'
-import { CompanySimpleView } from 'domains/Company/components/views'
 import { RoleSimpleView } from 'domains/Role/components/views'
-import { SpecialitySimpleView } from 'domains/Speciality/components/views'
-import { ROLES } from '~/constants'
-import { useEffect, useState } from 'react'
+
+import { useCollectionData } from 'react-firebase-hooks/firestore'
+import firestore from '~/services/Firebase/firestore'
+import { Spinner } from '~/components'
+import { COLLECTIONS } from 'app/constants'
 const { Text } = Typography
 /**
  * @info UserSimpleTable (05 Mar 2021) // CREATION DATE
  *
  * @comment UserSimpleTable - React component.
  *
- * @since 22 Mar 2021 ( v.0.0.5 ) // LAST-EDIT DATE
+ * @since 22 Mar 2021 ( v.0.0.7 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
@@ -20,7 +20,7 @@ let columns = [
   {
     title: 'User',
     key: 'user',
-    render: (text, data) => <UserSimpleView withAvatar {...data} />
+    render: (text, data) => <UserSimpleView withAvatar id={data.id} />
   },
   {
     title: 'Email',
@@ -33,55 +33,19 @@ let columns = [
     dataIndex: 'role',
     key: 'role',
     render: (role) => <RoleSimpleView role={role} />
-  },
-  {
-    title: 'Company',
-    key: 'company',
-    dataIndex: 'companyId',
-    render: (companyId) =>
-      companyId ? (
-        <CompanySimpleView companyId={companyId} />
-      ) : (
-        <Text type="secondary">None</Text>
-      )
-  },
-  {
-    title: 'Speciality',
-    key: 'speciality',
-    dataIndex: 'specialityId',
-    render: (specialityId) =>
-      specialityId ? (
-        <SpecialitySimpleView specialityId={specialityId} />
-      ) : (
-        <Text type="secondary">None</Text>
-      )
   }
 ]
 
 const UserSimpleTable = (props) => {
-  // [INTERFACES]
-  const { data, viewFor } = props
-  const [userColumns, setUserColumns] = useState(columns)
-
-  // [USE_EFFECTS]
-  useEffect(() => {
-    viewFor === ROLES.STUDENT &&
-      columns.find(({ key }, idx) => {
-        key === 'speciality' &&
-          setUserColumns(
-            [].concat(columns.slice(0, idx), columns.slice(idx + 1))
-          )
-      })
-  }, [])
+  // [ADDITIONAL_HOOKS]
+  const [usersData, loading] = useCollectionData(
+    firestore.collection(COLLECTIONS.USERS)
+  )
 
   // [TEMPLATE]
-  return <Table columns={userColumns} dataSource={data} pagination={false} />
-}
+  if (loading) return <Spinner />
 
-// [PROPTYPES]
-UserSimpleTable.propTypes = {
-  data: PropTypes.array.isRequired,
-  viewFor: PropTypes.string
+  return <Table columns={columns} dataSource={usersData} pagination={false} />
 }
 
 export default UserSimpleTable
