@@ -82,10 +82,7 @@ const UserShow = () => {
                   <Col xxl={{ span: 11 }}>
                     <Row>
                       <Col xs={{ span: 24 }}>
-                        <UserSimpleView
-                          firstName={userData.firstName}
-                          secondName={userData.secondName}
-                        />
+                        <UserSimpleView {...userData} />
                       </Col>
                       <Col xs={{ span: 24 }}>
                         <Text
