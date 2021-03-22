@@ -8,7 +8,6 @@ import { ROUTE_PATHS, COLLECTIONS } from 'app/constants'
 import firestore from '~/services/Firebase/firestore'
 import { Spinner } from '~/components'
 import _ from 'lodash'
-const { Text } = Typography
 
 /**
  * @info StudentSimpleTable (08 Mar 2021) // CREATION DATE
@@ -36,12 +35,7 @@ let columns = [
     title: 'Company',
     dataIndex: 'companyId',
     key: 'company',
-    render: (text, data) =>
-      data.companyId ? (
-        <CompanySimpleView companyId={data.companyId} />
-      ) : (
-        <Text type="secondary">None</Text>
-      )
+    render: (text, data) => <CompanySimpleView companyId={data?.companyId} />
   },
   {
     title: 'Action',
@@ -68,7 +62,7 @@ const CreatePlanButton = (props) => {
 const StudentSimpleTable = () => {
   // [ADDITIONAL_HOOKS]
   const history = useHistory()
-  const [studentsData, loading] = useCollectionData(
+  const [studentsData] = useCollectionData(
     firestore.collection(COLLECTIONS.STUDENTS)
   )
 
@@ -100,7 +94,7 @@ const StudentSimpleTable = () => {
   }, [studentsData])
 
   // [TEMPLATE]
-  if (loading && usersLoading) return <Spinner />
+  if (usersLoading) return <Spinner />
 
   return (
     <Table

@@ -9,13 +9,12 @@ import firestore from '~/services/Firebase/firestore'
 import { Spinner } from '~/components'
 import { COLLECTIONS, ROUTE_PATHS } from 'app/constants'
 import _ from 'lodash'
-const { Text } = Typography
 /**
  * @info MentorSimpleTable (22 Mar 2021) // CREATION DATE
  *
  * @comment MentorSimpleTable - React component.
  *
- * @since 22 Mar 2021 ( v.0.0.3 ) // LAST-EDIT DATE
+ * @since 22 Mar 2021 ( v.0.0.4 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
@@ -35,30 +34,24 @@ let columns = [
     title: 'Company',
     dataIndex: 'company',
     key: 'company',
-    render: (text, data) =>
-      data.companyId ? (
-        <CompanySimpleView companyId={data.companyId} />
-      ) : (
-        <Text type="secondary">None</Text>
-      )
+    render: (text, data) => <CompanySimpleView companyId={data?.companyId} />
   },
   {
     title: 'Competence',
     dataIndex: 'competence',
     key: 'competence',
-    render: (text, data) =>
-      data?.competenceIds?.length ? (
-        <CompetenceSimpleView competenceId={data.competenceIds[0]} />
-      ) : (
-        <Text type="secondary">None</Text>
-      )
+    render: (text, data) => (
+      <CompetenceSimpleView
+        competenceId={data?.competenceIds?.length && data.competenceIds[0]}
+      />
+    )
   }
 ]
 
 const MentorSimpleTable = () => {
   // [ADDITIONAL_HOOKS]
   const history = useHistory()
-  const [mentorsData, loading] = useCollectionData(
+  const [mentorsData] = useCollectionData(
     firestore.collection(COLLECTIONS.MENTORS)
   )
 
@@ -90,7 +83,7 @@ const MentorSimpleTable = () => {
   }, [mentorsData])
 
   // [TEMPLATE]
-  if (loading && usersLoading) return <Spinner />
+  if (usersLoading) return <Spinner />
 
   return (
     <Table
