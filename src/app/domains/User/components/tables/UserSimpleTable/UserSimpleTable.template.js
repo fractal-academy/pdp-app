@@ -1,18 +1,22 @@
 import PropTypes from 'prop-types'
+import { useEffect, useState } from 'react'
 import { Table, Typography } from 'antd'
 import { UserSimpleView } from 'domains/User/components/views'
-import { CompanySimpleView } from 'domains/Company/components/views'
 import { RoleSimpleView } from 'domains/Role/components/views'
+import { CompanySimpleView } from 'domains/Company/components/views'
 import { SpecialitySimpleView } from 'domains/Speciality/components/views'
 import { ROLES } from '~/constants'
-import { useEffect, useState } from 'react'
+import { useCollectionData } from 'react-firebase-hooks/firestore'
+import firestore from '~/services/Firebase/firestore'
+import { COLLECTIONS } from 'app/constants'
+import { Spinner } from '~/components'
 const { Text } = Typography
 /**
  * @info UserSimpleTable (05 Mar 2021) // CREATION DATE
  *
  * @comment UserSimpleTable - React component.
  *
- * @since 22 Mar 2021 ( v.0.0.5 ) // LAST-EDIT DATE
+ * @since 22 Mar 2021 ( v.0.0.6 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
@@ -60,8 +64,15 @@ let columns = [
 
 const UserSimpleTable = (props) => {
   // [INTERFACES]
-  const { data, viewFor } = props
+  const { viewFor } = props
   const [userColumns, setUserColumns] = useState(columns)
+
+  // [ADDITIONAL_HOOKS]
+  const [usersData, loading] = useCollectionData(
+    viewFor
+      ? firestore.collection(COLLECTIONS.USERS).where('role', '==', viewFor)
+      : firestore.collection(COLLECTIONS.USERS)
+  )
 
   // [USE_EFFECTS]
   useEffect(() => {
@@ -75,12 +86,15 @@ const UserSimpleTable = (props) => {
   }, [])
 
   // [TEMPLATE]
-  return <Table columns={userColumns} dataSource={data} pagination={false} />
+  if (loading) return <Spinner />
+
+  return (
+    <Table columns={userColumns} dataSource={usersData} pagination={false} />
+  )
 }
 
 // [PROPTYPES]
 UserSimpleTable.propTypes = {
-  data: PropTypes.array.isRequired,
   viewFor: PropTypes.string
 }
 

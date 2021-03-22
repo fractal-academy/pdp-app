@@ -1,5 +1,5 @@
-import PropTypes from 'prop-types'
-import { UserSimpleTable } from '../'
+import { useState } from 'react'
+import { UserSimpleTable } from 'domains/User/components/tables'
 import { ROLES } from '~/constants'
 import { Tabs } from 'antd'
 const { TabPane } = Tabs
@@ -8,45 +8,44 @@ const { TabPane } = Tabs
  *
  * @comment UserAdvancedTable - React component.
  *
- * @since 07 Mar 2021 ( v.0.0.2 ) // LAST-EDIT DATE
+ * @since 22 Mar 2021 ( v.0.0.3 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
 
 const TABS = [
   {
-    tab: 'All',
-    viewFor: ''
+    tab: { title: 'All', viewFor: '' }
   },
   {
-    tab: 'Mentors',
-    viewFor: ROLES.MENTOR
+    tab: { title: 'Mentors', viewFor: ROLES.MENTOR }
   },
   {
-    tab: 'Students',
-    viewFor: ROLES.STUDENT
+    tab: { title: 'Students', viewFor: ROLES.STUDENT }
   }
 ]
 
 const UserAdvancedTable = (props) => {
   // [INTERFACES]
-  const { data, ...rest } = props
+  const { ...rest } = props
+
+  // [COMPONENT_STATE_HOOKS]
+  const [viewFor, setViewFor] = useState()
 
   // [TEMPLATE]
   return (
-    <Tabs defaultActiveKey={TABS[0].tab} size="large" {...rest}>
+    <Tabs
+      defaultActiveKey={TABS[0].tab.title}
+      size="large"
+      onChange={(tab) => setViewFor(tab)}
+      {...rest}>
       {TABS.map((item) => (
-        <TabPane tab={item.tab} key={item.tab}>
-          <UserSimpleTable viewFor={item.viewFor} data={data} />
+        <TabPane tab={item.tab.title} key={item.tab.viewFor}>
+          <UserSimpleTable viewFor={viewFor} />
         </TabPane>
       ))}
     </Tabs>
   )
-}
-
-// [PROPTYPES]
-UserAdvancedTable.propTypes = {
-  data: PropTypes.array.isRequired
 }
 
 export default UserAdvancedTable
