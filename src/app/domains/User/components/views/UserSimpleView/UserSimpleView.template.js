@@ -30,12 +30,8 @@ const UserSimpleView = (props) => {
 
   // [COMPUTED_PROPERTIES]
   const userDisplayName =
-    userData?.firstName && userData?.secondName
+    userData?.firstName || userData?.secondName
       ? `${userData?.firstName} ${userData?.secondName}`
-      : userData?.firstName
-      ? userData?.firstName
-      : userData?.secondName
-      ? userData?.secondName
       : userData?.email
 
   // [TEMPLATE]
