@@ -12,7 +12,7 @@ const { Text } = Typography
  *
  * @comment UserSimpleTable - React component.
  *
- * @since 07 Mar 2021 ( v.0.0.4 ) // LAST-EDIT DATE
+ * @since 22 Mar 2021 ( v.0.0.5 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
@@ -22,6 +22,8 @@ let columns = [
     key: 'user',
     render: (text, data) => (
       <UserSimpleView
+        withAvatar
+        id={data.id}
         avatarURL={data.avatarURL}
         firstName={data.firstName}
         secondName={data.secondName}
@@ -45,15 +47,15 @@ let columns = [
     title: 'Company',
     key: 'company',
     dataIndex: 'companyId',
-    render: (companyId) => <CompanySimpleView companyId={companyId} />
+    render: (companyId) =>
+      companyId && <CompanySimpleView companyId={companyId} />
   },
   {
     title: 'Speciality',
     key: 'speciality',
     dataIndex: 'specialityId',
-    render: (specialityId) => (
-      <SpecialitySimpleView specialityId={specialityId} />
-    )
+    render: (specialityId) =>
+      specialityId && <SpecialitySimpleView specialityId={specialityId} />
   }
 ]
 
