@@ -6,7 +6,7 @@ import { RoleSingleSelect } from 'domains/Role/components/selects'
 import { UserOutlined } from '@ant-design/icons'
 import { useSession } from 'contexts/Session/hooks'
 import { ROLES } from '~/constants'
-const { Title } = Typography
+const { Title, Text } = Typography
 
 /**
  * @info UserAdvancedView (05 Mar 2021) // CREATION DATE
@@ -25,10 +25,12 @@ const UserAdvancedView = (props) => {
     firstName,
     secondName,
     email,
+    phone,
     role,
     withRoleSelect,
     onAvatarClick,
-    avatarLeft
+    avatarLeft,
+    fullInfo
   } = props
 
   // [ADDITIONAL_HOOKS]
@@ -36,13 +38,7 @@ const UserAdvancedView = (props) => {
 
   // [COMPUTED_PROPERTIES]
   const userDisplayName =
-    firstName && secondName
-      ? `${firstName} ${secondName}`
-      : firstName
-      ? firstName
-      : secondName
-      ? secondName
-      : email
+    firstName || secondName ? `${firstName} ${secondName}` : email
 
   // [TEMPLATE]
   return (
@@ -72,6 +68,20 @@ const UserAdvancedView = (props) => {
           </Box>
         )}
       </Col>
+      {fullInfo && (
+        <Col>
+          <Row>
+            <Col span={24}>
+              <Text type="secondary">{email}</Text>
+            </Col>
+            {phone && (
+              <Col span={24}>
+                <Text type="secondary">{email}</Text>
+              </Col>
+            )}
+          </Row>
+        </Col>
+      )}
     </Row>
   )
 }
@@ -82,10 +92,12 @@ UserAdvancedView.propTypes = {
   firstName: PropTypes.string,
   secondName: PropTypes.string,
   email: PropTypes.string.isRequired,
+  phone: PropTypes.string,
   role: PropTypes.string.isRequired,
   avatarLeft: PropTypes.bool,
   withRoleSelect: PropTypes.func,
-  onAvatarClick: PropTypes.func
+  onAvatarClick: PropTypes.func,
+  fullInfo: PropTypes.bool
 }
 
 export default UserAdvancedView
