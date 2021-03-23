@@ -1,15 +1,18 @@
-import { SessionSimpleForm } from 'domains/Session/components/forms'
-import { Box, Title, Row, Col } from 'antd-styled'
-import { Button } from 'antd'
-import { getGrid } from '~/utils'
+import { useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
+import { Button } from 'antd'
+import { Box, Title, Row, Col } from 'antd-styled'
+import { SessionSimpleForm } from 'domains/Session/components/forms'
+import { useSession } from 'contexts/Session/hooks'
 import { ROUTE_PATHS } from 'app/constants'
+import { getGrid } from '~/utils'
+
 /**
  * @info SessionRegister (05 Mar 2021) // CREATION DATE
  *
  * @comment SessionRegister - React component.
  *
- * @since 17 Mar 2021 ( v.0.0.1 ) // LAST-EDIT DATE
+ * @since 23 Mar 2021 ( v.0.0.2 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
@@ -17,23 +20,14 @@ import { ROUTE_PATHS } from 'app/constants'
 const SessionRegister = () => {
   // [ADDITIONAL_HOOKS]
   const history = useHistory()
-
-  // [COMPONENT_STATE_HOOKS]
-  /*
-  code sample:
-  const singleton = useRef(true) // references also put here
-  const [state, setState] = useState({})
-  */
-
-  // [HELPER_FUNCTIONS]
-
-  // [COMPUTED_PROPERTIES]
-  /* 
-    code sample: 
-    const userDisplayName = user.firstName + user.lastName
-  */
+  const session = useSession()
 
   // [USE_EFFECTS]
+  useEffect(() => {
+    if (session?.role) {
+      history.replace(ROUTE_PATHS.START_PAGE_MAP[session?.role])
+    }
+  }, [history, session])
 
   // [TEMPLATE]
   return (

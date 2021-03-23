@@ -1,17 +1,17 @@
 import { useEffect, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import { useAuthState } from 'react-firebase-hooks/auth'
+import { message } from 'antd'
 import { useSessionDispatch } from 'app/contexts/Session/hooks'
-import auth from '~/services/Firebase/auth'
+import TYPES from '~/app/contexts/Session/types'
 import {
   getCollectionData,
   setDocument,
   getDocumentData
 } from '~/services/Firebase/firestore'
-import TYPES from '~/app/contexts/Session/types'
+import auth from '~/services/Firebase/auth'
 import { ROUTE_PATHS, COLLECTIONS } from 'app/constants'
 import { ROLES } from '~/constants'
-import { message } from 'antd'
 
 const useAuthListener = () => {
   // [ADDITIONAL_HOOKS]
@@ -28,17 +28,17 @@ const useAuthListener = () => {
     const fetchUser = async () => {
       try {
         if (!!localStorage.getItem('isNewUser')) {
-          const users = await getCollectionData(`${COLLECTIONS.USERS}`)
+          const users = await getCollectionData(COLLECTIONS.USERS)
 
           const role = !users.length ? ROLES.ADMIN : ROLES.STUDENT
-          await setDocument(`${COLLECTIONS.USERS}`, user.uid, {
+          await setDocument(COLLECTIONS.USERS, user.uid, {
             email: user.email,
             id: user.uid,
             role
           })
           localStorage.removeItem('isNewUser')
         }
-        const userData = await getDocumentData(`${COLLECTIONS.USERS}`, user.uid)
+        const userData = await getDocumentData(COLLECTIONS.USERS, user.uid)
 
         sessionDispatch({ type: TYPES.SET_USER, payload: userData })
 

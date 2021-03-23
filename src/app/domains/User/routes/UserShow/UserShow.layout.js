@@ -1,21 +1,21 @@
 import { useHistory, useParams } from 'react-router-dom'
+import { useDocumentData } from 'react-firebase-hooks/firestore'
 import { Space, Button, Avatar } from 'antd'
 import { Row, Col, Card, Title, Text } from 'antd-styled'
-import { PageWrapper } from '~/components/HOC'
-import { ROUTE_PATHS } from 'app/constants'
-import { useDocumentData } from 'react-firebase-hooks/firestore'
-import firestore from '~/services/Firebase/firestore'
-import { COLLECTIONS } from 'app/constants'
-import { Spinner } from '~/components'
-import { UserSimpleView } from 'domains/User/components/views'
 import { UserOutlined } from '@ant-design/icons'
+import { UserSimpleView } from 'domains/User/components/views'
+import { NotFoundPath, Spinner } from '~/components'
+import { PageWrapper } from '~/components/HOC'
 import { useSession } from 'contexts/Session/hooks'
+import firestore from '~/services/Firebase/firestore'
+import { ROUTE_PATHS, COLLECTIONS } from 'app/constants'
+
 /**
  * @info UserShow (05 Mar 2021) // CREATION DATE
  *
  * @comment UserShow - React component.
  *
- * @since 22 Mar 2021 ( v.0.0.4 ) // LAST-EDIT DATE
+ * @since 23 Mar 2021 ( v.0.0.5 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
@@ -25,6 +25,7 @@ const UserShow = () => {
   const history = useHistory()
   const { id } = useParams()
   const session = useSession()
+
   const [userData, loading] = useDocumentData(
     firestore.doc(`${COLLECTIONS.USERS}/${id}`)
   )
@@ -39,15 +40,16 @@ const UserShow = () => {
       </Button>
     </Space>
   )
+
   const title =
     session.id === id
       ? 'My profile'
       : !loading &&
-        `${userData.role[0].toUpperCase()}${userData.role.slice(1)}'s profile`
+        `${userData?.role[0].toUpperCase()}${userData?.role.slice(1)}'s profile`
 
   // [TEMPLATE]
   if (loading) return <Spinner />
-
+  if (!userData) return <NotFoundPath />
   return (
     <PageWrapper
       title={title}
