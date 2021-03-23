@@ -13,7 +13,7 @@ const { Title, Text } = Typography
  *
  * @comment UserAdvancedView - React component.
  *
- * @since 08 Mar 2021 ( v.0.0.4 ) // LAST-EDIT DATE
+ * @since 23 Mar 2021 ( v.0.0.5 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
