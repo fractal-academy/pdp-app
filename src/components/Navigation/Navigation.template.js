@@ -18,7 +18,7 @@ import * as styles from './Navigation.style'
  *
  * @comment Navigation - React component.
  *
- * @since 22 Mar 2021 ( v.0.0.8 ) // LAST-EDIT DATE
+ * @since 23 Mar 2021 ( v.0.0.9 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
@@ -109,6 +109,7 @@ const Navigation = () => {
         <Box paddingX={4} marginBottom={4}>
           <UserAdvancedView
             {...session}
+            role={role}
             onAvatarClick={goToProfile}
             withRoleSelect={(value) => {
               history.push(ROUTE_PATHS.START_PAGE_MAP[value])
