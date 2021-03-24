@@ -4,7 +4,7 @@ import { useAuthState } from 'react-firebase-hooks/auth'
 import { message } from 'antd'
 import { useSessionDispatch } from 'app/contexts/Session/hooks'
 import TYPES from '~/app/contexts/Session/types'
-import {
+import firestore, {
   getCollectionData,
   setDocument,
   getDocumentData
@@ -29,13 +29,24 @@ const useAuthListener = () => {
       try {
         if (!!localStorage.getItem('isNewUser')) {
           const users = await getCollectionData(COLLECTIONS.USERS)
+          const studentRef = await firestore
+            .collection(COLLECTIONS.STUDENTS)
+            .doc()
 
-          const role = !users.length ? ROLES.ADMIN : ROLES.STUDENT
+          const role = users.length ? ROLES.STUDENT : ROLES.ADMIN
+
           await setDocument(COLLECTIONS.USERS, user.uid, {
             email: user.email,
             id: user.uid,
-            role
+            role,
+            studentId: studentRef.id
           })
+
+          await setDocument(COLLECTIONS.STUDENTS, studentRef.id, {
+            id: studentRef.id,
+            userId: user.uid
+          })
+
           localStorage.removeItem('isNewUser')
         }
         const userData = await getDocumentData(COLLECTIONS.USERS, user.uid)
