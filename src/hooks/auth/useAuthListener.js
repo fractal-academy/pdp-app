@@ -7,7 +7,8 @@ import TYPES from '~/app/contexts/Session/types'
 import firestore, {
   getCollectionData,
   setDocument,
-  getDocumentData
+  getDocumentData,
+  getDocumentRef
 } from '~/services/Firebase/firestore'
 import auth from '~/services/Firebase/auth'
 import { ROUTE_PATHS, COLLECTIONS } from 'app/constants'
@@ -29,9 +30,7 @@ const useAuthListener = () => {
       try {
         if (!!localStorage.getItem('isNewUser')) {
           const users = await getCollectionData(COLLECTIONS.USERS)
-          const studentRef = await firestore
-            .collection(COLLECTIONS.STUDENTS)
-            .doc()
+          const studentId = getDocumentRef(COLLECTIONS.STUDENTS).id
 
           const role = users.length ? ROLES.STUDENT : ROLES.ADMIN
 
@@ -39,11 +38,11 @@ const useAuthListener = () => {
             email: user.email,
             id: user.uid,
             role,
-            studentId: studentRef.id
+            studentId
           })
 
-          await setDocument(COLLECTIONS.STUDENTS, studentRef.id, {
-            id: studentRef.id,
+          await setDocument(COLLECTIONS.STUDENTS, studentId, {
+            id: studentId,
             userId: user.uid
           })
 
