@@ -81,7 +81,7 @@ const Navigation = () => {
       auth.signOut()
       history.push(ROUTE_PATHS.SESSION_LOGIN)
       sessionDispatch({
-        type: TYPES.SING_OUT
+        type: TYPES.SIGN_OUT
       })
     } catch (error) {
       console.log(error.message)
