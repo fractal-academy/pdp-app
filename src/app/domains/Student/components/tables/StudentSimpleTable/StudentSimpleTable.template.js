@@ -8,14 +8,14 @@ import { ROUTE_PATHS, COLLECTIONS } from 'app/constants'
 import firestore from '~/services/Firebase/firestore'
 import { Spinner } from '~/components'
 import { ROLES } from '~/constants'
-import _ from 'lodash'
+import { mergeUserData } from '~/utils'
 
 /**
  * @info StudentSimpleTable (08 Mar 2021) // CREATION DATE
  *
  * @comment StudentSimpleTable - React component.
  *
- * @since 22 Mar 2021 ( v.0.0.7) // LAST-EDIT DATE
+ * @since 24 Mar 2021 ( v.0.0.8) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
@@ -76,18 +76,8 @@ const StudentSimpleTable = () => {
     if (studentsData) {
       const fetchUser = async () => {
         setUsersLoading(true)
-        const usersSnapshot = await firestore
-          .collection(COLLECTIONS.USERS)
-          .where('role', '==', ROLES.STUDENT)
-          .get()
-
-        const users = usersSnapshot.docs.map((snapshot) => snapshot.data())
-
-        setUserData(
-          Object.values(
-            _.merge(_.keyBy(users, 'id'), _.keyBy(studentsData, 'userId'))
-          )
-        )
+        const mergeData = await mergeUserData(ROLES.STUDENT, studentsData)
+        setUserData(mergeData)
         setUsersLoading(false)
       }
       fetchUser()

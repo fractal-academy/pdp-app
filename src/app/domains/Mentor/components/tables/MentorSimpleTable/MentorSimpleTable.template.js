@@ -9,13 +9,13 @@ import firestore from '~/services/Firebase/firestore'
 import { Spinner } from '~/components'
 import { ROLES } from '~/constants'
 import { COLLECTIONS, ROUTE_PATHS } from 'app/constants'
-import _ from 'lodash'
+import { mergeUserData } from '~/utils'
 /**
  * @info MentorSimpleTable (22 Mar 2021) // CREATION DATE
  *
  * @comment MentorSimpleTable - React component.
  *
- * @since 22 Mar 2021 ( v.0.0.4 ) // LAST-EDIT DATE
+ * @since 23 Mar 2021 ( v.0.0.5 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
@@ -63,18 +63,8 @@ const MentorSimpleTable = () => {
     if (mentorsData) {
       const fetchUser = async () => {
         setUsersLoading(true)
-        const usersSnapshot = await firestore
-          .collection(COLLECTIONS.USERS)
-          .where('role', '==', ROLES.MENTOR)
-          .get()
-
-        const users = usersSnapshot.docs.map((snapshot) => snapshot.data())
-
-        setUserData(
-          Object.values(
-            _.merge(_.keyBy(users, 'id'), _.keyBy(mentorsData, 'userId'))
-          )
-        )
+        const mergeData = await mergeUserData(ROLES.MENTOR, mentorsData)
+        setUserData(mergeData)
         setUsersLoading(false)
       }
       fetchUser()
