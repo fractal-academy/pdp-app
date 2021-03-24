@@ -13,7 +13,7 @@ const { Title, Text } = Typography
  *
  * @comment UserSimpleView - React component.
  *
- * @since 22 Mar 2021 ( v.0.0.5 ) // LAST-EDIT DATE
+ * @since 24 Mar 2021 ( v.0.0.6 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
@@ -52,7 +52,9 @@ const UserSimpleView = (props) => {
         </Col>
       )}
       {withEmail ? (
-        <Text type="secondary">{userData.email}</Text>
+        <Col>
+          <Text type="secondary">{userData.email}</Text>
+        </Col>
       ) : (
         <Col>
           <Title level={5}>{userDisplayName}</Title>

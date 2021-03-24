@@ -5,7 +5,7 @@ import { PageWrapper } from '~/components/HOC'
  *
  * @comment UserAll - React component.
  *
- * @since 22 Mar 2021 ( v.0.0.4 ) // LAST-EDIT DATE
+ * @since 23 Mar 2021 ( v.0.0.5 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
@@ -14,12 +14,7 @@ const UserAll = () => {
   // [TEMPLATE]
 
   return (
-    <PageWrapper
-      title="Users"
-      fullWidth
-      inlineHeader
-      nextBtnProps={{ text: 'Add user' }}
-      onNext={() => console.log()}>
+    <PageWrapper title="Users" fullWidth inlineHeader>
       <UserAdvancedTable />
     </PageWrapper>
   )

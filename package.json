@@ -9,6 +9,7 @@
     "@testing-library/react": "^11.2.5",
     "@testing-library/user-event": "^12.8.0",
     "antd": "^4.13.0",
+    "antd-img-crop": "^3.14.1",
     "antd-styled": "^1.1.56",
     "circular-dependency-plugin": "^5.2.2",
     "craco-less": "^1.17.1",
