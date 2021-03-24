@@ -4,12 +4,9 @@ import { useAuthState } from 'react-firebase-hooks/auth'
 import { message } from 'antd'
 import { useSessionDispatch } from 'app/contexts/Session/hooks'
 import TYPES from '~/app/contexts/Session/types'
-import {
-  getCollectionData,
-  setDocument,
-  getDocumentData
-} from '~/services/Firebase/firestore'
+import { getCollectionData, setDocument } from '~/services/Firebase/firestore'
 import auth from '~/services/Firebase/auth'
+import firestore from '~/services/Firebase/firestore'
 import { ROUTE_PATHS, COLLECTIONS } from 'app/constants'
 import { ROLES } from '~/constants'
 
@@ -38,9 +35,16 @@ const useAuthListener = () => {
           })
           localStorage.removeItem('isNewUser')
         }
-        const userData = await getDocumentData(COLLECTIONS.USERS, user.uid)
-
-        sessionDispatch({ type: TYPES.SET_USER, payload: userData })
+        firestore
+          .collection(COLLECTIONS.USERS)
+          .doc(user.uid)
+          .onSnapshot((doc) => {
+            sessionDispatch({
+              type: TYPES.SET_USER,
+              payload: doc.data()
+            })
+            setLoading(false)
+          })
 
         if (!!localStorage.getItem('signIn')) {
           history.push('/')
@@ -50,11 +54,9 @@ const useAuthListener = () => {
         message.error(error.message)
         setLoading(false)
       }
-      setLoading(false)
     }
 
     if (!user) {
-      sessionDispatch({ type: TYPES.SING_OUT })
       !userLoading && history.push(ROUTE_PATHS.SESSION_LOGIN)
       setLoading(userLoading)
     }
