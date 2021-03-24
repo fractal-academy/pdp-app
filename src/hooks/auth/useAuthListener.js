@@ -11,6 +11,7 @@ import firestore, {
   getDocumentRef
 } from '~/services/Firebase/firestore'
 import auth from '~/services/Firebase/auth'
+import firestore from '~/services/Firebase/firestore'
 import { ROUTE_PATHS, COLLECTIONS } from 'app/constants'
 import { ROLES } from '~/constants'
 
@@ -26,6 +27,7 @@ const useAuthListener = () => {
   // [USE_EFFECTS]
   useEffect(() => {
     setLoading(true)
+    let unsubscribeUsers
     const fetchUser = async () => {
       try {
         if (!!localStorage.getItem('isNewUser')) {
@@ -48,9 +50,16 @@ const useAuthListener = () => {
 
           localStorage.removeItem('isNewUser')
         }
-        const userData = await getDocumentData(COLLECTIONS.USERS, user.uid)
-
-        sessionDispatch({ type: TYPES.SET_USER, payload: userData })
+        unsubscribeUsers = firestore
+          .collection(COLLECTIONS.USERS)
+          .doc(user.uid)
+          .onSnapshot((doc) => {
+            sessionDispatch({
+              type: TYPES.SET_USER,
+              payload: doc.data()
+            })
+            setLoading(false)
+          })
 
         if (!!localStorage.getItem('signIn')) {
           history.push('/')
@@ -60,15 +69,15 @@ const useAuthListener = () => {
         message.error(error.message)
         setLoading(false)
       }
-      setLoading(false)
     }
 
     if (!user) {
-      sessionDispatch({ type: TYPES.SING_OUT })
       !userLoading && history.push(ROUTE_PATHS.SESSION_LOGIN)
       setLoading(userLoading)
     }
     user && !userLoading && fetchUser()
+
+    return () => unsubscribeUsers?.()
   }, [user, userLoading])
 
   return { loading }

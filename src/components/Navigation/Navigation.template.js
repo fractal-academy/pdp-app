@@ -64,7 +64,7 @@ const Navigation = () => {
   // [ADDITIONAL_HOOKS]
   const history = useHistory()
   const session = useSession()
-  const { role } = useRole()
+  const { role, setRole } = useRole()
   const match = useRouteMatch(ROUTE_PATHS.START_PAGE_MAP[role])
   const sessionDispatch = useSessionDispatch()
 
@@ -81,7 +81,7 @@ const Navigation = () => {
       auth.signOut()
       history.push(ROUTE_PATHS.SESSION_LOGIN)
       sessionDispatch({
-        type: TYPES.LOG_OUT
+        type: TYPES.SING_OUT
       })
     } catch (error) {
       console.log(error.message)
@@ -112,6 +112,7 @@ const Navigation = () => {
             role={role}
             onAvatarClick={goToProfile}
             withRoleSelect={(value) => {
+              setRole(value)
               history.push(ROUTE_PATHS.START_PAGE_MAP[value])
             }}
             avatarLeft
@@ -143,7 +144,7 @@ const Navigation = () => {
                 icon={<LogoutOutlined />}
                 danger
                 onClick={onLogOut}>
-                Log out
+                Sing out
               </Menu.Item>
             </Menu>
           </Box>

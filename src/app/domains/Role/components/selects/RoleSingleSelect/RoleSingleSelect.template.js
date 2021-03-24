@@ -7,31 +7,26 @@ import { useRole } from 'contexts/Role/hooks'
  *
  * @comment RoleSingleSelect - React component.
  *
- * @since 08 Mar 2021 ( v.0.0.2 ) // LAST-EDIT DATE
+ * @since 24 Mar 2021 ( v.0.0.3 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
 
 const RoleSingleSelect = (props) => {
   // [INTERFACES]
-  const { role, onRoleSelect } = props
+  const { role, onRoleSelect, ...rest } = props
 
   // [ADDITIONAL_HOOKS]
-  const { setRole, accessRoles } = useRole()
-
-  // [HELPER_FUNCTIONS]
-  const handleRoleSelect = (value) => {
-    setRole(value)
-    onRoleSelect(value)
-  }
+  const { accessRoles } = useRole()
 
   // [TEMPLATE]
   return (
     <Select
       value={role}
-      onChange={handleRoleSelect}
+      onChange={onRoleSelect}
       size="small"
-      bordered={false}>
+      bordered={false}
+      {...rest}>
       {accessRoles.map((role) => (
         <Select.Option value={role} key={role}>
           {role}

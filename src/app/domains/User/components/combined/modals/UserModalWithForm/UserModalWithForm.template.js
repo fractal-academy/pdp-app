@@ -1,52 +1,75 @@
 import PropTypes from 'prop-types'
-
+import { useState } from 'react'
+import { message, Modal } from 'antd'
+import _ from 'lodash'
+import firestore from '~/services/Firebase/firestore'
+import { COLLECTIONS } from 'app/constants'
+import { UserSimpleForm } from 'domains/User/components/forms'
 /**
  * @info UserModalWithForm (23 Mar 2021) // CREATION DATE
  *
  * @comment UserModalWithForm - React component.
  *
- * @since 23 Mar 2021 ( v.0.0.1 ) // LAST-EDIT DATE
+ * @since 24 Mar 2021 ( v.0.0.3 ) // LAST-EDIT DATE
  *
  * @return {React.FC}
  */
 
-const UserModalWithForm = () => {
+const UserModalWithForm = (props) => {
   // [INTERFACES]
-  /*
-  code sample: 
-  const { data } = props
-  */
-
-  // [ADDITIONAL_HOOKS]
-  /*
-  code sample: 
-  const firestore = useFirestore()
-  */
+  const {
+    isModalVisible,
+    setIsModalVisible,
+    avatarURL,
+    ...restUserData
+  } = props
 
   // [COMPONENT_STATE_HOOKS]
-  /*
-  code sample:
-  const singleton = useRef(true) // references also put here
-  const [state, setState] = useState({})
-  */
+  const [avatarFormURL, setAvatarFormURL] = useState(avatarURL)
+  const [loading, setLoading] = useState(false)
 
   // [HELPER_FUNCTIONS]
+  const onSubmit = (userData) => {
+    setLoading(true)
+    try {
+      firestore
+        .collection(COLLECTIONS.USERS)
+        .doc(restUserData.id)
+        .set(
+          { ..._.pickBy(userData, _.identity), avatarURL: avatarFormURL },
+          { merge: true }
+        ) //deleted fields that are 'undefined'
+      message.success('User was edited successful')
+    } catch (error) {
+      message.error(error.message)
+    }
+    setLoading(false)
+    setIsModalVisible(false)
+  }
 
-  // [COMPUTED_PROPERTIES]
-  /* 
-    code sample: 
-    const userDisplayName = user.firstName + user.lastName
-  */
-
-  // [USE_EFFECTS]
+  const onCancel = () => {
+    setIsModalVisible(false)
+  }
 
   // [TEMPLATE]
-  return <div>UserModalWithForm</div>
+  return (
+    <Modal title="Edit profile" visible={isModalVisible} footer={null}>
+      <UserSimpleForm
+        setAvatarURL={setAvatarFormURL}
+        avatarURL={avatarFormURL}
+        onSubmit={onSubmit}
+        onCancel={onCancel}
+        loading={loading}
+        {...restUserData}
+      />
+    </Modal>
+  )
 }
 
 // [PROPTYPES]
 UserModalWithForm.propTypes = {
-  props: PropTypes.object
+  setIsModalVisible: PropTypes.func.isRequired,
+  isModalVisible: PropTypes.bool.isRequired
 }
 
 export default UserModalWithForm
