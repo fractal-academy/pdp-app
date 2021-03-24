@@ -4,9 +4,12 @@ import { useAuthState } from 'react-firebase-hooks/auth'
 import { message } from 'antd'
 import { useSessionDispatch } from 'app/contexts/Session/hooks'
 import TYPES from '~/app/contexts/Session/types'
-import { getCollectionData, setDocument } from '~/services/Firebase/firestore'
+import firestore, {
+  getCollectionData,
+  setDocument,
+  getDocumentRef
+} from '~/services/Firebase/firestore'
 import auth from '~/services/Firebase/auth'
-import firestore from '~/services/Firebase/firestore'
 import { ROUTE_PATHS, COLLECTIONS } from 'app/constants'
 import { ROLES } from '~/constants'
 
@@ -27,13 +30,22 @@ const useAuthListener = () => {
       try {
         if (!!localStorage.getItem('isNewUser')) {
           const users = await getCollectionData(COLLECTIONS.USERS)
+          const studentId = getDocumentRef(COLLECTIONS.STUDENTS).id
 
-          const role = !users.length ? ROLES.ADMIN : ROLES.STUDENT
+          const role = users.length ? ROLES.STUDENT : ROLES.ADMIN
+
           await setDocument(COLLECTIONS.USERS, user.uid, {
             email: user.email,
             id: user.uid,
-            role
+            role,
+            studentId
           })
+
+          await setDocument(COLLECTIONS.STUDENTS, studentId, {
+            id: studentId,
+            userId: user.uid
+          })
+
           localStorage.removeItem('isNewUser')
         }
         unsubscribeUsers = firestore
