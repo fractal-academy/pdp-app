@@ -32,19 +32,24 @@ const useAuthListener = () => {
           const users = await getCollectionData(COLLECTIONS.USERS)
           const studentId = getDocumentRef(COLLECTIONS.STUDENTS).id
 
-          const role = users.length ? ROLES.STUDENT : ROLES.ADMIN
-
-          await setDocument(COLLECTIONS.USERS, user.uid, {
+          const userData = {
             email: user.email,
             id: user.uid,
-            role,
+            role: users.length ? ROLES.STUDENT : ROLES.ADMIN,
             studentId
-          })
+          }
 
-          await setDocument(COLLECTIONS.STUDENTS, studentId, {
-            id: studentId,
-            userId: user.uid
-          })
+          if (userData.role === ROLES.ADMIN) {
+            const mentorId = getDocumentRef(COLLECTIONS.MENTORS).id
+            userData.mentorId = mentorId
+            await setDocument(COLLECTIONS.MENTORS, mentorId, {
+              id: mentorId,
+              userId: user.uid,
+              isAdmin: true
+            })
+          }
+
+          await setDocument(COLLECTIONS.USERS, user.uid, userData)
 
           localStorage.removeItem('isNewUser')
         }
