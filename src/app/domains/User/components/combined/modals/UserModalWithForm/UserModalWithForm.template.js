@@ -1,8 +1,8 @@
 import PropTypes from 'prop-types'
 import { useState } from 'react'
-import { message, Modal } from 'antd'
+import { message, Modal, Form } from 'antd'
 import _ from 'lodash'
-import firestore from '~/services/Firebase/firestore'
+import { getCollectionRef } from '~/services/Firebase/firestore'
 import { COLLECTIONS } from 'app/constants'
 import { UserSimpleForm } from 'domains/User/components/forms'
 /**
@@ -10,7 +10,7 @@ import { UserSimpleForm } from 'domains/User/components/forms'
  *
  * @comment UserModalWithForm - React component.
  *
- * @since 24 Mar 2021 ( v.0.0.3 ) // LAST-EDIT DATE
+ * @since 24 Mar 2021 ( v.0.0.4 ) // LAST-EDIT DATE
  *
  * @return {React.FC}
  */
@@ -21,6 +21,7 @@ const UserModalWithForm = (props) => {
     isModalVisible,
     setIsModalVisible,
     avatarURL,
+    title,
     ...restUserData
   } = props
 
@@ -28,12 +29,14 @@ const UserModalWithForm = (props) => {
   const [avatarFormURL, setAvatarFormURL] = useState(avatarURL)
   const [loading, setLoading] = useState(false)
 
+  // [ADDITIONAL_HOOKS]
+  const [form] = Form.useForm()
+
   // [HELPER_FUNCTIONS]
   const onSubmit = (userData) => {
     setLoading(true)
     try {
-      firestore
-        .collection(COLLECTIONS.USERS)
+      getCollectionRef(COLLECTIONS.USERS)
         .doc(restUserData.id)
         .set(
           { ..._.pickBy(userData, _.identity), avatarURL: avatarFormURL },
@@ -53,12 +56,16 @@ const UserModalWithForm = (props) => {
 
   // [TEMPLATE]
   return (
-    <Modal title="Edit profile" visible={isModalVisible} footer={null}>
+    <Modal
+      title={title}
+      visible={isModalVisible}
+      onOk={form.submit}
+      onCancel={onCancel}>
       <UserSimpleForm
+        form={form}
         setAvatarURL={setAvatarFormURL}
         avatarURL={avatarFormURL}
         onSubmit={onSubmit}
-        onCancel={onCancel}
         loading={loading}
         {...restUserData}
       />
@@ -69,7 +76,8 @@ const UserModalWithForm = (props) => {
 // [PROPTYPES]
 UserModalWithForm.propTypes = {
   setIsModalVisible: PropTypes.func.isRequired,
-  isModalVisible: PropTypes.bool.isRequired
+  isModalVisible: PropTypes.bool.isRequired,
+  title: PropTypes.string.isRequired
 }
 
 export default UserModalWithForm

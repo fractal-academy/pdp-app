@@ -46,9 +46,8 @@ const UserSimpleForm = (props) => {
     email,
     phone,
     role,
-    onSubmit,
-    onCancel,
-    loading
+    form,
+    onSubmit
   } = props
 
   // [COMPONENT_STATE_HOOKS]
@@ -90,10 +89,11 @@ const UserSimpleForm = (props) => {
     <Form
       name="userEdit"
       initialValues={{ firstName, secondName, email, phone, role }}
+      form={form}
       onFinish={onSubmit}>
-      <Row justifyContent="center" mb={2}>
+      <Row justifyContent="center" mb={3}>
         <Col>
-          <Avatar src={avatarURL} size={82} icon={<UserOutlined />} />
+          <Avatar src={avatarURL} size={96} icon={<UserOutlined />} />
         </Col>
       </Row>
       <Form.Item name="avatarURL">
@@ -119,20 +119,6 @@ const UserSimpleForm = (props) => {
           <Input placeholder={field.placeholder} />
         </Form.Item>
       ))}
-      <Row justifyContent="flex-end">
-        <Col>
-          <Form.Item>
-            <Button type="primary" htmlType="submit" loading={loading}>
-              Submit
-            </Button>
-          </Form.Item>
-        </Col>
-        <Col>
-          <Form.Item>
-            <Button onClick={onCancel}>Cancel</Button>
-          </Form.Item>
-        </Col>
-      </Row>
     </Form>
   )
 }
@@ -144,9 +130,7 @@ UserSimpleForm.propTypes = {
   avatarURL: PropTypes.string,
   email: PropTypes.string.isRequired,
   phone: PropTypes.string,
-  onSubmit: PropTypes.func,
-  onCancel: PropTypes.func,
-  loading: PropTypes.bool.isRequired
+  onSubmit: PropTypes.func.isRequired
 }
 
 export default UserSimpleForm
