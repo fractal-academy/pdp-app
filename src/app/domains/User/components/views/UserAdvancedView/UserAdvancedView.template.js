@@ -13,7 +13,7 @@ const { Title, Text } = Typography
  *
  * @comment UserAdvancedView - React component.
  *
- * @since 23 Mar 2021 ( v.0.0.5 ) // LAST-EDIT DATE
+ * @since 24 Mar 2021 ( v.0.0.6 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
@@ -58,8 +58,7 @@ const UserAdvancedView = (props) => {
         display="flex"
         flexDirection="column"
         alignItems={!avatarLeft && 'flex-end'}>
-        <Title level={4}>{userDisplayName}</Title>
-
+        <Title level={5}>{userDisplayName}</Title>
         {withRoleSelect && session.role !== ROLES.STUDENT ? (
           <RoleSingleSelect role={role} onRoleSelect={withRoleSelect} />
         ) : (
@@ -76,7 +75,7 @@ const UserAdvancedView = (props) => {
             </Col>
             {phone && (
               <Col span={24}>
-                <Text type="secondary">{email}</Text>
+                <Text type="secondary">{phone}</Text>
               </Col>
             )}
           </Row>
