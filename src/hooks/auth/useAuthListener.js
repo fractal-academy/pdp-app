@@ -7,11 +7,9 @@ import TYPES from '~/app/contexts/Session/types'
 import firestore, {
   getCollectionData,
   setDocument,
-  getDocumentData,
   getDocumentRef
 } from '~/services/Firebase/firestore'
 import auth from '~/services/Firebase/auth'
-import firestore from '~/services/Firebase/firestore'
 import { ROUTE_PATHS, COLLECTIONS } from 'app/constants'
 import { ROLES } from '~/constants'
 
