@@ -39,7 +39,7 @@ const UserModalWithForm = (props) => {
       getCollectionRef(COLLECTIONS.USERS)
         .doc(restUserData.id)
         .set(
-          { ..._.pickBy(userData, _.identity), avatarURL: avatarFormURL },
+          { ..._.pickBy(userData, _.identity), avatarURL: avatarFormURL || '' },
           { merge: true }
         ) //deleted fields that are 'undefined'
       message.success('User was edited successful')
