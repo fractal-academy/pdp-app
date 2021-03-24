@@ -1,15 +1,18 @@
+import { useState } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
-import { useDocumentData } from 'react-firebase-hooks/firestore'
-import { Space, Button, Avatar } from 'antd'
+import { Space, Button } from 'antd'
 import { Row, Col, Card, Title, Text } from 'antd-styled'
-import { UserOutlined } from '@ant-design/icons'
-import { UserSimpleView } from 'domains/User/components/views'
-import { NotFoundPath, Spinner } from '~/components'
 import { PageWrapper } from '~/components/HOC'
-import { useSession } from 'contexts/Session/hooks'
+import { ROUTE_PATHS } from 'app/constants'
+import { useDocumentData } from 'react-firebase-hooks/firestore'
 import firestore from '~/services/Firebase/firestore'
-import { ROUTE_PATHS, COLLECTIONS } from 'app/constants'
-
+import { COLLECTIONS } from 'app/constants'
+import { Spinner, NotFoundPath } from '~/components'
+import { UserAdvancedView } from 'domains/User/components/views'
+import { EditOutlined } from '@ant-design/icons'
+import { useSession } from 'contexts/Session/hooks'
+import { ROLES } from '~/constants'
+import { UserModalWithForm } from 'domains/User/components/combined/modals'
 /**
  * @info UserShow (05 Mar 2021) // CREATION DATE
  *
@@ -30,10 +33,14 @@ const UserShow = () => {
     firestore.doc(`${COLLECTIONS.USERS}/${id}`)
   )
 
+  // [COMPONENT_STATE_HOOKS]
+  const [isModalVisible, setIsModalVisible] = useState(false)
+
   // [COMPUTED_PROPERTIES]
   const action = (
     <Space>
       <Button
+        type="primary"
         size="large"
         onClick={() => history.push(ROUTE_PATHS.PLAN_CREATE)}>
         Create plan
@@ -46,6 +53,11 @@ const UserShow = () => {
       ? 'My profile'
       : !loading &&
         `${userData?.role[0].toUpperCase()}${userData?.role.slice(1)}'s profile`
+
+  // [HELPER_FUNCTIONS]
+  const showModal = () => {
+    setIsModalVisible(true)
+  }
 
   // [TEMPLATE]
   if (loading) return <Spinner />
@@ -64,36 +76,15 @@ const UserShow = () => {
             <Col flex={1}>
               <Card>
                 <Row gutter={[0, 16]} justifyContent="space-between">
-                  <Col
-                    display="flex"
-                    justifyContent="center"
-                    xxl={{ span: 11 }}>
-                    <Avatar
-                      size={{
-                        xs: 24,
-                        sm: 32,
-                        md: 40,
-                        lg: 54,
-                        xl: 72,
-                        xxl: 98
-                      }}
-                      icon={<UserOutlined />}
-                      src={userData.avatarURL}
-                    />
+                  <Col display="flex">
+                    <UserAdvancedView {...userData} avatarLeft fullInfo />
+                    {(id === session.id || session.role === ROLES.ADMIN) && (
+                      <EditOutlined onClick={showModal} />
+                    )}
                   </Col>
-                  <Col xxl={{ span: 11 }}>
-                    <Row>
-                      <Col xs={{ span: 24 }}>
-                        <UserSimpleView id={userData.id} />
-                      </Col>
-                      <Col xs={{ span: 24 }}>
-                        <Text
-                          type="secondary"
-                          style={{ textTransform: 'capitalize' }}>
-                          {userData.role}
-                        </Text>
-                      </Col>
-                      {userData?.companyId && (
+                  {userData?.companyId && (
+                    <Col xxl={{ span: 11 }}>
+                      <Row>
                         <Col xs={{ span: 24 }}>
                           <Space
                             size={4}
@@ -103,9 +94,9 @@ const UserShow = () => {
                             </Text>
                           </Space>
                         </Col>
-                      )}
-                    </Row>
-                  </Col>
+                      </Row>
+                    </Col>
+                  )}
                 </Row>
               </Card>
             </Col>
@@ -128,6 +119,12 @@ const UserShow = () => {
           </Row>
         </Col>
       </Row>
+      <UserModalWithForm
+        id={id}
+        setIsModalVisible={setIsModalVisible}
+        isModalVisible={isModalVisible}
+        {...userData}
+      />
     </PageWrapper>
   )
 }
