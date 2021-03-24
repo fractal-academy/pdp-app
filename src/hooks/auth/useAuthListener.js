@@ -22,6 +22,7 @@ const useAuthListener = () => {
   // [USE_EFFECTS]
   useEffect(() => {
     setLoading(true)
+    let unsubscribeUsers
     const fetchUser = async () => {
       try {
         if (!!localStorage.getItem('isNewUser')) {
@@ -35,7 +36,7 @@ const useAuthListener = () => {
           })
           localStorage.removeItem('isNewUser')
         }
-        firestore
+        unsubscribeUsers = firestore
           .collection(COLLECTIONS.USERS)
           .doc(user.uid)
           .onSnapshot((doc) => {
@@ -61,6 +62,8 @@ const useAuthListener = () => {
       setLoading(userLoading)
     }
     user && !userLoading && fetchUser()
+
+    return () => unsubscribeUsers?.()
   }, [user, userLoading])
 
   return { loading }
