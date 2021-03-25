@@ -35,7 +35,12 @@ const getIds = (ref) => {
   const ids = []
   if (ref) {
     for (const subLevel of Object.keys(ref)) {
-      ids.push(...ref[subLevel].map(({ id }) => id))
+      ids.push(
+        ...ref[subLevel].map(({ id }) => ({
+          id,
+          subLevel
+        }))
+      )
     }
     return ids
   }
@@ -90,12 +95,22 @@ const TechnologyCreate = () => {
         if (materialsRef) {
           technology.materialIds = {}
           getIds(materialsRef).forEach(
-            (id) => (technology.materialIds[id] = true)
+            ({ id, subLevel }) =>
+              (technology.materialIds[id] = {
+                levelId: level,
+                subLevelId: subLevel
+              })
           )
         }
         if (todosRef) {
           technology.todoIds = {}
-          getIds(todosRef).forEach((id) => (technology.todoIds[id] = true))
+          getIds(todosRef).forEach(
+            ({ id, subLevel }) =>
+              (technology.todoIds[id] = {
+                levelId: level,
+                subLevelId: subLevel
+              })
+          )
         }
 
         if (interviewRef) {
@@ -114,7 +129,10 @@ const TechnologyCreate = () => {
 
             await setDocument(COLLECTIONS.INTERVIEWS, interview.id, interview)
 
-            technology.interviewIds[interview.id] = true
+            technology.interviewIds[interview.id] = {
+              levelId: level,
+              subLevelId: subLevel
+            }
           }
         }
       }
