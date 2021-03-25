@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import { Space, Button } from 'antd'
 import { Row, Col, Card, Title, Text } from 'antd-styled'
@@ -13,12 +13,15 @@ import { EditOutlined } from '@ant-design/icons'
 import { useSession } from 'contexts/Session/hooks'
 import { ROLES } from '~/constants'
 import { UserModalWithForm } from 'domains/User/components/combined/modals'
+import Avatar from 'antd/lib/avatar/avatar'
+import { CompanySimpleList } from 'domains/Company/components/lists'
+import _ from 'lodash'
 /**
  * @info UserShow (05 Mar 2021) // CREATION DATE
  *
  * @comment UserShow - React component.
  *
- * @since 23 Mar 2021 ( v.0.0.5 ) // LAST-EDIT DATE
+ * @since 24 Mar 2021 ( v.0.0.6 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
@@ -28,15 +31,21 @@ const UserShow = () => {
   const history = useHistory()
   const { id } = useParams()
   const session = useSession()
-
-  const [userData, loading] = useDocumentData(
+  const [userData] = useDocumentData(
     firestore.doc(`${COLLECTIONS.USERS}/${id}`)
+  )
+  const [studentData, loading] = useDocumentData(
+    userData && firestore.doc(`${COLLECTIONS.STUDENTS}/${userData.studentId}`)
   )
 
   // [COMPONENT_STATE_HOOKS]
   const [isModalVisible, setIsModalVisible] = useState(false)
+  const [fullUserData, setFullUserData] = useState()
 
-  // [COMPUTED_PROPERTIES]
+  // [HELPER_FUNCTIONS]
+  const showModal = () => {
+    setIsModalVisible(true)
+  }
   const action = (
     <Space>
       <Button
@@ -48,20 +57,31 @@ const UserShow = () => {
     </Space>
   )
 
+  // [COMPUTED_PROPERTIES]
+  const userDisplayName =
+    userData?.firstName || userData?.secondName
+      ? `${userData?.firstName ?? ''} ${userData?.secondName ?? ''}`
+      : userData?.email
+
   const title =
     session.id === id
       ? 'My profile'
       : !loading &&
         `${userData?.role[0].toUpperCase()}${userData?.role.slice(1)}'s profile`
 
-  // [HELPER_FUNCTIONS]
-  const showModal = () => {
-    setIsModalVisible(true)
-  }
+  const modalTitle = `Edit ${
+    id === session.id ? 'my ' : userData?.firstName + "'s" || userData.email
+  } profile`
+
+  // [USE_EFFECTS]
+  useEffect(
+    () => !loading && setFullUserData({ ...studentData, ...userData }),
+    [studentData, userData]
+  )
 
   // [TEMPLATE]
   if (loading) return <Spinner />
-  if (!userData) return <NotFoundPath />
+  if (!fullUserData) return <NotFoundPath />
   return (
     <PageWrapper
       title={title}
@@ -70,56 +90,70 @@ const UserShow = () => {
       backBtnLeft
       inlineHeader
       fullWidth>
-      <Row>
-        <Col span={6}>
-          <Row gutter={[0, 16]}>
-            <Col flex={1}>
-              <Card>
-                <Row gutter={[0, 16]} justifyContent="space-between">
-                  <Col display="flex">
-                    <UserAdvancedView {...userData} avatarLeft fullInfo />
-                    {(id === session.id || session.role === ROLES.ADMIN) && (
-                      <EditOutlined onClick={showModal} />
-                    )}
-                  </Col>
-                  {userData?.companyId && (
-                    <Col xxl={{ span: 11 }}>
-                      <Row>
-                        <Col xs={{ span: 24 }}>
-                          <Space
-                            size={4}
-                            split={<Text type="secondary">•</Text>}>
-                            <Text type="secondary" strong>
-                              {userData.companyId}
-                            </Text>
-                          </Space>
-                        </Col>
-                      </Row>
-                    </Col>
-                  )}
-                </Row>
-              </Card>
-            </Col>
-            <Col flex={1}>
-              <Card>
-                <Title level={3}>Competences</Title>
-              </Card>
-            </Col>
-          </Row>
-        </Col>
-        <Col flex={1}>
-          <Row gutter={[0, 16]}>
-            {['Skills', 'Experience', 'Plans'].map((infoBlock) => (
-              <Col span={24}>
-                <Card height={200}>
-                  <Title level={3}>{infoBlock}</Title>
-                </Card>
+      <Row gutter={[16, 8]}>
+        <Col span={7}>
+          <Card>
+            <Row justifyContent="center" position="relative">
+              <Col mb={2}>
+                <Avatar size={96} src={fullUserData.avatarURL} />
               </Col>
-            ))}
-          </Row>
+              {
+                <Col position="absolute" right="0">
+                  {(id === session.id || session.role === ROLES.ADMIN) && (
+                    <EditOutlined onClick={showModal} />
+                  )}
+                </Col>
+              }
+            </Row>
+            <Row justifyContent="center">
+              <Col>
+                <Title level={4}>{userDisplayName}</Title>
+              </Col>
+            </Row>
+            <Row justifyContent="center" mb={3}>
+              <Col>
+                <Text type="secondary">{fullUserData.role}</Text>
+              </Col>
+            </Row>
+            <Row justifyContent="center">
+              <Col>
+                <Title level={5}>Personal info</Title>
+              </Col>
+            </Row>
+            {fullUserData?.companyIds?.length && (
+              <Row justifyContent="center" mb={2}>
+                <Col>
+                  <CompanySimpleList companyIds={fullUserData.companyIds} />
+                </Col>
+              </Row>
+            )}
+            <Row justifyContent="center" mb={2}>
+              <Col>
+                <Text type="secondary">{fullUserData.email}</Text>
+              </Col>
+            </Row>
+            {fullUserData?.phone && (
+              <Row justifyContent="center">
+                <Col>
+                  <Text type="secondary">{fullUserData.phone}</Text>
+                </Col>
+              </Row>
+            )}
+          </Card>
+        </Col>
+
+        <Col>
+          <Card>
+            <Row justifyContent="center">
+              <Col>
+                <Title level={4}>Skills</Title>
+              </Col>
+            </Row>
+          </Card>
         </Col>
       </Row>
       <UserModalWithForm
+        title={modalTitle}
         id={id}
         setIsModalVisible={setIsModalVisible}
         isModalVisible={isModalVisible}
