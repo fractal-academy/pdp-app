@@ -26,7 +26,7 @@ const CompanySimpleView = (props) => {
 
   // [TEMPLATE]
   if (loading) return <Text type="secondary">loading...</Text>
-  if (!company) return <Text type="secondary">no company</Text>
+  if (!company && !name) return <Text type="secondary">no company</Text>
   return <Text type="secondary">{name || company?.name}</Text>
 }
 

@@ -68,12 +68,12 @@ const LevelSimpleCascader = (props) => {
 
         const levelMap = []
 
-        for (const level of Object.keys(docWithLevels.levelIds)) {
-          const levelData = await getDocumentData(COLLECTIONS.LEVELS, level)
+        for (const levelId of Object.keys(docWithLevels.levelIds)) {
+          const levelData = await getDocumentData(COLLECTIONS.LEVELS, levelId)
 
           levelMap.push({
             label: levelData.name,
-            value: level,
+            value: levelId,
             isLeaf: false
           })
         }

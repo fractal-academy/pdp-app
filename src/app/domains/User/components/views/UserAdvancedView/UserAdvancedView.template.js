@@ -38,7 +38,7 @@ const UserAdvancedView = (props) => {
 
   // [COMPUTED_PROPERTIES]
   const userDisplayName =
-    firstName || secondName ? `${firstName} ${secondName}` : email
+    firstName || secondName ? `${firstName ?? ''} ${secondName ?? ''}` : email
 
   // [TEMPLATE]
   return (
