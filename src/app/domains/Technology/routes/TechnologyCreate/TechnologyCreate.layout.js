@@ -1,10 +1,11 @@
 import { useState, useCallback, useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
-import { Form, Spin, Cascader, Button, Space } from 'antd'
+import { Form, Spin, Button, Space } from 'antd'
 import { Col, Row, Text, Box, Paragraph } from 'antd-styled'
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons'
 import { TechnologyAdvancedForm } from 'domains/Technology/components/forms'
 import { TechnologyAdvancedCascader } from 'domains/Technology/components/combined/cascader'
+import { LevelSimpleCascader } from 'domains/Level/components/combined/cascaders'
 import { PageWrapper } from '~/components/HOC'
 import {
   getDocumentData,
@@ -197,7 +198,7 @@ const TechnologyCreate = () => {
     if (value.length) {
       setSelectedLevel({ levelId: value[0], subLevelId: value[1] })
     } else {
-      setSelectedLevel(false)
+      setSelectedLevel(null)
     }
   }
 
@@ -274,10 +275,10 @@ const TechnologyCreate = () => {
               <Form>
                 <Row gutter={[8, 16]}>
                   <Col span={24} display="flex" justifyContent="center">
-                    <Cascader
-                      size="large"
-                      placeholder="Select level"
-                      onChange={onLevelSelect}
+                    <LevelSimpleCascader
+                      onLevelSelect={onLevelSelect}
+                      levelTree={levelTree}
+                      loadLevel={loadLevel}
                       options={levelTree}
                       loadData={loadLevel}
                       defaultValue={
