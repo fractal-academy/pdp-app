@@ -115,7 +115,11 @@ const UserSimpleForm = (props) => {
       </Form.Item>
       {currentUserRole.role === ROLES.ADMIN && (
         <Form.Item name="role">
-          <RoleSingleSelect />
+          <Row justifyContent="center">
+            <Col span={7}>
+              <RoleSingleSelect role={role} />
+            </Col>
+          </Row>
         </Form.Item>
       )}
       {EDITING_FIELDS.map((field) => (
