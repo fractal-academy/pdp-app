@@ -8,13 +8,14 @@ import storage from '~/services/Firebase/storage'
 import { ROLES } from '~/constants'
 import { useRole } from 'contexts/Role/hooks'
 import { RoleSingleSelect } from 'domains/Role/components/selects'
+import { v5 as uuidv5, v4 as uuidv4 } from 'uuid'
 
 /**
  * @info UserSimpleForm (05 Mar 2021) // CREATION DATE
  *
  * @comment UserSimpleForm - React component.
  *
- * @since 24 Mar 2021 ( v.0.0.3 ) // LAST-EDIT DATE
+ * @since 24 Mar 2021 ( v.0.0.4 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
@@ -35,6 +36,7 @@ const EDITING_FIELDS = [
   },
   { name: 'phone', placeholder: 'Phone' }
 ]
+const STORAGE_URL = 'users/'
 
 const UserSimpleForm = (props) => {
   // [INTERFACES]
@@ -61,10 +63,12 @@ const UserSimpleForm = (props) => {
     const { file } = data
     setLoadingAvatar(true)
     try {
+      const MY_NAMESPACE = uuidv4()
       const avatarRef = storage
         .ref()
-        .child('users/' + file)
+        .child(STORAGE_URL + uuidv5(file.name, MY_NAMESPACE))
         .put(file)
+
       avatarRef.on(
         'state_changed',
         () => {},
