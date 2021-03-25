@@ -48,6 +48,10 @@ const useAuthListener = () => {
               isAdmin: true
             })
           }
+          await setDocument(COLLECTIONS.STUDENTS, studentId, {
+            id: studentId,
+            userId: user.uid
+          })
 
           await setDocument(COLLECTIONS.USERS, user.uid, userData)
 
