@@ -52,6 +52,7 @@ const UserModalWithForm = (props) => {
 
   const onCancel = () => {
     setIsModalVisible(false)
+    form.setFieldsValue(restUserData)
   }
 
   // [TEMPLATE]
