@@ -1,2 +1,3 @@
 import getGrid from './getGrid'
-export { getGrid }
+import mergeUserData from './mergeUserData'
+export { getGrid, mergeUserData }
