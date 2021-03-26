@@ -27,6 +27,36 @@ const useAuthListener = () => {
   useEffect(() => {
     setLoading(true)
     let unsubscribeUser, unsubscribeStudent, unsubscribeMentor
+
+    const getMentorData = (mentorId) =>
+      getCollectionRef(COLLECTIONS.MENTORS)
+        .doc(mentorId)
+        .onSnapshot((studentData) =>
+          sessionDispatch({ type: TYPES.SET_USER, payload: studentData.data() })
+        )
+
+    const getStudentData = (studentId) =>
+      getCollectionRef(COLLECTIONS.STUDENTS)
+        .doc(studentId)
+        .onSnapshot((studentData) => {
+          sessionDispatch({ type: TYPES.SET_USER, payload: studentData.data() })
+          setLoading(false)
+        })
+
+    const getUserData = () =>
+      getCollectionRef(COLLECTIONS.USERS)
+        .doc(user.uid)
+        .onSnapshot((userSnapshot) => {
+          const userData = userSnapshot.data()
+          if (userData.mentorId) {
+            unsubscribeMentor = getMentorData(userData.mentorId)
+          }
+
+          unsubscribeStudent = getStudentData(userData.studentId)
+
+          sessionDispatch({ type: TYPES.SET_USER, payload: userData })
+        })
+
     const fetchUser = async () => {
       try {
         if (!!localStorage.getItem('isNewUser')) {
@@ -59,31 +89,7 @@ const useAuthListener = () => {
           localStorage.removeItem('isNewUser')
         }
 
-        unsubscribeUser = getCollectionRef(COLLECTIONS.USERS)
-          .doc(user.uid)
-          .onSnapshot((userData) => {
-            const fullUserData = userData.data()
-            unsubscribeStudent = getCollectionRef(COLLECTIONS.STUDENTS)
-              .doc(fullUserData.studentId)
-              .onSnapshot((studentData) => {
-                unsubscribeMentor =
-                  fullUserData?.mentorId &&
-                  getCollectionRef(COLLECTIONS.MENTORS)
-                    .doc(fullUserData.mentorId)
-                    .onSnapshot((mentorData) => {
-                      sessionDispatch({
-                        type: TYPES.SET_MENTOR,
-                        payload: mentorData.data()
-                      })
-                    })
-
-                sessionDispatch({
-                  type: TYPES.SET_USER,
-                  payload: { ...studentData.data(), ...fullUserData }
-                })
-                setLoading(false)
-              })
-          })
+        unsubscribeUser = getUserData()
 
         if (!!localStorage.getItem('signIn')) {
           history.push('/')
