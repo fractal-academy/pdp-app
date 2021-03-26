@@ -8,6 +8,7 @@ import storage from '~/services/Firebase/storage'
 import { ROLES } from '~/constants'
 import { useRole } from 'contexts/Role/hooks'
 import { RoleSingleSelect } from 'domains/Role/components/selects'
+import { CompanyMultipleSelect } from 'domains/Company/components/selects'
 import { v5 as uuidv5, v4 as uuidv4 } from 'uuid'
 
 /**
@@ -15,7 +16,7 @@ import { v5 as uuidv5, v4 as uuidv4 } from 'uuid'
  *
  * @comment UserSimpleForm - React component.
  *
- * @since 24 Mar 2021 ( v.0.0.4 ) // LAST-EDIT DATE
+ * @since 25 Mar 2021 ( v.0.0.5 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
@@ -48,6 +49,8 @@ const UserSimpleForm = (props) => {
     email,
     phone,
     role,
+    companyIds,
+    setCompanyIds,
     form,
     onSubmit
   } = props
@@ -113,17 +116,27 @@ const UserSimpleForm = (props) => {
           </Col>
         </Row>
       </Form.Item>
+      <Form.Item>
+        <Row justifyContent="center">
+          <Col span={15}>
+            <CompanyMultipleSelect
+              companyIds={companyIds || []}
+              setCompanyIds={setCompanyIds}
+            />
+          </Col>
+        </Row>
+      </Form.Item>
       {currentUserRole.role === ROLES.ADMIN && (
-        <Form.Item name="role">
-          <Row justifyContent="center">
-            <Col span={7}>
-              <RoleSingleSelect role={role} />
-            </Col>
-          </Row>
-        </Form.Item>
+        <Row justifyContent="center">
+          <Col span={7}>
+            <Form.Item name="role" initialValue={role}>
+              <RoleSingleSelect />
+            </Form.Item>
+          </Col>
+        </Row>
       )}
       {EDITING_FIELDS.map((field) => (
-        <Form.Item name={field.name} rules={field.rules}>
+        <Form.Item key={field.name} name={field.name} rules={field.rules}>
           <Input placeholder={field.placeholder} />
         </Form.Item>
       ))}
@@ -138,7 +151,10 @@ UserSimpleForm.propTypes = {
   avatarURL: PropTypes.string,
   email: PropTypes.string.isRequired,
   phone: PropTypes.string,
-  onSubmit: PropTypes.func.isRequired
+  onSubmit: PropTypes.func.isRequired,
+  companyIds: PropTypes.array,
+  roleSelect: PropTypes.string.isRequired,
+  setRoleSelect: PropTypes.func.isRequired
 }
 
 export default UserSimpleForm

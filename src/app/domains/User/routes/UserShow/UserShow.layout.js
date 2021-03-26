@@ -8,20 +8,18 @@ import { useDocumentData } from 'react-firebase-hooks/firestore'
 import firestore from '~/services/Firebase/firestore'
 import { COLLECTIONS } from 'app/constants'
 import { Spinner, NotFoundPath } from '~/components'
-import { UserAdvancedView } from 'domains/User/components/views'
-import { EditOutlined } from '@ant-design/icons'
+import { EditOutlined, UserOutlined } from '@ant-design/icons'
 import { useSession } from 'contexts/Session/hooks'
 import { ROLES } from '~/constants'
 import { UserModalWithForm } from 'domains/User/components/combined/modals'
 import Avatar from 'antd/lib/avatar/avatar'
 import { CompanySimpleList } from 'domains/Company/components/lists'
-import _ from 'lodash'
 /**
  * @info UserShow (05 Mar 2021) // CREATION DATE
  *
  * @comment UserShow - React component.
  *
- * @since 24 Mar 2021 ( v.0.0.6 ) // LAST-EDIT DATE
+ * @since 26 Mar 2021 ( v.0.0.7 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
@@ -74,14 +72,14 @@ const UserShow = () => {
   } profile`
 
   // [USE_EFFECTS]
-  useEffect(
-    () => !loading && setFullUserData({ ...studentData, ...userData }),
-    [studentData, userData]
-  )
+  useEffect(() => {
+    !loading && setFullUserData({ ...studentData, ...userData })
+  }, [studentData, userData])
 
   // [TEMPLATE]
   if (loading) return <Spinner />
-  if (!fullUserData) return <NotFoundPath />
+  if ((fullUserData && !Object.keys(fullUserData).length) || !fullUserData)
+    return <NotFoundPath />
   return (
     <PageWrapper
       title={title}
@@ -95,7 +93,11 @@ const UserShow = () => {
           <Card>
             <Row justifyContent="center" position="relative">
               <Col mb={2}>
-                <Avatar size={96} src={fullUserData.avatarURL} />
+                <Avatar
+                  size={96}
+                  src={fullUserData.avatarURL}
+                  icon={<UserOutlined />}
+                />
               </Col>
               {
                 <Col position="absolute" right="0">
@@ -154,10 +156,9 @@ const UserShow = () => {
       </Row>
       <UserModalWithForm
         title={modalTitle}
-        id={id}
         setIsModalVisible={setIsModalVisible}
         isModalVisible={isModalVisible}
-        {...userData}
+        {...fullUserData}
       />
     </PageWrapper>
   )

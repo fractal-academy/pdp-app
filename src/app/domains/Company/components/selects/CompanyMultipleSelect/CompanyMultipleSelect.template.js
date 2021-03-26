@@ -11,18 +11,18 @@ import { CompanySimpleView } from 'domains/Company/components/views'
  *
  * @comment CompanyMultipleSelect - React component.
  *
- * @since 25 Mar 2021 ( v.0.0.2 ) // LAST-EDIT DATE
+ * @since 25 Mar 2021 ( v.0.0.3 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
 
 const CompanyMultipleSelect = (props) => {
   // [INTERFACES]
-  const { companyIds } = props
+  const { companyIds, setCompanyIds } = props
 
   // [COMPONENT_STATE_HOOKS]
   const [selectedCompanyIds, setSelectedCompanyIds] = useState(companyIds)
-  const [companyAllIds, setCompanyAllIds] = useState()
+  const [allCompanyIds, setAllCompanyIds] = useState()
   const [loading, setLoading] = useState(false)
 
   // [ADDITIONAL_HOOKS]
@@ -31,11 +31,11 @@ const CompanyMultipleSelect = (props) => {
 
     const fetchCompanies = async () => {
       setLoading(true)
-      setCompanyAllIds([])
+      setAllCompanyIds([])
       unsubscribe = getCollectionRef(
         COLLECTIONS.COMPANIES
       ).onSnapshot((snapshots) =>
-        setCompanyAllIds(snapshots.docs.map((snapshot) => snapshot.data().id))
+        setAllCompanyIds(snapshots.docs.map((snapshot) => snapshot.data().id))
       )
       setLoading(false)
     }
@@ -43,13 +43,15 @@ const CompanyMultipleSelect = (props) => {
     return () => unsubscribe()
   }, [])
 
-  // [HELPER_FUNCTIONS]
-  const filteredCompanyIds = companyAllIds?.filter(
+  // [COMPUTED_PROPERTIES]
+  const filteredCompanyIds = allCompanyIds?.filter(
     (companyId) => !selectedCompanyIds.includes(companyId)
   )
 
+  // [HELPER_FUNCTIONS]
   const handleChange = (selectedItems) => {
     setSelectedCompanyIds(selectedItems)
+    setCompanyIds(selectedItems)
   }
   const tagRender = (props) => {
     const { label, closable, onClose } = props
