@@ -50,7 +50,6 @@ const UserSimpleForm = (props) => {
     phone,
     role,
     companyIds,
-    setCompanyIds,
     form,
     onSubmit
   } = props
@@ -95,7 +94,7 @@ const UserSimpleForm = (props) => {
   return (
     <Form
       name="userEdit"
-      initialValues={{ firstName, secondName, email, phone, role }}
+      initialValues={{ firstName, secondName, email, phone, role, companyIds }}
       form={form}
       onFinish={onSubmit}>
       <Row justifyContent="center" mb={3}>
@@ -116,16 +115,13 @@ const UserSimpleForm = (props) => {
           </Col>
         </Row>
       </Form.Item>
-      <Form.Item>
-        <Row justifyContent="center">
-          <Col span={15}>
-            <CompanyMultipleSelect
-              companyIds={companyIds || []}
-              setCompanyIds={setCompanyIds}
-            />
-          </Col>
-        </Row>
-      </Form.Item>
+      <Row justifyContent="center">
+        <Col span={15}>
+          <Form.Item name="companyIds" initialValue={companyIds}>
+            <CompanyMultipleSelect />
+          </Form.Item>
+        </Col>
+      </Row>
       {currentUserRole.role === ROLES.ADMIN && (
         <Row justifyContent="center">
           <Col span={7}>
