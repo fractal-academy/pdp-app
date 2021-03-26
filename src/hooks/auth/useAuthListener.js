@@ -62,7 +62,7 @@ const useAuthListener = () => {
         unsubscribeUser = getCollectionRef(COLLECTIONS.USERS)
           .doc(user.uid)
           .onSnapshot((userData) => {
-            let fullUserData = userData.data()
+            const fullUserData = userData.data()
             unsubscribeStudent = getCollectionRef(COLLECTIONS.STUDENTS)
               .doc(fullUserData.studentId)
               .onSnapshot((studentData) => {
