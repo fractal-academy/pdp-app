@@ -7,6 +7,11 @@ const rootReducer = (state, action) => {
         ...state,
         ...action.payload
       }
+    case TYPES.SET_MENTOR:
+      return {
+        ...state,
+        ...action.payload
+      }
     case TYPES.SIGN_OUT:
       return null
     default: {
