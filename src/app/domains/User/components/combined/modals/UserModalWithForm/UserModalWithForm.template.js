@@ -33,7 +33,6 @@ const UserModalWithForm = (props) => {
 
   // [COMPONENT_STATE_HOOKS]
   const [avatarFormURL, setAvatarFormURL] = useState(avatarURL)
-  const [roleSelect, setRoleSelect] = useState(restUserData.role)
   const [companyIds, setCompanyIds] = useState(restUserData.companyIds)
   const [loading, setLoading] = useState(false)
 
@@ -42,45 +41,44 @@ const UserModalWithForm = (props) => {
 
   // [HELPER_FUNCTIONS]
   const onSubmit = async (userData) => {
-    setLoading(true)
+    // setLoading(true)
+    console.log(userData)
+    // if (restUserData.role !== ROLES.MENTOR && userData.role === ROLES.MENTOR) {
+    //   const mentorId = getDocumentRef(COLLECTIONS.MENTORS).id
 
-    if (restUserData.role !== ROLES.MENTOR && roleSelect === ROLES.MENTOR) {
-      const mentorId = getDocumentRef(COLLECTIONS.MENTORS).id
+    //   await setDocument(COLLECTIONS.MENTORS, mentorId, {
+    //     id: mentorId,
+    //     userId: restUserData.id
+    //   })
+    //   userData = { ...userData, mentorId: mentorId }
+    // }
+    // if (restUserData.role === ROLES.MENTOR && userData.role === ROLES.STUDENT) {
+    //   await deleteDocument(COLLECTIONS.MENTORS, restUserData.mentorId)
+    //   console.log(userData)
+    //   delete userData.mentorId
+    // }
 
-      await setDocument(COLLECTIONS.MENTORS, mentorId, {
-        id: mentorId,
-        userId: restUserData.id
-      })
-      userData = { ...userData, mentorId: mentorId }
-    }
-    if (restUserData.role === ROLES.MENTOR && roleSelect === ROLES.STUDENT) {
-      await deleteDocument(COLLECTIONS.MENTORS, restUserData.mentorId)
-      console.log(userData)
-      delete userData.mentorId
-    }
+    // try {
+    //   delete userData.companyIds
+    //   await getCollectionRef(COLLECTIONS.USERS)
+    //     .doc(restUserData.userId)
+    //     .set({
+    //       ..._.pickBy(userData, _.identity),
+    //       avatarURL: avatarFormURL || ''
+    //     }) //deleted fields that are 'undefined'
 
-    try {
-      await getCollectionRef(COLLECTIONS.USERS)
-        .doc(restUserData.userId)
-        .set({
-          ..._.pickBy(userData, _.identity),
-          avatarURL: avatarFormURL || '',
-          studentId: restUserData.studentId,
-          id: restUserData.id
-        }) //deleted fields that are 'undefined'
-
-      companyIds &&
-        (await getCollectionRef(COLLECTIONS.STUDENTS)
-          .doc(restUserData.studentId)
-          .update({
-            companyIds
-          }))
-      message.success('User was edited successful')
-    } catch (error) {
-      message.error(error.message)
-    }
-    setLoading(false)
-    setIsModalVisible(false)
+    //   companyIds &&
+    //     (await getCollectionRef(COLLECTIONS.STUDENTS)
+    //       .doc(restUserData.studentId)
+    //       .update({
+    //         companyIds
+    //       }))
+    //   message.success('User was edited successful')
+    // } catch (error) {
+    //   message.error(error.message)
+    // }
+    // setLoading(false)
+    // setIsModalVisible(false)
   }
 
   const onCancel = () => {
@@ -99,10 +97,8 @@ const UserModalWithForm = (props) => {
         form={form}
         setAvatarURL={setAvatarFormURL}
         avatarURL={avatarFormURL}
-        roleSelect={roleSelect}
         companyIds={companyIds}
         setCompanyIds={setCompanyIds}
-        setRoleSelect={setRoleSelect}
         onSubmit={onSubmit}
         loading={loading}
         {...restUserData}

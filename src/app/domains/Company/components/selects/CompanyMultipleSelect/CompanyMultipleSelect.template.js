@@ -11,17 +11,17 @@ import { CompanySimpleView } from 'domains/Company/components/views'
  *
  * @comment CompanyMultipleSelect - React component.
  *
- * @since 25 Mar 2021 ( v.0.0.3 ) // LAST-EDIT DATE
+ * @since 26 Mar 2021 ( v.0.0.4 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
 
 const CompanyMultipleSelect = (props) => {
   // [INTERFACES]
-  const { companyIds, setCompanyIds } = props
+  const { companyIds, ...rest } = props
 
   // [COMPONENT_STATE_HOOKS]
-  const [selectedCompanyIds, setSelectedCompanyIds] = useState(companyIds)
+  const [selectedCompanyIds, setSelectedCompanyIds] = useState(rest.value)
   const [allCompanyIds, setAllCompanyIds] = useState()
   const [loading, setLoading] = useState(false)
 
@@ -42,16 +42,16 @@ const CompanyMultipleSelect = (props) => {
     fetchCompanies()
     return () => unsubscribe()
   }, [])
-
+  !loading && console.log(selectedCompanyIds, allCompanyIds)
   // [COMPUTED_PROPERTIES]
   const filteredCompanyIds = allCompanyIds?.filter(
-    (companyId) => !selectedCompanyIds.includes(companyId)
+    (companyId) => !selectedCompanyIds?.includes(companyId)
   )
 
   // [HELPER_FUNCTIONS]
   const handleChange = (selectedItems) => {
     setSelectedCompanyIds(selectedItems)
-    setCompanyIds(selectedItems)
+    // rest.onChange?.(selectedItems)
   }
   const tagRender = (props) => {
     const { label, closable, onClose } = props
@@ -63,6 +63,10 @@ const CompanyMultipleSelect = (props) => {
     )
   }
 
+  useEffect(() => {
+    console.log(selectedCompanyIds)
+  }, [selectedCompanyIds])
+
   // [TEMPLATE]
   if (loading) return <Spinner />
 
@@ -70,10 +74,9 @@ const CompanyMultipleSelect = (props) => {
     <Select
       mode="multiple"
       placeholder="Select company"
-      value={selectedCompanyIds}
-      onChange={handleChange}
       tagRender={tagRender}
-      loading={loading}>
+      loading={loading}
+      {...rest}>
       {filteredCompanyIds?.map((id) => (
         <Select.Option key={id} value={id}>
           <CompanySimpleView companyId={id} />
