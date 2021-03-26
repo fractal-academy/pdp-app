@@ -1,21 +1,22 @@
 import { useEffect, useState } from 'react'
 import { Button, Table } from 'antd'
-import { useHistory, generatePath } from 'react-router-dom'
+import { useHistory } from 'react-router-dom'
+import { useCollectionData } from 'react-firebase-hooks/firestore'
 import { UserSimpleView } from 'domains/User/components/views'
 import { CompanySimpleView } from 'domains/Company/components/views'
-import { useCollectionData } from 'react-firebase-hooks/firestore'
-import { ROUTE_PATHS, COLLECTIONS } from 'app/constants'
-import firestore from '~/services/Firebase/firestore'
 import { Spinner } from '~/components'
-import { ROLES } from '~/constants'
+import { useSession } from 'contexts/Session/hooks'
+import { getCollectionRef } from '~/services/Firebase/firestore'
 import { mergeUserData } from '~/utils'
+import { ROUTE_PATHS, COLLECTIONS } from 'app/constants'
+import { ROLES } from '~/constants'
 
 /**
  * @info StudentSimpleTable (08 Mar 2021) // CREATION DATE
  *
  * @comment StudentSimpleTable - React component.
  *
- * @since 24 Mar 2021 ( v.0.0.8) // LAST-EDIT DATE
+ * @since 25 Mar 2021 ( v.0.0.9 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
@@ -60,11 +61,11 @@ const CreatePlanButton = (props) => {
   )
 }
 
-const StudentSimpleTable = () => {
+const StudentSimpleTable = (props) => {
   // [ADDITIONAL_HOOKS]
-  const history = useHistory()
+  const session = useSession()
   const [studentsData] = useCollectionData(
-    firestore.collection(COLLECTIONS.STUDENTS)
+    getCollectionRef(COLLECTIONS.STUDENTS).where('userId', '!=', session.id)
   )
 
   // [COMPONENT_STATE_HOOKS]
@@ -89,16 +90,10 @@ const StudentSimpleTable = () => {
 
   return (
     <Table
-      onRow={(record) => ({
-        onClick: () =>
-          history.push(generatePath(ROUTE_PATHS.USER_SHOW, { id: record.id })),
-        onMouseEnter: (e) => {
-          e.target.style.cursor = 'pointer'
-        }
-      })}
       columns={columns}
       dataSource={userData}
       pagination={false}
+      {...props}
     />
   )
 }

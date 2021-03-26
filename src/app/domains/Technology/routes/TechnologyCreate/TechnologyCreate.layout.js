@@ -20,7 +20,7 @@ import * as ROUTE_PATHS from 'app/constants/routePaths'
  *
  * @comment TechnologyCreate - React component.
  *
- * @since 24 Mar 2021 ( v.0.0.9 ) // LAST-EDIT DATE
+ * @since 25 Mar 2021 ( v.0.1.0 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
@@ -34,8 +34,13 @@ const ACTION_BUTTONS_MAP = [
 const getIds = (ref) => {
   const ids = []
   if (ref) {
-    for (const subLevel of Object.keys(ref)) {
-      ids.push(...ref[subLevel].map(({ id }) => id))
+    for (const subLevelId of Object.keys(ref)) {
+      ids.push(
+        ...ref[subLevelId].map(({ id }) => ({
+          id,
+          subLevelId
+        }))
+      )
     }
     return ids
   }
@@ -80,41 +85,54 @@ const TechnologyCreate = () => {
 
       technology.levelIds = levelPreset.levelIds
 
-      for (const level of Object.keys(levelPreset.levelIds)) {
-        const materialsRef = prepareData?.materialIds?.[level]
-        const todosRef = prepareData?.todoIds?.[level]
-        const interviewRef = prepareData?.questionIds?.[level]
+      for (const levelId of Object.keys(levelPreset.levelIds)) {
+        const materialsRef = prepareData?.materialIds?.[levelId]
+        const todosRef = prepareData?.todoIds?.[levelId]
+        const interviewRef = prepareData?.questionIds?.[levelId]
 
         getIds(materialsRef)
 
         if (materialsRef) {
           technology.materialIds = {}
           getIds(materialsRef).forEach(
-            (id) => (technology.materialIds[id] = true)
+            ({ id, subLevelId }) =>
+              (technology.materialIds[id] = {
+                levelId,
+                subLevelId
+              })
           )
         }
         if (todosRef) {
           technology.todoIds = {}
-          getIds(todosRef).forEach((id) => (technology.todoIds[id] = true))
+          getIds(todosRef).forEach(
+            ({ id, subLevelId }) =>
+              (technology.todoIds[id] = {
+                levelId,
+                subLevelId
+              })
+          )
         }
 
         if (interviewRef) {
           technology.interviewIds = {}
           let interview = {
             technologyId: historyState.technologyId,
-            levelIds: { levelId: level }
+            levelIds: { levelId }
           }
           prepareData.interviewIds = {}
-          prepareData.interviewIds[level] = {}
-          for (const subLevel of Object.keys(interviewRef)) {
-            interview.questionIds = interviewRef[subLevel].map(({ id }) => id)
-            interview.levelIds = { ...interview.levelIds, subLevelId: subLevel }
+          prepareData.interviewIds[levelId] = {}
+          for (const subLevelId of Object.keys(interviewRef)) {
+            interview.questionIds = interviewRef[subLevelId].map(({ id }) => id)
+            interview.levelIds = { ...interview.levelIds, subLevelId }
 
             interview.id = getDocumentRef(COLLECTIONS.INTERVIEWS).id
 
             await setDocument(COLLECTIONS.INTERVIEWS, interview.id, interview)
 
-            technology.interviewIds[interview.id] = true
+            technology.interviewIds[interview.id] = {
+              levelId,
+              subLevelId
+            }
           }
         }
       }

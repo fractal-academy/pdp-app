@@ -4,10 +4,11 @@ import { useAuthState } from 'react-firebase-hooks/auth'
 import { message } from 'antd'
 import { useSessionDispatch } from 'app/contexts/Session/hooks'
 import TYPES from '~/app/contexts/Session/types'
-import firestore, {
+import {
   getCollectionData,
   setDocument,
-  getDocumentRef
+  getDocumentRef,
+  getCollectionRef
 } from '~/services/Firebase/firestore'
 import auth from '~/services/Firebase/auth'
 import { ROUTE_PATHS, COLLECTIONS } from 'app/constants'
@@ -25,7 +26,37 @@ const useAuthListener = () => {
   // [USE_EFFECTS]
   useEffect(() => {
     setLoading(true)
-    let unsubscribeUsers
+    let unsubscribeUser, unsubscribeStudent, unsubscribeMentor
+
+    const getMentorData = (mentorId) =>
+      getCollectionRef(COLLECTIONS.MENTORS)
+        .doc(mentorId)
+        .onSnapshot((studentData) =>
+          sessionDispatch({ type: TYPES.SET_USER, payload: studentData.data() })
+        )
+
+    const getStudentData = (studentId) =>
+      getCollectionRef(COLLECTIONS.STUDENTS)
+        .doc(studentId)
+        .onSnapshot((studentData) => {
+          sessionDispatch({ type: TYPES.SET_USER, payload: studentData.data() })
+          setLoading(false)
+        })
+
+    const getUserData = () =>
+      getCollectionRef(COLLECTIONS.USERS)
+        .doc(user.uid)
+        .onSnapshot((userSnapshot) => {
+          const userData = userSnapshot.data()
+          if (userData.mentorId) {
+            unsubscribeMentor = getMentorData(userData.mentorId)
+          }
+
+          unsubscribeStudent = getStudentData(userData.studentId)
+
+          sessionDispatch({ type: TYPES.SET_USER, payload: userData })
+        })
+
     const fetchUser = async () => {
       try {
         if (!!localStorage.getItem('isNewUser')) {
@@ -57,16 +88,8 @@ const useAuthListener = () => {
 
           localStorage.removeItem('isNewUser')
         }
-        unsubscribeUsers = firestore
-          .collection(COLLECTIONS.USERS)
-          .doc(user.uid)
-          .onSnapshot((doc) => {
-            sessionDispatch({
-              type: TYPES.SET_USER,
-              payload: doc.data()
-            })
-            setLoading(false)
-          })
+
+        unsubscribeUser = getUserData()
 
         if (!!localStorage.getItem('signIn')) {
           history.push('/')
@@ -84,7 +107,8 @@ const useAuthListener = () => {
     }
     user && !userLoading && fetchUser()
 
-    return () => unsubscribeUsers?.()
+    return () =>
+      unsubscribeUser?.() && unsubscribeStudent?.() && unsubscribeMentor?.()
   }, [user, userLoading])
 
   return { loading }
