@@ -18,10 +18,10 @@ import { CompanySimpleView } from 'domains/Company/components/views'
 
 const CompanyMultipleSelect = (props) => {
   // [INTERFACES]
-  const { companyIds, ...rest } = props
+  const { companyIds, value, onChange } = props
 
   // [COMPONENT_STATE_HOOKS]
-  const [selectedCompanyIds, setSelectedCompanyIds] = useState(rest.value)
+  const [selectedCompanyIds, setSelectedCompanyIds] = useState(value)
   const [allCompanyIds, setAllCompanyIds] = useState()
   const [loading, setLoading] = useState(false)
 
@@ -42,7 +42,7 @@ const CompanyMultipleSelect = (props) => {
     fetchCompanies()
     return () => unsubscribe()
   }, [])
-  !loading && console.log(selectedCompanyIds, allCompanyIds)
+
   // [COMPUTED_PROPERTIES]
   const filteredCompanyIds = allCompanyIds?.filter(
     (companyId) => !selectedCompanyIds?.includes(companyId)
@@ -51,7 +51,7 @@ const CompanyMultipleSelect = (props) => {
   // [HELPER_FUNCTIONS]
   const handleChange = (selectedItems) => {
     setSelectedCompanyIds(selectedItems)
-    // rest.onChange?.(selectedItems)
+    onChange?.(selectedItems)
   }
   const tagRender = (props) => {
     const { label, closable, onClose } = props
@@ -76,7 +76,8 @@ const CompanyMultipleSelect = (props) => {
       placeholder="Select company"
       tagRender={tagRender}
       loading={loading}
-      {...rest}>
+      onChange={handleChange}
+      value={selectedCompanyIds}>
       {filteredCompanyIds?.map((id) => (
         <Select.Option key={id} value={id}>
           <CompanySimpleView companyId={id} />

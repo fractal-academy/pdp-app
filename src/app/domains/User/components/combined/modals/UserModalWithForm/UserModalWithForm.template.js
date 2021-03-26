@@ -41,7 +41,7 @@ const UserModalWithForm = (props) => {
 
   // [HELPER_FUNCTIONS]
   const onSubmit = async (userData) => {
-    // setLoading(true)
+    setLoading(true)
     console.log(userData)
     // if (restUserData.role !== ROLES.MENTOR && userData.role === ROLES.MENTOR) {
     //   const mentorId = getDocumentRef(COLLECTIONS.MENTORS).id
@@ -77,8 +77,8 @@ const UserModalWithForm = (props) => {
     // } catch (error) {
     //   message.error(error.message)
     // }
-    // setLoading(false)
-    // setIsModalVisible(false)
+    setLoading(false)
+    setIsModalVisible(false)
   }
 
   const onCancel = () => {
