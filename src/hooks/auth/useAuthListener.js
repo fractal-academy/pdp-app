@@ -4,10 +4,11 @@ import { useAuthState } from 'react-firebase-hooks/auth'
 import { message } from 'antd'
 import { useSessionDispatch } from 'app/contexts/Session/hooks'
 import TYPES from '~/app/contexts/Session/types'
-import firestore, {
+import {
   getCollectionData,
   setDocument,
-  getDocumentRef
+  getDocumentRef,
+  getCollectionRef
 } from '~/services/Firebase/firestore'
 import auth from '~/services/Firebase/auth'
 import { ROUTE_PATHS, COLLECTIONS } from 'app/constants'
@@ -25,7 +26,7 @@ const useAuthListener = () => {
   // [USE_EFFECTS]
   useEffect(() => {
     setLoading(true)
-    let unsubscribeUsers
+    let unsubscribeUser, unsubscribeStudent, unsubscribeMentor
     const fetchUser = async () => {
       try {
         if (!!localStorage.getItem('isNewUser')) {
@@ -57,15 +58,31 @@ const useAuthListener = () => {
 
           localStorage.removeItem('isNewUser')
         }
-        unsubscribeUsers = firestore
-          .collection(COLLECTIONS.USERS)
+
+        unsubscribeUser = getCollectionRef(COLLECTIONS.USERS)
           .doc(user.uid)
-          .onSnapshot((doc) => {
-            sessionDispatch({
-              type: TYPES.SET_USER,
-              payload: doc.data()
-            })
-            setLoading(false)
+          .onSnapshot((userData) => {
+            let fullUserData = userData.data()
+            unsubscribeStudent = getCollectionRef(COLLECTIONS.STUDENTS)
+              .doc(fullUserData.studentId)
+              .onSnapshot((studentData) => {
+                unsubscribeMentor =
+                  fullUserData?.mentorId &&
+                  getCollectionRef(COLLECTIONS.MENTORS)
+                    .doc(fullUserData.mentorId)
+                    .onSnapshot((mentorData) => {
+                      sessionDispatch({
+                        type: TYPES.SET_MENTOR,
+                        payload: mentorData.data()
+                      })
+                    })
+
+                sessionDispatch({
+                  type: TYPES.SET_USER,
+                  payload: { ...studentData.data(), ...fullUserData }
+                })
+                setLoading(false)
+              })
           })
 
         if (!!localStorage.getItem('signIn')) {
@@ -84,7 +101,8 @@ const useAuthListener = () => {
     }
     user && !userLoading && fetchUser()
 
-    return () => unsubscribeUsers?.()
+    return () =>
+      unsubscribeUser?.() && unsubscribeStudent?.() && unsubscribeMentor?.()
   }, [user, userLoading])
 
   return { loading }
