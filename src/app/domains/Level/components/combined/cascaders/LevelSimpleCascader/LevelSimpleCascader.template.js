@@ -9,14 +9,15 @@ import { COLLECTIONS } from 'app/constants'
  *
  * @comment LevelSimpleCascader - React component.
  *
- * @since 24 Mar 2021 ( v.0.0.3 ) // LAST-EDIT DATE
+ * @since 25 Mar 2021 ( v.0.0.3 ) // LAST-EDIT DATE
  *
- * @param {Array}         [props.levelTree]             Controlled tree data.
- * @param {function}      [props.loadLevel]             Function that loads sub levels.
- * @param {Array}         [props.defaultValue]          Default tree.
- * @param {string}         props.docId                  Document id in firestore that will using to build tree.
- * @param {function}      [props.onLevelSelect]         Function that runs on level select.
- * @param {string}         props.loadFrom               Collection name in firestore.
+ * @param {Array.<string>}         [props.levelTree]             Controlled tree data.
+ * @param {function}               [props.loadLevel]             Function that loads sub levels.
+ * @param {Array.<string>}         [props.defaultValue]          Default selected levels.
+ * @param {Array.<string>}         [props.defaultTree]           Default tree.
+ * @param {string}                  props.docId                  Document id in firestore that will using to build tree.
+ * @param {function}               [props.onLevelSelect]         Function that runs on level select.
+ * @param {string}                  props.loadFrom               Collection name in firestore.
  *
  * @return {React.FC}
  */
@@ -27,6 +28,7 @@ const LevelSimpleCascader = (props) => {
     levelTree,
     loadLevel,
     defaultValue,
+    defaultTree,
     docId,
     onLevelSelect,
     loadFrom,
@@ -34,7 +36,7 @@ const LevelSimpleCascader = (props) => {
   } = props
 
   // [COMPONENT_STATE_HOOKS]
-  const [treeData, setTreeData] = useState([])
+  const [treeData, setTreeData] = useState(defaultTree ?? [])
   const [levelLoading, setLevelLoading] = useState(true)
 
   // [HELPER_FUNCTIONS]
@@ -61,29 +63,33 @@ const LevelSimpleCascader = (props) => {
 
   // [USE_EFFECTS]
   useEffect(() => {
-    const fetchLevels = async () => {
-      setLevelLoading(true)
-      try {
-        const docWithLevels = await getDocumentData(loadFrom, docId)
-
-        const levelMap = []
-
-        for (const levelId of Object.keys(docWithLevels.levelIds)) {
-          const levelData = await getDocumentData(COLLECTIONS.LEVELS, levelId)
-
-          levelMap.push({
-            label: levelData.name,
-            value: levelId,
-            isLeaf: false
-          })
-        }
-        setTreeData(levelMap)
-      } catch (error) {
-        console.log('level loading', error)
-      }
+    if (defaultTree || !levelTree) {
       setLevelLoading(false)
+    } else {
+      const fetchLevels = async () => {
+        setLevelLoading(true)
+        try {
+          const docWithLevels = await getDocumentData(loadFrom, docId)
+
+          const levelMap = []
+
+          for (const levelId of Object.keys(docWithLevels.levelIds)) {
+            const levelData = await getDocumentData(COLLECTIONS.LEVELS, levelId)
+
+            levelMap.push({
+              label: levelData.name,
+              value: levelId,
+              isLeaf: false
+            })
+          }
+          setTreeData(levelMap)
+        } catch (error) {
+          console.log('level loading', error)
+        }
+        setLevelLoading(false)
+      }
+      fetchLevels()
     }
-    fetchLevels()
   }, [docId, loadFrom])
 
   // [TEMPLATE]
@@ -91,7 +97,7 @@ const LevelSimpleCascader = (props) => {
     <Cascader
       size="large"
       placeholder="Select level"
-      onChange={onLevelSelect}
+      onChange={(value) => onLevelSelect(value, treeData)}
       options={levelTree ?? treeData}
       loadData={loadLevel ?? loadData}
       defaultValue={defaultValue}
@@ -103,9 +109,10 @@ const LevelSimpleCascader = (props) => {
 
 // [PROPTYPES]
 LevelSimpleCascader.propTypes = {
-  levelTree: PropTypes.array,
+  levelTree: PropTypes.arrayOf(PropTypes.string),
   loadLevel: PropTypes.func,
-  defaultValue: PropTypes.array,
+  defaultValue: PropTypes.arrayOf(PropTypes.string),
+  defaultTree: PropTypes.arrayOf(PropTypes.string),
   docId: PropTypes.string,
   loadFrom: PropTypes.string,
   onLevelSelect: PropTypes.func
