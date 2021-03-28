@@ -5,8 +5,7 @@ import _ from 'lodash'
 import {
   getCollectionRef,
   getDocumentRef,
-  setDocument,
-  deleteDocument
+  setDocument
 } from '~/services/Firebase/firestore'
 import { COLLECTIONS } from 'app/constants'
 import { UserSimpleForm } from 'domains/User/components/forms'
@@ -16,7 +15,7 @@ import { ROLES } from '~/constants'
  *
  * @comment UserModalWithForm - React component.
  *
- * @since 26 Mar 2021 ( v.0.0.5 ) // LAST-EDIT DATE
+ * @since 28 Mar 2021 ( v.0.0.6 ) // LAST-EDIT DATE
  *
  * @return {React.FC}
  */
@@ -40,45 +39,74 @@ const UserModalWithForm = (props) => {
   const [form] = Form.useForm()
 
   // [HELPER_FUNCTIONS]
-  const onSubmit = async (userData) => {
+  const onSubmit = async (fullUserData) => {
     setLoading(true)
-    console.log(userData)
-    // if (restUserData.role !== ROLES.MENTOR && userData.role === ROLES.MENTOR) {
-    //   const mentorId = getDocumentRef(COLLECTIONS.MENTORS).id
 
-    //   await setDocument(COLLECTIONS.MENTORS, mentorId, {
-    //     id: mentorId,
-    //     userId: restUserData.id
-    //   })
-    //   userData = { ...userData, mentorId: mentorId }
-    // }
-    // if (restUserData.role === ROLES.MENTOR && userData.role === ROLES.STUDENT) {
-    //   await deleteDocument(COLLECTIONS.MENTORS, restUserData.mentorId)
-    //   console.log(userData)
-    //   delete userData.mentorId
-    // }
+    let userData = {}
+    let mentorData = { mentorId: restUserData?.mentorId }
 
-    // try {
-    //   delete userData.companyIds
-    //   await getCollectionRef(COLLECTIONS.USERS)
-    //     .doc(restUserData.userId)
-    //     .set({
-    //       ..._.pickBy(userData, _.identity),
-    //       avatarURL: avatarFormURL || ''
-    //     }) //deleted fields that are 'undefined'
+    if (restUserData.role !== fullUserData.role) {
+      if (restUserData.role === ROLES.STUDENT) {
+        const mentorId = getDocumentRef(COLLECTIONS.MENTORS).id
+        await setDocument(COLLECTIONS.MENTORS, mentorId, {
+          id: mentorId,
+          userId: restUserData.id,
+          isAdmin: fullUserData.role === ROLES.ADMIN ? true : false
+          /**
+           * if role from edit form is admin,
+           *  to user`s document will be set field isAdmin: true
+           *  if role is mentor - isAdmin: false
+           */
+        })
+        mentorData = { mentorId }
+      } else if (fullUserData.role === ROLES.STUDENT) {
+        /**
+         *  if previous role is admin or mentor
+         */
+        delete mentorData.mentorId
+      } else {
+        /**
+         * if previous role is admin or mentor,
+         * and role from edit form is admin or mentor, too
+         */
+        await getCollectionRef(COLLECTIONS.MENTORS)
+          .doc(restUserData.mentorId)
+          .update({
+            isAdmin: fullUserData.role === ROLES.ADMIN ? true : false
+          })
+      }
+    }
 
-    //   companyIds &&
-    //     (await getCollectionRef(COLLECTIONS.STUDENTS)
-    //       .doc(restUserData.studentId)
-    //       .update({
-    //         companyIds
-    //       }))
-    //   message.success('User was edited successful')
-    // } catch (error) {
-    //   message.error(error.message)
-    // }
+    userData = {
+      ...userData,
+      ...mentorData,
+      id: restUserData.id,
+      firstName: fullUserData?.firstName,
+      secondName: fullUserData?.secondName,
+      role: fullUserData.role,
+      phone: fullUserData?.phone,
+      email: fullUserData?.email,
+      studentId: restUserData.studentId,
+      avatarURL: avatarFormURL ?? ''
+    }
+
+    try {
+      await getCollectionRef(COLLECTIONS.USERS)
+        .doc(restUserData.userId)
+        .set({ ..._.pickBy(userData, _.identity) })
+
+      await getCollectionRef(COLLECTIONS.STUDENTS)
+        .doc(restUserData.studentId)
+        .update({ companyIds: fullUserData.companyIds })
+
+      message.success('User was edited successful')
+    } catch (error) {
+      message.error(error.message)
+    }
+
     setLoading(false)
     setIsModalVisible(false)
+    form.setFieldsValue(userData)
   }
 
   const onCancel = () => {
