@@ -11,14 +11,14 @@ import { CompanySimpleView } from 'domains/Company/components/views'
  *
  * @comment CompanyMultipleSelect - React component.
  *
- * @since 26 Mar 2021 ( v.0.0.4 ) // LAST-EDIT DATE
+ * @since 28 Mar 2021 ( v.0.0.5 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
 
 const CompanyMultipleSelect = (props) => {
   // [INTERFACES]
-  const { companyIds, value, onChange } = props
+  const { value, onChange } = props
 
   // [COMPONENT_STATE_HOOKS]
   const [selectedCompanyIds, setSelectedCompanyIds] = useState(value)
@@ -63,10 +63,6 @@ const CompanyMultipleSelect = (props) => {
     )
   }
 
-  useEffect(() => {
-    console.log(selectedCompanyIds)
-  }, [selectedCompanyIds])
-
   // [TEMPLATE]
   if (loading) return <Spinner />
 
@@ -89,7 +85,8 @@ const CompanyMultipleSelect = (props) => {
 
 // [PROPTYPES]
 CompanyMultipleSelect.propTypes = {
-  companyIds: PropTypes.array.isRequired
+  onChange: PropTypes.func,
+  value: PropTypes.array
 }
 
 export default CompanyMultipleSelect
