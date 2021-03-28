@@ -8,6 +8,7 @@ import storage from '~/services/Firebase/storage'
 import { ROLES } from '~/constants'
 import { useRole } from 'contexts/Role/hooks'
 import { RoleSingleSelect } from 'domains/Role/components/selects'
+import { CompanyMultipleSelect } from 'domains/Company/components/selects'
 import { v5 as uuidv5, v4 as uuidv4 } from 'uuid'
 
 /**
@@ -15,14 +16,32 @@ import { v5 as uuidv5, v4 as uuidv4 } from 'uuid'
  *
  * @comment UserSimpleForm - React component.
  *
- * @since 24 Mar 2021 ( v.0.0.4 ) // LAST-EDIT DATE
+ * @since 28 Mar 2021 ( v.0.0.6 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
 
 const EDITING_FIELDS = [
-  { name: 'firstName', placeholder: 'First name' },
-  { name: 'secondName', placeholder: 'Second name' },
+  {
+    name: 'firstName',
+    placeholder: 'First name',
+    rules: [
+      {
+        required: true,
+        message: 'Please input your name'
+      }
+    ]
+  },
+  {
+    name: 'secondName',
+    placeholder: 'Second name',
+    roles: [
+      {
+        required: true,
+        message: 'Please input your surname'
+      }
+    ]
+  },
   {
     name: 'email',
     placeholder: 'Email',
@@ -48,6 +67,7 @@ const UserSimpleForm = (props) => {
     email,
     phone,
     role,
+    companyIds,
     form,
     onSubmit
   } = props
@@ -92,7 +112,7 @@ const UserSimpleForm = (props) => {
   return (
     <Form
       name="userEdit"
-      initialValues={{ firstName, secondName, email, phone, role }}
+      initialValues={{ firstName, secondName, email, phone, role, companyIds }}
       form={form}
       onFinish={onSubmit}>
       <Row justifyContent="center" mb={3}>
@@ -100,9 +120,9 @@ const UserSimpleForm = (props) => {
           <Avatar src={avatarURL} size={96} icon={<UserOutlined />} />
         </Col>
       </Row>
-      <Form.Item name="avatarURL">
-        <Row justifyContent="center">
-          <Col>
+      <Row justifyContent="center">
+        <Col>
+          <Form.Item name="avatarURL">
             <ImgCrop rotate>
               <Upload showUploadList={false} customRequest={onUploadAvatar}>
                 <Button icon={<UploadOutlined />} loading={loadingAvatar}>
@@ -110,20 +130,27 @@ const UserSimpleForm = (props) => {
                 </Button>
               </Upload>
             </ImgCrop>
+          </Form.Item>
+        </Col>
+      </Row>
+      <Row justifyContent="center">
+        <Col span={15}>
+          <Form.Item name="companyIds" initialValue={companyIds}>
+            <CompanyMultipleSelect />
+          </Form.Item>
+        </Col>
+      </Row>
+      {currentUserRole.role === ROLES.ADMIN && (
+        <Row justifyContent="center">
+          <Col span={7}>
+            <Form.Item name="role" initialValue={role}>
+              <RoleSingleSelect />
+            </Form.Item>
           </Col>
         </Row>
-      </Form.Item>
-      {currentUserRole.role === ROLES.ADMIN && (
-        <Form.Item name="role">
-          <Row justifyContent="center">
-            <Col span={7}>
-              <RoleSingleSelect role={role} />
-            </Col>
-          </Row>
-        </Form.Item>
       )}
       {EDITING_FIELDS.map((field) => (
-        <Form.Item name={field.name} rules={field.rules}>
+        <Form.Item key={field.name} name={field.name} rules={field.rules}>
           <Input placeholder={field.placeholder} />
         </Form.Item>
       ))}
@@ -138,6 +165,8 @@ UserSimpleForm.propTypes = {
   avatarURL: PropTypes.string,
   email: PropTypes.string.isRequired,
   phone: PropTypes.string,
+  role: PropTypes.string.isRequired,
+  companyIds: PropTypes.array,
   onSubmit: PropTypes.func.isRequired
 }
 

@@ -8,20 +8,18 @@ import { useDocumentData } from 'react-firebase-hooks/firestore'
 import firestore from '~/services/Firebase/firestore'
 import { COLLECTIONS } from 'app/constants'
 import { Spinner, NotFoundPath } from '~/components'
-import { UserAdvancedView } from 'domains/User/components/views'
-import { EditOutlined } from '@ant-design/icons'
+import { EditOutlined, UserOutlined } from '@ant-design/icons'
 import { useSession } from 'contexts/Session/hooks'
 import { ROLES } from '~/constants'
 import { UserModalWithForm } from 'domains/User/components/combined/modals'
 import Avatar from 'antd/lib/avatar/avatar'
 import { CompanySimpleList } from 'domains/Company/components/lists'
-import _ from 'lodash'
 /**
  * @info UserShow (05 Mar 2021) // CREATION DATE
  *
  * @comment UserShow - React component.
  *
- * @since 24 Mar 2021 ( v.0.0.6 ) // LAST-EDIT DATE
+ * @since 28 Mar 2021 ( v.0.0.8 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
@@ -31,16 +29,17 @@ const UserShow = () => {
   const history = useHistory()
   const { id } = useParams()
   const session = useSession()
-  const [userData] = useDocumentData(
+  const [userData, userLoading] = useDocumentData(
     firestore.doc(`${COLLECTIONS.USERS}/${id}`)
   )
-  const [studentData, loading] = useDocumentData(
-    userData && firestore.doc(`${COLLECTIONS.STUDENTS}/${userData.studentId}`)
+  const [studentData, studentLoading] = useDocumentData(
+    firestore.doc(`${COLLECTIONS.STUDENTS}/${userData?.studentId}`)
   )
 
   // [COMPONENT_STATE_HOOKS]
   const [isModalVisible, setIsModalVisible] = useState(false)
   const [fullUserData, setFullUserData] = useState()
+  const [loading, setLoading] = useState(true)
 
   // [HELPER_FUNCTIONS]
   const showModal = () => {
@@ -74,10 +73,12 @@ const UserShow = () => {
   } profile`
 
   // [USE_EFFECTS]
-  useEffect(
-    () => !loading && setFullUserData({ ...studentData, ...userData }),
-    [studentData, userData]
-  )
+  useEffect(() => {
+    if (!userLoading && !studentLoading) {
+      setFullUserData({ ...studentData, ...userData })
+      setLoading(false)
+    }
+  }, [studentData, userData, userLoading, studentLoading])
 
   // [TEMPLATE]
   if (loading) return <Spinner />
@@ -95,7 +96,11 @@ const UserShow = () => {
           <Card>
             <Row justifyContent="center" position="relative">
               <Col mb={2}>
-                <Avatar size={96} src={fullUserData.avatarURL} />
+                <Avatar
+                  size={96}
+                  src={fullUserData.avatarURL}
+                  icon={<UserOutlined />}
+                />
               </Col>
               {
                 <Col position="absolute" right="0">
@@ -154,10 +159,9 @@ const UserShow = () => {
       </Row>
       <UserModalWithForm
         title={modalTitle}
-        id={id}
         setIsModalVisible={setIsModalVisible}
         isModalVisible={isModalVisible}
-        {...userData}
+        {...fullUserData}
       />
     </PageWrapper>
   )

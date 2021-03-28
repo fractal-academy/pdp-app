@@ -1,2 +1,3 @@
 import { CompanySingleSelect } from './CompanySingleSelect'
-export { CompanySingleSelect }
+import { CompanyMultipleSelect } from './CompanyMultipleSelect'
+export { CompanySingleSelect, CompanyMultipleSelect }

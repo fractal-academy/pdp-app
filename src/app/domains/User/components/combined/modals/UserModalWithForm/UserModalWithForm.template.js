@@ -2,15 +2,20 @@ import PropTypes from 'prop-types'
 import { useState } from 'react'
 import { message, Modal, Form } from 'antd'
 import _ from 'lodash'
-import { getCollectionRef } from '~/services/Firebase/firestore'
+import {
+  getCollectionRef,
+  getDocumentRef,
+  setDocument
+} from '~/services/Firebase/firestore'
 import { COLLECTIONS } from 'app/constants'
 import { UserSimpleForm } from 'domains/User/components/forms'
+import { ROLES } from '~/constants'
 /**
  * @info UserModalWithForm (23 Mar 2021) // CREATION DATE
  *
  * @comment UserModalWithForm - React component.
  *
- * @since 24 Mar 2021 ( v.0.0.4 ) // LAST-EDIT DATE
+ * @since 28 Mar 2021 ( v.0.0.7 ) // LAST-EDIT DATE
  *
  * @return {React.FC}
  */
@@ -27,27 +32,81 @@ const UserModalWithForm = (props) => {
 
   // [COMPONENT_STATE_HOOKS]
   const [avatarFormURL, setAvatarFormURL] = useState(avatarURL)
+  const [companyIds, setCompanyIds] = useState(restUserData.companyIds)
   const [loading, setLoading] = useState(false)
 
   // [ADDITIONAL_HOOKS]
   const [form] = Form.useForm()
 
   // [HELPER_FUNCTIONS]
-  const onSubmit = (userData) => {
+  const onSubmit = async (fullUserData) => {
     setLoading(true)
+
+    let userData = {}
+    let mentorData = { mentorId: restUserData?.mentorId }
+
+    if (restUserData.role !== fullUserData.role) {
+      if (restUserData.role === ROLES.STUDENT) {
+        const mentorId = getDocumentRef(COLLECTIONS.MENTORS).id
+        await setDocument(COLLECTIONS.MENTORS, mentorId, {
+          id: mentorId,
+          userId: restUserData.id,
+          isAdmin: fullUserData.role === ROLES.ADMIN
+          /**
+           * if role from edit form is admin,
+           *  to mentor`s document will be set field isAdmin: true
+           *  if role is mentor - isAdmin: false
+           */
+        })
+        mentorData = { mentorId }
+      } else if (fullUserData.role === ROLES.STUDENT) {
+        /**
+         *  if previous role is admin or mentor
+         */
+        delete mentorData.mentorId
+      } else {
+        /**
+         * if previous role is admin or mentor,
+         * and role from edit form is admin or mentor, too
+         */
+        await getCollectionRef(COLLECTIONS.MENTORS)
+          .doc(restUserData.mentorId)
+          .update({
+            isAdmin: fullUserData.role === ROLES.ADMIN
+          })
+      }
+    }
+
+    userData = {
+      ...userData,
+      ...mentorData,
+      id: restUserData.id,
+      firstName: fullUserData?.firstName,
+      secondName: fullUserData?.secondName,
+      role: fullUserData.role,
+      phone: fullUserData?.phone,
+      email: fullUserData?.email,
+      studentId: restUserData.studentId,
+      avatarURL: avatarFormURL ?? ''
+    }
+
     try {
-      getCollectionRef(COLLECTIONS.USERS)
-        .doc(restUserData.id)
-        .set(
-          { ..._.pickBy(userData, _.identity), avatarURL: avatarFormURL || '' },
-          { merge: true }
-        ) //deleted fields that are 'undefined'
+      await getCollectionRef(COLLECTIONS.USERS)
+        .doc(restUserData.userId)
+        .set({ ..._.pickBy(userData, _.identity) })
+
+      await getCollectionRef(COLLECTIONS.STUDENTS)
+        .doc(restUserData.studentId)
+        .update({ companyIds: fullUserData.companyIds })
+
       message.success('User was edited successful')
     } catch (error) {
       message.error(error.message)
     }
+
     setLoading(false)
     setIsModalVisible(false)
+    form.setFieldsValue(userData)
   }
 
   const onCancel = () => {
@@ -66,6 +125,8 @@ const UserModalWithForm = (props) => {
         form={form}
         setAvatarURL={setAvatarFormURL}
         avatarURL={avatarFormURL}
+        companyIds={companyIds}
+        setCompanyIds={setCompanyIds}
         onSubmit={onSubmit}
         loading={loading}
         {...restUserData}
@@ -78,7 +139,8 @@ const UserModalWithForm = (props) => {
 UserModalWithForm.propTypes = {
   setIsModalVisible: PropTypes.func.isRequired,
   isModalVisible: PropTypes.bool.isRequired,
-  title: PropTypes.string.isRequired
+  title: PropTypes.string.isRequired,
+  avatarURL: PropTypes.string
 }
 
 export default UserModalWithForm
