@@ -42,7 +42,6 @@ const UserModalWithForm = (props) => {
   const onSubmit = async (fullUserData) => {
     setLoading(true)
 
-    let userData = {}
     let mentorData = { mentorId: restUserData?.mentorId }
 
     if (restUserData.role !== fullUserData.role) {
@@ -77,8 +76,7 @@ const UserModalWithForm = (props) => {
       }
     }
 
-    userData = {
-      ...userData,
+    const userData = {
       ...mentorData,
       id: restUserData.id,
       firstName: fullUserData?.firstName,
