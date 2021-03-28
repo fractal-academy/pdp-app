@@ -15,7 +15,7 @@ import { ROLES } from '~/constants'
  *
  * @comment UserModalWithForm - React component.
  *
- * @since 28 Mar 2021 ( v.0.0.6 ) // LAST-EDIT DATE
+ * @since 28 Mar 2021 ( v.0.0.7 ) // LAST-EDIT DATE
  *
  * @return {React.FC}
  */
@@ -51,10 +51,10 @@ const UserModalWithForm = (props) => {
         await setDocument(COLLECTIONS.MENTORS, mentorId, {
           id: mentorId,
           userId: restUserData.id,
-          isAdmin: fullUserData.role === ROLES.ADMIN ? true : false
+          isAdmin: fullUserData.role === ROLES.ADMIN
           /**
            * if role from edit form is admin,
-           *  to user`s document will be set field isAdmin: true
+           *  to mentor`s document will be set field isAdmin: true
            *  if role is mentor - isAdmin: false
            */
         })
@@ -72,7 +72,7 @@ const UserModalWithForm = (props) => {
         await getCollectionRef(COLLECTIONS.MENTORS)
           .doc(restUserData.mentorId)
           .update({
-            isAdmin: fullUserData.role === ROLES.ADMIN ? true : false
+            isAdmin: fullUserData.role === ROLES.ADMIN
           })
       }
     }

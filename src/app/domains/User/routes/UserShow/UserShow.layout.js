@@ -19,7 +19,7 @@ import { CompanySimpleList } from 'domains/Company/components/lists'
  *
  * @comment UserShow - React component.
  *
- * @since 26 Mar 2021 ( v.0.0.7 ) // LAST-EDIT DATE
+ * @since 28 Mar 2021 ( v.0.0.8 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
@@ -29,16 +29,17 @@ const UserShow = () => {
   const history = useHistory()
   const { id } = useParams()
   const session = useSession()
-  const [userData] = useDocumentData(
+  const [userData, userLoading] = useDocumentData(
     firestore.doc(`${COLLECTIONS.USERS}/${id}`)
   )
-  const [studentData, loading] = useDocumentData(
-    userData && firestore.doc(`${COLLECTIONS.STUDENTS}/${userData.studentId}`)
+  const [studentData, studentLoading] = useDocumentData(
+    firestore.doc(`${COLLECTIONS.STUDENTS}/${userData?.studentId}`)
   )
 
   // [COMPONENT_STATE_HOOKS]
   const [isModalVisible, setIsModalVisible] = useState(false)
   const [fullUserData, setFullUserData] = useState()
+  const [loading, setLoading] = useState(true)
 
   // [HELPER_FUNCTIONS]
   const showModal = () => {
@@ -73,13 +74,15 @@ const UserShow = () => {
 
   // [USE_EFFECTS]
   useEffect(() => {
-    !loading && setFullUserData({ ...studentData, ...userData })
-  }, [studentData, userData])
+    if (!userLoading && !studentLoading) {
+      setFullUserData({ ...studentData, ...userData })
+      setLoading(false)
+    }
+  }, [studentData, userData, userLoading, studentLoading])
 
   // [TEMPLATE]
   if (loading) return <Spinner />
-  if ((fullUserData && !Object.keys(fullUserData).length) || !fullUserData)
-    return <NotFoundPath />
+  if (!fullUserData) return <NotFoundPath />
   return (
     <PageWrapper
       title={title}
