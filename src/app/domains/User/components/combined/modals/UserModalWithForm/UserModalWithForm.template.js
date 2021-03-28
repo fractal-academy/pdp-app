@@ -15,7 +15,7 @@ import { ROLES } from '~/constants'
  *
  * @comment UserModalWithForm - React component.
  *
- * @since 28 Mar 2021 ( v.0.0.7 ) // LAST-EDIT DATE
+ * @since 28 Mar 2021 ( v.0.0.8 ) // LAST-EDIT DATE
  *
  * @return {React.FC}
  */
@@ -120,6 +120,7 @@ const UserModalWithForm = (props) => {
       title={title}
       visible={isModalVisible}
       onOk={form.submit}
+      okButtonProps={{ loading }}
       onCancel={onCancel}>
       <UserSimpleForm
         form={form}
@@ -128,7 +129,6 @@ const UserModalWithForm = (props) => {
         companyIds={companyIds}
         setCompanyIds={setCompanyIds}
         onSubmit={onSubmit}
-        loading={loading}
         {...restUserData}
       />
     </Modal>
