@@ -16,14 +16,32 @@ import { v5 as uuidv5, v4 as uuidv4 } from 'uuid'
  *
  * @comment UserSimpleForm - React component.
  *
- * @since 25 Mar 2021 ( v.0.0.5 ) // LAST-EDIT DATE
+ * @since 28 Mar 2021 ( v.0.0.6 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
 
 const EDITING_FIELDS = [
-  { name: 'firstName', placeholder: 'First name' },
-  { name: 'secondName', placeholder: 'Second name' },
+  {
+    name: 'firstName',
+    placeholder: 'First name',
+    rules: [
+      {
+        required: true,
+        message: 'Please input your name'
+      }
+    ]
+  },
+  {
+    name: 'secondName',
+    placeholder: 'Second name',
+    roles: [
+      {
+        required: true,
+        message: 'Please input your surname'
+      }
+    ]
+  },
   {
     name: 'email',
     placeholder: 'Email',
@@ -102,9 +120,9 @@ const UserSimpleForm = (props) => {
           <Avatar src={avatarURL} size={96} icon={<UserOutlined />} />
         </Col>
       </Row>
-      <Form.Item name="avatarURL">
-        <Row justifyContent="center">
-          <Col>
+      <Row justifyContent="center">
+        <Col>
+          <Form.Item name="avatarURL">
             <ImgCrop rotate>
               <Upload showUploadList={false} customRequest={onUploadAvatar}>
                 <Button icon={<UploadOutlined />} loading={loadingAvatar}>
@@ -112,9 +130,9 @@ const UserSimpleForm = (props) => {
                 </Button>
               </Upload>
             </ImgCrop>
-          </Col>
-        </Row>
-      </Form.Item>
+          </Form.Item>
+        </Col>
+      </Row>
       <Row justifyContent="center">
         <Col span={15}>
           <Form.Item name="companyIds" initialValue={companyIds}>
@@ -147,10 +165,9 @@ UserSimpleForm.propTypes = {
   avatarURL: PropTypes.string,
   email: PropTypes.string.isRequired,
   phone: PropTypes.string,
-  onSubmit: PropTypes.func.isRequired,
+  role: PropTypes.string.isRequired,
   companyIds: PropTypes.array,
-  roleSelect: PropTypes.string.isRequired,
-  setRoleSelect: PropTypes.func.isRequired
+  onSubmit: PropTypes.func.isRequired
 }
 
 export default UserSimpleForm
