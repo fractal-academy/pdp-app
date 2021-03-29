@@ -13,12 +13,13 @@ import { useSession } from 'contexts/Session/hooks'
 import { ROLES } from '~/constants'
 import { UserModalWithForm } from 'domains/User/components/combined/modals'
 import { CompanySimpleList } from 'domains/Company/components/lists'
+import { getGrid } from '~/utils'
 /**
  * @info UserShow (05 Mar 2021) // CREATION DATE
  *
  * @comment UserShow - React component.
  *
- * @since 29 Mar 2021 ( v.0.0.9 ) // LAST-EDIT DATE
+ * @since 29 Mar 2021 ( v.0.1.0 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
@@ -94,7 +95,7 @@ const UserShow = () => {
       inlineHeader
       fullWidth>
       <Row gutter={[16, 8]}>
-        <Col span={7}>
+        <Col {...getGrid({ xs: 24, md: 12, lg: 10, xl: 10 })}>
           <Card>
             <Row justifyContent="center" position="relative">
               <Col mb={2}>
