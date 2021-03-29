@@ -110,10 +110,6 @@ const UserSimpleForm = (props) => {
       message.error(error.message)
     }
   }
-  const normFile = (e) => {
-    console.log(e.file)
-    return e.file
-  }
 
   // [TEMPLATE]
   return (
