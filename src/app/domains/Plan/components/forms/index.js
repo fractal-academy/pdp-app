@@ -1,2 +1,4 @@
 import { PlanAdvancedForm } from './PlanAdvancedForm'
-export { PlanAdvancedForm }
+import { PlanSimpleForm } from './PlanSimpleForm'
+
+export { PlanAdvancedForm, PlanSimpleForm }
