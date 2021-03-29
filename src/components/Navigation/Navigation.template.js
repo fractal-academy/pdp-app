@@ -18,7 +18,7 @@ import * as styles from './Navigation.style'
  *
  * @comment Navigation - React component.
  *
- * @since 23 Mar 2021 ( v.0.0.9 ) // LAST-EDIT DATE
+ * @since 29 Mar 2021 ( v.0.0.10 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
@@ -75,7 +75,7 @@ const Navigation = () => {
 
   // [HELPER_FUNCTIONS]
   const goToProfile = () =>
-    history.push(generatePath(ROUTE_PATHS.USER_SHOW, { id: session.id }))
+    history.push(generatePath(ROUTE_PATHS.USER_SHOW, { id: session.userId }))
   const onLogOut = () => {
     try {
       auth.signOut()
@@ -153,8 +153,5 @@ const Navigation = () => {
     </Sider>
   )
 }
-
-// [PROPTYPES]
-Navigation.propTypes = {}
 
 export default Navigation
