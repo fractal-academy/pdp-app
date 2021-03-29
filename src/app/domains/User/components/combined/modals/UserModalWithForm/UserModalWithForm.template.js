@@ -15,25 +15,19 @@ import { ROLES } from '~/constants'
  *
  * @comment UserModalWithForm - React component.
  *
- * @since 28 Mar 2021 ( v.0.0.8 ) // LAST-EDIT DATE
+ * @since 29 Mar 2021 ( v.0.1.1 ) // LAST-EDIT DATE
  *
  * @return {React.FC}
  */
 
 const UserModalWithForm = (props) => {
   // [INTERFACES]
-  const {
-    isModalVisible,
-    setIsModalVisible,
-    avatarURL,
-    title,
-    ...restUserData
-  } = props
+  const { isModalVisible, setIsModalVisible, title, ...restUserData } = props
 
   // [COMPONENT_STATE_HOOKS]
-  const [avatarFormURL, setAvatarFormURL] = useState(avatarURL)
   const [companyIds, setCompanyIds] = useState(restUserData.companyIds)
   const [loading, setLoading] = useState(false)
+  const [loadingAvatar, setLoadingAvatar] = useState(false)
 
   // [ADDITIONAL_HOOKS]
   const [form] = Form.useForm()
@@ -85,7 +79,7 @@ const UserModalWithForm = (props) => {
       phone: fullUserData?.phone,
       email: fullUserData?.email,
       studentId: restUserData.studentId,
-      avatarURL: avatarFormURL ?? ''
+      avatarURL: fullUserData.avatarURL
     }
 
     try {
@@ -93,9 +87,10 @@ const UserModalWithForm = (props) => {
         .doc(restUserData.userId)
         .set({ ..._.pickBy(userData, _.identity) })
 
-      await getCollectionRef(COLLECTIONS.STUDENTS)
-        .doc(restUserData.studentId)
-        .update({ companyIds: fullUserData.companyIds })
+      fullUserData?.companyIds &&
+        (await getCollectionRef(COLLECTIONS.STUDENTS)
+          .doc(restUserData.studentId)
+          .update({ companyIds: fullUserData.companyIds }))
 
       message.success('User was edited successful')
     } catch (error) {
@@ -104,7 +99,8 @@ const UserModalWithForm = (props) => {
 
     setLoading(false)
     setIsModalVisible(false)
-    form.setFieldsValue(userData)
+    // form.setFieldsValue(userData)
+    localStorage.removeItem('editProfile')
   }
 
   const onCancel = () => {
@@ -118,15 +114,16 @@ const UserModalWithForm = (props) => {
       title={title}
       visible={isModalVisible}
       onOk={form.submit}
-      okButtonProps={{ loading }}
-      onCancel={onCancel}>
+      okButtonProps={{ loading, disabled: loadingAvatar }}
+      onCancel={onCancel}
+      destroyOnClose>
       <UserSimpleForm
         form={form}
-        setAvatarURL={setAvatarFormURL}
-        avatarURL={avatarFormURL}
         companyIds={companyIds}
         setCompanyIds={setCompanyIds}
         onSubmit={onSubmit}
+        loadingAvatar={loadingAvatar}
+        setLoadingAvatar={setLoadingAvatar}
         {...restUserData}
       />
     </Modal>
@@ -137,8 +134,7 @@ const UserModalWithForm = (props) => {
 UserModalWithForm.propTypes = {
   setIsModalVisible: PropTypes.func.isRequired,
   isModalVisible: PropTypes.bool.isRequired,
-  title: PropTypes.string.isRequired,
-  avatarURL: PropTypes.string
+  title: PropTypes.string.isRequired
 }
 
 export default UserModalWithForm

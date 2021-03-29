@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
-import { Space, Button } from 'antd'
+import { Space, Button, Avatar } from 'antd'
 import { Row, Col, Card, Title, Text } from 'antd-styled'
 import { PageWrapper } from '~/components/HOC'
 import { ROUTE_PATHS } from 'app/constants'
@@ -12,14 +12,13 @@ import { EditOutlined, UserOutlined } from '@ant-design/icons'
 import { useSession } from 'contexts/Session/hooks'
 import { ROLES } from '~/constants'
 import { UserModalWithForm } from 'domains/User/components/combined/modals'
-import Avatar from 'antd/lib/avatar/avatar'
 import { CompanySimpleList } from 'domains/Company/components/lists'
 /**
  * @info UserShow (05 Mar 2021) // CREATION DATE
  *
  * @comment UserShow - React component.
  *
- * @since 28 Mar 2021 ( v.0.0.8 ) // LAST-EDIT DATE
+ * @since 29 Mar 2021 ( v.0.0.9 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
@@ -63,13 +62,13 @@ const UserShow = () => {
       : userData?.email
 
   const title =
-    session.id === id
+    session.userId === id
       ? 'My profile'
       : !loading &&
         `${userData?.role[0].toUpperCase()}${userData?.role.slice(1)}'s profile`
 
   const modalTitle = `Edit ${
-    id === session.id ? 'my ' : userData?.firstName + "'s" || userData.email
+    id === session.userId ? 'my ' : userData?.firstName ?? userData?.email
   } profile`
 
   // [USE_EFFECTS]
@@ -77,6 +76,9 @@ const UserShow = () => {
     if (!userLoading && !studentLoading) {
       setFullUserData({ ...studentData, ...userData })
       setLoading(false)
+      if (!!localStorage.getItem('editProfile')) {
+        setIsModalVisible(true)
+      }
     }
   }, [studentData, userData, userLoading, studentLoading])
 
@@ -102,13 +104,11 @@ const UserShow = () => {
                   icon={<UserOutlined />}
                 />
               </Col>
-              {
+              {(id === session.userId || session.role === ROLES.ADMIN) && (
                 <Col position="absolute" right="0">
-                  {(id === session.id || session.role === ROLES.ADMIN) && (
-                    <EditOutlined onClick={showModal} />
-                  )}
+                  <EditOutlined onClick={showModal} />
                 </Col>
-              }
+              )}
             </Row>
             <Row justifyContent="center">
               <Col>
@@ -146,7 +146,6 @@ const UserShow = () => {
             )}
           </Card>
         </Col>
-
         <Col>
           <Card>
             <Row justifyContent="center">

@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react'
-import { useHistory } from 'react-router-dom'
+import { useHistory, generatePath } from 'react-router-dom'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { message } from 'antd'
-import { useSessionDispatch } from 'app/contexts/Session/hooks'
+import { useSessionDispatch, useSession } from 'app/contexts/Session/hooks'
 import TYPES from '~/app/contexts/Session/types'
 import {
   getCollectionData,
@@ -19,6 +19,7 @@ const useAuthListener = () => {
   const [user, userLoading] = useAuthState(auth)
   const history = useHistory()
   const sessionDispatch = useSessionDispatch()
+  const session = useSession()
 
   // [STATE_HOOKS]
   const [loading, setLoading] = useState(true)
@@ -85,8 +86,6 @@ const useAuthListener = () => {
           })
 
           await setDocument(COLLECTIONS.USERS, user.uid, userData)
-
-          localStorage.removeItem('isNewUser')
         }
 
         unsubscribeUser = getUserData()
@@ -102,6 +101,7 @@ const useAuthListener = () => {
     }
 
     if (!user) {
+      sessionDispatch({ type: TYPES.SIGN_OUT })
       !userLoading && history.push(ROUTE_PATHS.SESSION_LOGIN)
       setLoading(userLoading)
     }
@@ -111,6 +111,13 @@ const useAuthListener = () => {
       unsubscribeUser?.() && unsubscribeStudent?.() && unsubscribeMentor?.()
   }, [user, userLoading])
 
+  useEffect(() => {
+    if (user && session && localStorage.getItem('isNewUser')) {
+      history.push(generatePath(ROUTE_PATHS.USER_SHOW, { id: session.id }))
+      localStorage.removeItem('isNewUser')
+      localStorage.setItem('editProfile', true)
+    }
+  }, [session])
   return { loading }
 }
 
