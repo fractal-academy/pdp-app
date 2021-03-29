@@ -29,8 +29,9 @@ const PlanAll = () => {
   // [ADDITIONAL_HOOKS]
   const session = useSession()
   const [plans, loading] = useCollectionData(
-    session?.planIds &&
-      firestore.collection(COLLECTIONS.PLANS).where('id', 'in', session.planIds)
+    firestore
+      .collection(COLLECTIONS.PLANS)
+      .where('id', 'in', session?.studentPlanIds)
   )
   const [activePlan, loadingActivePlan] = useDocumentData(
     activePlanId && firestore.collection(COLLECTIONS.PLANS).doc(activePlanId)
