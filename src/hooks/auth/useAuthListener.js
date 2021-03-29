@@ -49,13 +49,18 @@ const useAuthListener = () => {
         .doc(user.uid)
         .onSnapshot((userSnapshot) => {
           const userData = userSnapshot.data()
-          if (userData.mentorId) {
-            unsubscribeMentor = getMentorData(userData.mentorId)
+          if (!userData) {
+            sessionDispatch({ type: TYPES.SIGN_OUT })
+            setLoading(false)
+          } else {
+            if (userData.mentorId) {
+              unsubscribeMentor = getMentorData(userData.mentorId)
+            }
+
+            unsubscribeStudent = getStudentData(userData.studentId)
+
+            sessionDispatch({ type: TYPES.SET_USER, payload: userData })
           }
-
-          unsubscribeStudent = getStudentData(userData.studentId)
-
-          sessionDispatch({ type: TYPES.SET_USER, payload: userData })
         })
 
     const fetchUser = async () => {
@@ -117,6 +122,7 @@ const useAuthListener = () => {
       localStorage.removeItem('isNewUser')
       localStorage.setItem('editProfile', true)
     }
+    !session && history.push(ROUTE_PATHS.SESSION_LOGIN)
   }, [session])
   return { loading }
 }
