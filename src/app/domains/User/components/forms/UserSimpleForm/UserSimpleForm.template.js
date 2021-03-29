@@ -135,7 +135,7 @@ const UserSimpleForm = (props) => {
       </Row>
       <Row justifyContent="center">
         <Col>
-          <Form.Item name="avatarURL" getValueFromEvent={normFile}>
+          <Form.Item name="avatarURL">
             <ImgCrop rotate>
               <Upload showUploadList={false} action={onUploadAvatar}>
                 <Button icon={<UploadOutlined />} loading={loadingAvatar}>

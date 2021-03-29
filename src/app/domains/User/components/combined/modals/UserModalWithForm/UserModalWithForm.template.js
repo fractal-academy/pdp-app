@@ -134,8 +134,7 @@ const UserModalWithForm = (props) => {
 UserModalWithForm.propTypes = {
   setIsModalVisible: PropTypes.func.isRequired,
   isModalVisible: PropTypes.bool.isRequired,
-  title: PropTypes.string.isRequired,
-  avatarURL: PropTypes.string
+  title: PropTypes.string.isRequired
 }
 
 export default UserModalWithForm
