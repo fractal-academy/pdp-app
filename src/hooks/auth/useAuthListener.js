@@ -53,7 +53,7 @@ const useAuthListener = () => {
             sessionDispatch({ type: TYPES.SIGN_OUT })
             setLoading(false)
           } else {
-            if (userData.mentorId) {
+            if (userData?.mentorId) {
               unsubscribeMentor = getMentorData(userData.mentorId)
             }
 
