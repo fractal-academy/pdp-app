@@ -69,11 +69,12 @@ const UserSimpleForm = (props) => {
     role,
     companyIds,
     form,
-    onSubmit
+    onSubmit,
+    setLoadingAvatar,
+    loadingAvatar
   } = props
 
   // [COMPONENT_STATE_HOOKS]
-  const [loadingAvatar, setLoadingAvatar] = useState(false)
   const [avatarFormURL, setAvatarFormURL] = useState(avatarURL)
 
   // [ADDITIONAL_HOOKS]
@@ -183,7 +184,9 @@ UserSimpleForm.propTypes = {
   phone: PropTypes.string,
   role: PropTypes.string.isRequired,
   companyIds: PropTypes.array,
-  onSubmit: PropTypes.func.isRequired
+  onSubmit: PropTypes.func.isRequired,
+  setLoadingAvatar: PropTypes.func.isRequired,
+  loadingAvatar: PropTypes.bool.isRequired
 }
 
 export default UserSimpleForm

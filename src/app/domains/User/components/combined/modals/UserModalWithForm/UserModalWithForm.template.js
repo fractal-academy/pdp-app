@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types'
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { message, Modal, Form } from 'antd'
 import _ from 'lodash'
 import {
@@ -15,24 +15,19 @@ import { ROLES } from '~/constants'
  *
  * @comment UserModalWithForm - React component.
  *
- * @since 29 Mar 2021 ( v.0.1.0 ) // LAST-EDIT DATE
+ * @since 29 Mar 2021 ( v.0.1.1 ) // LAST-EDIT DATE
  *
  * @return {React.FC}
  */
 
 const UserModalWithForm = (props) => {
   // [INTERFACES]
-  const {
-    isModalVisible,
-    setIsModalVisible,
-
-    title,
-    ...restUserData
-  } = props
+  const { isModalVisible, setIsModalVisible, title, ...restUserData } = props
 
   // [COMPONENT_STATE_HOOKS]
   const [companyIds, setCompanyIds] = useState(restUserData.companyIds)
   const [loading, setLoading] = useState(false)
+  const [loadingAvatar, setLoadingAvatar] = useState(false)
 
   // [ADDITIONAL_HOOKS]
   const [form] = Form.useForm()
@@ -119,7 +114,7 @@ const UserModalWithForm = (props) => {
       title={title}
       visible={isModalVisible}
       onOk={form.submit}
-      okButtonProps={{ loading }}
+      okButtonProps={{ loading, disabled: loadingAvatar }}
       onCancel={onCancel}
       destroyOnClose>
       <UserSimpleForm
@@ -127,6 +122,8 @@ const UserModalWithForm = (props) => {
         companyIds={companyIds}
         setCompanyIds={setCompanyIds}
         onSubmit={onSubmit}
+        loadingAvatar={loadingAvatar}
+        setLoadingAvatar={setLoadingAvatar}
         {...restUserData}
       />
     </Modal>
