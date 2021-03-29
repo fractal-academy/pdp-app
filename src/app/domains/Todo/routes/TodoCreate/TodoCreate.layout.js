@@ -1,9 +1,9 @@
 import { useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import _ from 'lodash'
+import { PageWrapper } from '~/components/HOC'
 import { TodoSimpleForm } from 'domains/Todo/components/forms'
 import { TodoSimpleList } from 'domains/Todo/components/lists'
-import { PageWrapper } from '~/components/HOC'
 import {
   deleteDocument,
   getDocumentRef,
@@ -30,10 +30,20 @@ const TodoCreate = () => {
   const currentLevels = historyState.selectedLevel
   let currentLevelTodos
 
+  // [TECHNOLOGY CREATION WIZARD]
   // Check if there are already exist todos for currentLevels
   if (historyState?.todoIds) {
     currentLevelTodos =
       historyState.todoIds?.[currentLevels.levelId]?.[currentLevels.subLevelId]
+  }
+
+  // [PLAN CREATION WIZARD]
+  if (historyState.planId) {
+    const currentTech = historyState.selectedTech.find(
+      ({ key }) => key === historyState.technologyId
+    )
+    currentLevelTodos =
+      currentTech.todoIds?.[currentLevels.levelId]?.[currentLevels.subLevelId]
   }
 
   // [COMPONENT_STATE_HOOKS]
@@ -139,7 +149,7 @@ const TodoCreate = () => {
       />
       <TodoSimpleList
         setTodos={setTodos}
-        todos={todos}
+        todos={_.sortBy(todos, 'createdAt')}
         onDeleteTodo={onDeleteTodo}
       />
     </PageWrapper>
