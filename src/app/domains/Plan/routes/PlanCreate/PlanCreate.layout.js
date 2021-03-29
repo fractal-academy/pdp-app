@@ -98,6 +98,39 @@ const PlanCreate = () => {
             techData.todoIds[todo.id] = true
           }
         }
+        if (technology.questionIds) {
+          const { levelId, subLevelId } = technology.selectedLevel
+          techData.interviewIds = {}
+          const interviewId = getDocumentRef(COLLECTIONS.INTERVIEWS).id
+          const interviewData = {
+            id: interviewId,
+            technologyId: techId,
+            levelIds: technology.selectedLevel,
+            questionIds: []
+          }
+          for (const question of technology.questionIds[levelId][subLevelId]) {
+            if (question.readOnly) {
+              const questionId = getDocumentRef(COLLECTIONS.QUESTIONS).id
+              const questionData = {
+                ...question,
+                id: questionId
+              }
+              await setDocument(
+                `${collectionPath}/${COLLECTIONS.QUESTIONS}`,
+                questionId,
+                questionData
+              )
+              interviewData.questionIds.push(questionId)
+            }
+          }
+          await setDocument(
+            `${collectionPath}/${COLLECTIONS.INTERVIEWS}`,
+            interviewId,
+            interviewData
+          )
+
+          techData.interviewIds[interviewId] = true
+        }
         if (technology.materialIds) {
           const { levelId, subLevelId } = technology.selectedLevel
           techData.materialIds = technology.materialIds[levelId][subLevelId]
