@@ -15,7 +15,7 @@ import { ROLES } from '~/constants'
  *
  * @comment UserModalWithForm - React component.
  *
- * @since 29 Mar 2021 ( v.0.1.1 ) // LAST-EDIT DATE
+ * @since 29 Mar 2021 ( v.0.1.4 ) // LAST-EDIT DATE
  *
  * @return {React.FC}
  */
@@ -99,7 +99,7 @@ const UserModalWithForm = (props) => {
 
     setLoading(false)
     setIsModalVisible(false)
-    // form.setFieldsValue(userData)
+
     localStorage.removeItem('editProfile')
   }
 
@@ -115,8 +115,10 @@ const UserModalWithForm = (props) => {
       visible={isModalVisible}
       onOk={form.submit}
       okButtonProps={{ loading, disabled: loadingAvatar }}
-      onCancel={onCancel}
-      destroyOnClose>
+      onCancel={!!!localStorage.getItem('editProfile') && onCancel}
+      cancelButtonProps={{ disabled: !!localStorage.getItem('editProfile') }}
+      destroyOnClose
+      closable={!!!localStorage.getItem('editProfile')}>
       <UserSimpleForm
         form={form}
         companyIds={companyIds}

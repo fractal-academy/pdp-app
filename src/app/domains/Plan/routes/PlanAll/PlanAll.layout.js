@@ -17,7 +17,7 @@ import { PageWrapper } from '~/components/HOC'
  *
  * @comment PlanAll - React component.
  *
- * @since 18 Mar 2021 ( v.0.0.5 ) // LAST-EDIT DATE
+ * @since 19 Mar 2021 ( v.0.0.6 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
@@ -29,9 +29,10 @@ const PlanAll = () => {
   // [ADDITIONAL_HOOKS]
   const session = useSession()
   const [plans, loading] = useCollectionData(
-    firestore
-      .collection(COLLECTIONS.PLANS)
-      .where('id', 'in', session?.studentPlanIds)
+    session?.studentPlanIds &&
+      firestore
+        .collection(COLLECTIONS.PLANS)
+        .where('id', 'in', session.studentPlanIds)
   )
   const [activePlan, loadingActivePlan] = useDocumentData(
     activePlanId && firestore.collection(COLLECTIONS.PLANS).doc(activePlanId)
