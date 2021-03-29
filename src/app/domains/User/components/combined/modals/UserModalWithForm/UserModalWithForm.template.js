@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { message, Modal, Form } from 'antd'
 import _ from 'lodash'
 import {
@@ -15,7 +15,7 @@ import { ROLES } from '~/constants'
  *
  * @comment UserModalWithForm - React component.
  *
- * @since 29 Mar 2021 ( v.0.0.9 ) // LAST-EDIT DATE
+ * @since 29 Mar 2021 ( v.0.1.0 ) // LAST-EDIT DATE
  *
  * @return {React.FC}
  */
@@ -25,13 +25,12 @@ const UserModalWithForm = (props) => {
   const {
     isModalVisible,
     setIsModalVisible,
-    avatarURL,
+
     title,
     ...restUserData
   } = props
 
   // [COMPONENT_STATE_HOOKS]
-  const [avatarFormURL, setAvatarFormURL] = useState(avatarURL)
   const [companyIds, setCompanyIds] = useState(restUserData.companyIds)
   const [loading, setLoading] = useState(false)
 
@@ -85,7 +84,7 @@ const UserModalWithForm = (props) => {
       phone: fullUserData?.phone,
       email: fullUserData?.email,
       studentId: restUserData.studentId,
-      avatarURL: avatarFormURL ?? ''
+      avatarURL: fullUserData.avatarURL
     }
 
     try {
@@ -105,7 +104,7 @@ const UserModalWithForm = (props) => {
 
     setLoading(false)
     setIsModalVisible(false)
-    form.setFieldsValue(userData)
+    // form.setFieldsValue(userData)
     localStorage.removeItem('editProfile')
   }
 
@@ -121,11 +120,10 @@ const UserModalWithForm = (props) => {
       visible={isModalVisible}
       onOk={form.submit}
       okButtonProps={{ loading }}
-      onCancel={onCancel}>
+      onCancel={onCancel}
+      destroyOnClose>
       <UserSimpleForm
         form={form}
-        setAvatarURL={setAvatarFormURL}
-        avatarURL={avatarFormURL}
         companyIds={companyIds}
         setCompanyIds={setCompanyIds}
         onSubmit={onSubmit}

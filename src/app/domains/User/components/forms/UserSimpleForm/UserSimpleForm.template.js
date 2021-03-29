@@ -17,7 +17,7 @@ import { v5 as uuidv5, v4 as uuidv4 } from 'uuid'
  *
  * @comment UserSimpleForm - React component.
  *
- * @since 29 Mar 2021 ( v.0.0.7 ) // LAST-EDIT DATE
+ * @since 29 Mar 2021 ( v.0.0.8 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
@@ -64,7 +64,6 @@ const UserSimpleForm = (props) => {
     firstName,
     secondName,
     avatarURL,
-    setAvatarURL,
     email,
     phone,
     role,
@@ -75,14 +74,14 @@ const UserSimpleForm = (props) => {
 
   // [COMPONENT_STATE_HOOKS]
   const [loadingAvatar, setLoadingAvatar] = useState(false)
+  const [avatarFormURL, setAvatarFormURL] = useState(avatarURL)
 
   // [ADDITIONAL_HOOKS]
   const currentUserRole = useRole()
   const session = useSession()
 
   // [HELPER_FUNCTIONS]
-  const onUploadAvatar = async (data) => {
-    const { file } = data
+  const onUploadAvatar = async (file) => {
     setLoadingAvatar(true)
     try {
       const MY_NAMESPACE = uuidv4()
@@ -98,7 +97,8 @@ const UserSimpleForm = (props) => {
         async () => {
           try {
             const avatarURL = await avatarRef.snapshot.ref.getDownloadURL()
-            setAvatarURL(avatarURL)
+            setAvatarFormURL(avatarURL)
+            form.setFieldsValue({ avatarURL })
           } catch (error) {
             console.log(error.message)
           }
@@ -108,6 +108,10 @@ const UserSimpleForm = (props) => {
     } catch (error) {
       message.error(error.message)
     }
+  }
+  const normFile = (e) => {
+    console.log(e.file)
+    return e.file
   }
 
   // [TEMPLATE]
@@ -120,7 +124,8 @@ const UserSimpleForm = (props) => {
         email,
         phone,
         role,
-        companyIds
+        companyIds,
+        avatarURL
       }}
       form={form}
       onFinish={(values) =>
@@ -128,14 +133,14 @@ const UserSimpleForm = (props) => {
       }>
       <Row justifyContent="center" mb={3}>
         <Col>
-          <Avatar src={avatarURL} size={96} icon={<UserOutlined />} />
+          <Avatar src={avatarFormURL} size={96} icon={<UserOutlined />} />
         </Col>
       </Row>
       <Row justifyContent="center">
         <Col>
-          <Form.Item name="avatarURL">
+          <Form.Item name="avatarURL" getValueFromEvent={normFile}>
             <ImgCrop rotate>
-              <Upload showUploadList={false} customRequest={onUploadAvatar}>
+              <Upload showUploadList={false} action={onUploadAvatar}>
                 <Button icon={<UploadOutlined />} loading={loadingAvatar}>
                   Upload avatar
                 </Button>
