@@ -48,7 +48,7 @@ const useAuthListener = () => {
         .doc(user.uid)
         .onSnapshot((userSnapshot) => {
           const userData = userSnapshot.data()
-          if (userData.mentorId) {
+          if (userData?.mentorId) {
             unsubscribeMentor = getMentorData(userData.mentorId)
           }
 
