@@ -298,6 +298,40 @@ const loadTodos = async (technology, selectedLevel) => {
   return { todoIds }
 }
 
+const loadInterview = async (technology, selectedLevel) => {
+  const questions = []
+  const technologyData = await getDocumentData(
+    COLLECTIONS.TECHNOLOGIES,
+    technology.key
+  )
+
+  for (const interviewKey of Object.keys(technologyData.interviewIds)) {
+    const interview = technologyData.interviewIds[interviewKey]
+    if (
+      interview.levelId === selectedLevel.levelId &&
+      interview.subLevelId === selectedLevel.subLevelId
+    ) {
+      const interviewData = await getDocumentData(
+        COLLECTIONS.INTERVIEWS,
+        interviewKey
+      )
+
+      for (const questionKey of interviewData.questionIds) {
+        const questionData = await getDocumentData(
+          COLLECTIONS.QUESTIONS,
+          questionKey
+        )
+        questions.push(questionData)
+      }
+    }
+  }
+
+  const questionIds = {
+    [selectedLevel.levelId]: { [selectedLevel.subLevelId]: questions }
+  }
+  return { questionIds }
+}
+
 const ListItem = (props) => {
   // [INTERFACES]
   const { technology, index } = props
@@ -331,11 +365,13 @@ const ListItem = (props) => {
       }
       let newHistoryState
       for (const item of DROPDOWN_MAP) {
-        const data = await loadTodos(technology, currentLevel)
+        const todos = await loadTodos(technology, currentLevel)
+        const questions = await loadInterview(technology, currentLevel)
 
         historyState.selectedTech[index] = {
           ...historyState.selectedTech[index],
-          ...data
+          ...todos,
+          ...questions
         }
 
         newHistoryState = {
@@ -345,7 +381,8 @@ const ListItem = (props) => {
           prevLocation: history.location.pathname,
           technologyId: technology.key,
           techTemplateLoading: true,
-          ...data
+          ...todos,
+          ...questions
         }
 
         history.replace(history.location.pathname, newHistoryState)
@@ -355,6 +392,7 @@ const ListItem = (props) => {
       setDataLoading(false)
     } else {
       setSelectedLevel(null)
+      setDataLoading(false)
       currentTech.selectedLevel = null
       history.replace(history.location.pathname, historyState)
     }
