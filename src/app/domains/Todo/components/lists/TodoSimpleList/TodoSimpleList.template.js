@@ -1,19 +1,17 @@
 import PropTypes from 'prop-types'
-import { List, Typography, Input, Form, Col } from 'antd'
+import { useState, useRef, useEffect } from 'react'
+import { List, Input, Form, Col, Tag } from 'antd'
 import { Remove, Edit, Box, Row } from 'antd-styled'
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons'
-import { useState, useRef, useEffect } from 'react'
 import firestore from '~/services/Firebase/firestore'
 import { COLLECTIONS } from 'app/constants'
-
-const { Text } = Typography
 
 /**
  * @info TodoSimpleList (05 Mar 2021) // CREATION DATE
  *
  * @comment TodoSimpleList - React component.
  *
- * @since 17 Mar 2021 ( v.0.0.5 ) // LAST-EDIT DATE
+ * @since 29 Mar 2021 ( v.0.0.6 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
@@ -66,23 +64,25 @@ const TodoSimpleList = (props) => {
       renderItem={(todo) => (
         <Box width="100%">
           <List.Item
-            actions={[
-              <Edit
-                shape="default"
-                tooltip="Edit"
-                type="text"
-                icon={<EditOutlined />}
-                onClick={() => setEditTodo(todo)}
-              />,
-              <Remove
-                shape="default"
-                tooltip="Remove"
-                type="text"
-                onClick={() => setEditTodo(false)}
-                icon={<DeleteOutlined />}
-                onSubmit={() => onDeleteTodo(todo.id)}
-              />
-            ]}>
+            actions={
+              !todo.readOnly && [
+                <Edit
+                  shape="default"
+                  tooltip="Edit"
+                  type="text"
+                  icon={<EditOutlined />}
+                  onClick={() => setEditTodo(todo)}
+                />,
+                <Remove
+                  shape="default"
+                  tooltip="Remove"
+                  type="text"
+                  onClick={() => setEditTodo(false)}
+                  icon={<DeleteOutlined />}
+                  onSubmit={() => onDeleteTodo(todo.id)}
+                />
+              ]
+            }>
             {editTodo.id === todo.id ? (
               <Row flex={1}>
                 <Col span={24}>
@@ -110,7 +110,10 @@ const TodoSimpleList = (props) => {
                 </Col>
               </Row>
             ) : (
-              <Text ellipsis>{todo.name}</Text>
+              <>
+                <List.Item.Meta title={todo.name} />
+                {todo.readOnly && <Tag color="warning">From Template</Tag>}
+              </>
             )}
           </List.Item>
         </Box>

@@ -16,7 +16,7 @@ import { ROLES } from '~/constants'
  *
  * @comment StudentSimpleTable - React component.
  *
- * @since 25 Mar 2021 ( v.0.0.9 ) // LAST-EDIT DATE
+ * @since 28 Mar 2021 ( v.0.1.0 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
@@ -65,7 +65,7 @@ const StudentSimpleTable = (props) => {
   // [ADDITIONAL_HOOKS]
   const session = useSession()
   const [studentsData] = useCollectionData(
-    getCollectionRef(COLLECTIONS.STUDENTS).where('userId', '!=', session.id)
+    getCollectionRef(COLLECTIONS.STUDENTS).where('userId', '!=', session.userId)
   )
 
   // [COMPONENT_STATE_HOOKS]

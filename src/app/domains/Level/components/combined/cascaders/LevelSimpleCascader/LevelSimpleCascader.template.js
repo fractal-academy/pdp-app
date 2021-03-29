@@ -9,7 +9,7 @@ import { COLLECTIONS } from 'app/constants'
  *
  * @comment LevelSimpleCascader - React component.
  *
- * @since 25 Mar 2021 ( v.0.0.3 ) // LAST-EDIT DATE
+ * @since 28 Mar 2021 ( v.0.0.4 ) // LAST-EDIT DATE
  *
  * @param {Array.<string>}         [props.levelTree]             Controlled tree data.
  * @param {function}               [props.loadLevel]             Function that loads sub levels.
@@ -63,7 +63,7 @@ const LevelSimpleCascader = (props) => {
 
   // [USE_EFFECTS]
   useEffect(() => {
-    if (defaultTree || !levelTree) {
+    if (defaultTree || levelTree) {
       setLevelLoading(false)
     } else {
       const fetchLevels = async () => {

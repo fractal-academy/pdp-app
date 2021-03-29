@@ -8,12 +8,13 @@ import { useDocumentData } from 'react-firebase-hooks/firestore'
 import firestore from '~/services/Firebase/firestore'
 import { Spinner } from '~/components'
 const { Title, Text } = Typography
+
 /**
  * @info UserSimpleView (05 Mar 2021) // CREATION DATE
  *
  * @comment UserSimpleView - React component.
  *
- * @since 24 Mar 2021 ( v.0.0.6 ) // LAST-EDIT DATE
+ * @since 27 Mar 2021 ( v.0.0.7 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
@@ -53,7 +54,7 @@ const UserSimpleView = (props) => {
       )}
       {withEmail ? (
         <Col>
-          <Text type="secondary">{userData.email}</Text>
+          <Text type="secondary">{userData?.email}</Text>
         </Col>
       ) : (
         <Col>

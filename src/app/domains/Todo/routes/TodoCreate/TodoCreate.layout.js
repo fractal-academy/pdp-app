@@ -1,9 +1,9 @@
 import { useState } from 'react'
 import { useHistory } from 'react-router-dom'
+import _ from 'lodash'
 import { TodoSimpleForm } from 'domains/Todo/components/forms'
 import { TodoSimpleList } from 'domains/Todo/components/lists'
 import { PageWrapper } from '~/components/HOC'
-import _ from 'lodash'
 import {
   deleteDocument,
   getDocumentRef,
@@ -17,7 +17,7 @@ import { COLLECTIONS } from 'app/constants'
  *
  * @comment TodoCreate - React component.
  *
- * @since 19 Mar 2021 ( v.0.0.9 ) // LAST-EDIT DATE
+ * @since 25 Mar 2021 ( v.0.1.0 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
@@ -47,7 +47,11 @@ const TodoCreate = () => {
       setTodoAddLoading(true)
 
       try {
-        const todoId = getDocumentRef(COLLECTIONS.TODOS).id
+        let collectionPath = COLLECTIONS.TODOS
+        if (historyState.planId) {
+          collectionPath = `${COLLECTIONS.PLANS}/${historyState.planId}/${COLLECTIONS.TODOS}`
+        }
+        const todoId = getDocumentRef(collectionPath).id
 
         const todoData = {
           id: todoId,
@@ -58,7 +62,7 @@ const TodoCreate = () => {
           readOnly: true
         }
 
-        await setDocument(COLLECTIONS.TODOS, todoData.id, todoData)
+        await setDocument(collectionPath, todoData.id, todoData)
         setTodos([...todos, { name: todoData.name, id: todoData.id }])
       } catch (error) {
         console.log('todo create', error)
@@ -90,14 +94,24 @@ const TodoCreate = () => {
           [subLevelId]: todos
         }
       }
-
-      return history.push(historyState.prevLocation, {
+      let data = {
         ...historyState,
         todoIds: {
           ...historyState?.todoIds,
           [levelId]: currentLevelTodos
         }
-      })
+      }
+      if (historyState.selectedTech) {
+        const techIndex = historyState.selectedTech.findIndex(
+          ({ key }) => key === historyState.technologyId
+        )
+        historyState.selectedTech[techIndex].todoIds = {
+          ...historyState?.todoIds,
+          [levelId]: currentLevelTodos
+        }
+        data = historyState
+      }
+      return history.replace(historyState.prevLocation, data)
     }
     // If there are no todos delete empty object from history state
     if (historyState?.todoIds) {
@@ -107,7 +121,7 @@ const TodoCreate = () => {
         delete historyState?.todoIds[levelId]
       }
     }
-    history.push(historyState.prevLocation, historyState)
+    history.replace(historyState.prevLocation, historyState)
   }
   // ----------------------------------
 
