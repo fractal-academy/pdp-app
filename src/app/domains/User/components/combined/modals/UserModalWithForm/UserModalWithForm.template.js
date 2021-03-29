@@ -15,7 +15,7 @@ import { ROLES } from '~/constants'
  *
  * @comment UserModalWithForm - React component.
  *
- * @since 28 Mar 2021 ( v.0.0.8 ) // LAST-EDIT DATE
+ * @since 29 Mar 2021 ( v.0.0.9 ) // LAST-EDIT DATE
  *
  * @return {React.FC}
  */
@@ -93,9 +93,10 @@ const UserModalWithForm = (props) => {
         .doc(restUserData.userId)
         .set({ ..._.pickBy(userData, _.identity) })
 
-      await getCollectionRef(COLLECTIONS.STUDENTS)
-        .doc(restUserData.studentId)
-        .update({ companyIds: fullUserData.companyIds })
+      fullUserData?.companyIds &&
+        (await getCollectionRef(COLLECTIONS.STUDENTS)
+          .doc(restUserData.studentId)
+          .update({ companyIds: fullUserData.companyIds }))
 
       message.success('User was edited successful')
     } catch (error) {
@@ -105,6 +106,7 @@ const UserModalWithForm = (props) => {
     setLoading(false)
     setIsModalVisible(false)
     form.setFieldsValue(userData)
+    localStorage.removeItem('editProfile')
   }
 
   const onCancel = () => {
