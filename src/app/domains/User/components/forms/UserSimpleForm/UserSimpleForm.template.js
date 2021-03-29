@@ -17,7 +17,7 @@ import { v5 as uuidv5, v4 as uuidv4 } from 'uuid'
  *
  * @comment UserSimpleForm - React component.
  *
- * @since 29 Mar 2021 ( v.0.0.8 ) // LAST-EDIT DATE
+ * @since 29 Mar 2021 ( v.0.0.9 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
@@ -61,6 +61,7 @@ const STORAGE_URL = 'users/'
 const UserSimpleForm = (props) => {
   // [INTERFACES]
   const {
+    userId,
     firstName,
     secondName,
     avatarURL,
@@ -153,7 +154,7 @@ const UserSimpleForm = (props) => {
           </Form.Item>
         </Col>
       </Row>
-      {currentUserRole.role === ROLES.ADMIN && (
+      {currentUserRole.role === ROLES.ADMIN && session.userId !== userId && (
         <Row justifyContent="center">
           <Col span={7}>
             <Form.Item name="role" initialValue={role}>
@@ -173,6 +174,7 @@ const UserSimpleForm = (props) => {
 
 // [PROPTYPES]
 UserSimpleForm.propTypes = {
+  userId: PropTypes.string.isRequired,
   firstName: PropTypes.string,
   secondName: PropTypes.string,
   avatarURL: PropTypes.string,
