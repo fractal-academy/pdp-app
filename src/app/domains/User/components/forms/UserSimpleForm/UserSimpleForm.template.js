@@ -7,6 +7,7 @@ import { UploadOutlined, UserOutlined } from '@ant-design/icons'
 import storage from '~/services/Firebase/storage'
 import { ROLES } from '~/constants'
 import { useRole } from 'contexts/Role/hooks'
+import { useSession } from 'contexts/Session/hooks'
 import { RoleSingleSelect } from 'domains/Role/components/selects'
 import { CompanyMultipleSelect } from 'domains/Company/components/selects'
 import { v5 as uuidv5, v4 as uuidv4 } from 'uuid'
@@ -16,7 +17,7 @@ import { v5 as uuidv5, v4 as uuidv4 } from 'uuid'
  *
  * @comment UserSimpleForm - React component.
  *
- * @since 28 Mar 2021 ( v.0.0.6 ) // LAST-EDIT DATE
+ * @since 29 Mar 2021 ( v.0.0.7 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
@@ -35,7 +36,7 @@ const EDITING_FIELDS = [
   {
     name: 'secondName',
     placeholder: 'Second name',
-    roles: [
+    rules: [
       {
         required: true,
         message: 'Please input your surname'
@@ -77,6 +78,7 @@ const UserSimpleForm = (props) => {
 
   // [ADDITIONAL_HOOKS]
   const currentUserRole = useRole()
+  const session = useSession()
 
   // [HELPER_FUNCTIONS]
   const onUploadAvatar = async (data) => {
@@ -112,9 +114,18 @@ const UserSimpleForm = (props) => {
   return (
     <Form
       name="userEdit"
-      initialValues={{ firstName, secondName, email, phone, role, companyIds }}
+      initialValues={{
+        firstName,
+        secondName,
+        email,
+        phone,
+        role,
+        companyIds
+      }}
       form={form}
-      onFinish={onSubmit}>
+      onFinish={(values) =>
+        onSubmit({ ...values, role: values.role ?? session.role })
+      }>
       <Row justifyContent="center" mb={3}>
         <Col>
           <Avatar src={avatarURL} size={96} icon={<UserOutlined />} />
