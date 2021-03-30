@@ -2,10 +2,8 @@ import { useState } from 'react'
 import { List } from 'antd'
 import { Content, Sider, Title } from 'antd-styled'
 import firestore from '~/services/Firebase/firestore/index'
-import {
-  useCollectionData,
-  useDocumentData
-} from 'react-firebase-hooks/firestore'
+import { useDocumentData } from 'react-firebase-hooks/firestore'
+import { useCollectionArray } from 'hooks/firebase'
 import { COLLECTIONS } from 'app/constants'
 import { PlanSimpleList } from 'domains/Plan/components/lists'
 import { TodoAdvancedList } from 'domains/Todo/components/lists'
@@ -17,7 +15,7 @@ import { PageWrapper } from '~/components/HOC'
  *
  * @comment PlanAll - React component.
  *
- * @since 29 Mar 2021 ( v.0.0.7 ) // LAST-EDIT DATE
+ * @since 30 Mar 2021 ( v.0.0.8 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
@@ -28,17 +26,15 @@ const PlanAll = () => {
 
   // [ADDITIONAL_HOOKS]
   const session = useSession()
-  const [plans, loading] = useCollectionData(
-    session?.studentPlanIds &&
-      firestore
-        .collection(COLLECTIONS.PLANS)
-        .where('id', 'in', session.studentPlanIds)
+  const [plans, loading] = useCollectionArray(
+    COLLECTIONS.PLANS,
+    session?.studentPlanIds
   )
   const [activePlan, loadingActivePlan] = useDocumentData(
     activePlanId && firestore.collection(COLLECTIONS.PLANS).doc(activePlanId)
   )
-
   // [TEMPLATE]
+  if (loading) return <Spinner />
   return (
     <>
       <Content bg="#ffffff" paddingTop={4} paddingX={4}>

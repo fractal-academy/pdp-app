@@ -65,7 +65,7 @@ const useAuthListener = () => {
 
     const fetchUser = async () => {
       try {
-        if (!!localStorage.getItem('isNewUser')) {
+        if (JSON.parse(localStorage.getItem('isNewUser'))) {
           const users = await getCollectionData(COLLECTIONS.USERS)
           const studentId = getDocumentRef(COLLECTIONS.STUDENTS).id
 
@@ -95,7 +95,7 @@ const useAuthListener = () => {
 
         unsubscribeUser = getUserData()
 
-        if (!!localStorage.getItem('signIn')) {
+        if (JSON.parse(localStorage.getItem('signIn'))) {
           history.push('/')
           localStorage.removeItem('signIn')
         }
