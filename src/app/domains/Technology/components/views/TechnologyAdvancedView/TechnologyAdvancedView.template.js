@@ -1,10 +1,9 @@
 import PropTypes from 'prop-types'
 import { Space } from 'antd'
 import { Card } from 'antd-styled'
-import { useCollectionData } from 'react-firebase-hooks/firestore'
+import { useCollectionArray } from 'hooks/firebase'
 import { TechnologySimpleView } from 'domains/Technology/components/views'
 import { MaterialSimpleView } from 'domains/Material/components/views'
-import firestore from '~/services/Firebase/firestore/index'
 import { Spinner } from '~/components'
 
 /**
@@ -12,21 +11,19 @@ import { Spinner } from '~/components'
  *
  * @comment TechnologyAdvancedView - React component.
  *
- * @since 16 Mar 2021 ( v.0.0.7 ) // LAST-EDIT DATE
+ * @since 30 Mar 2021 ( v.0.0.8 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
 
 const TechnologyAdvancedView = (props) => {
   // [INTERFACES]
-  const { extra, name, materialIds, refCollectionMaterials } = props
+  const { extra, name, materialIds = [], refCollectionMaterials } = props
 
   // [ADDITIONAL_HOOKS]
-  const [materials, loading] = useCollectionData(
-    materialIds &&
-      firestore
-        .collection(refCollectionMaterials)
-        .where('id', 'in', materialIds)
+  const [materials, loading] = useCollectionArray(
+    refCollectionMaterials,
+    materialIds
   )
 
   // [TEMPLATE]

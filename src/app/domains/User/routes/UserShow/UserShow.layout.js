@@ -27,7 +27,7 @@ import { COLLECTIONS, ROUTE_PATHS } from 'app/constants'
  *
  * @comment UserShow - React component.
  *
- * @since 30 Mar 2021 ( v.0.1.2 ) // LAST-EDIT DATE
+ * @since 30 Mar 2021 ( v.0.1.3 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
