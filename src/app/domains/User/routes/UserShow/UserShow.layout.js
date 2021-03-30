@@ -1,25 +1,33 @@
 import { useState, useEffect } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
-import { Space, Button, Avatar } from 'antd'
-import { Row, Col, Card, Title, Text } from 'antd-styled'
+import { Space, Button, Avatar, List } from 'antd'
+import { Row, Col, Card, Title, Text, Box } from 'antd-styled'
 import { PageWrapper } from '~/components/HOC'
 import { ROUTE_PATHS } from 'app/constants'
-import { useDocumentData } from 'react-firebase-hooks/firestore'
+import {
+  useCollectionData,
+  useDocumentData
+} from 'react-firebase-hooks/firestore'
 import firestore from '~/services/Firebase/firestore'
 import { COLLECTIONS } from 'app/constants'
-import { Spinner, NotFoundPath } from '~/components'
-import { EditOutlined, UserOutlined } from '@ant-design/icons'
+import { Spinner, NotFoundPath, Status } from '~/components'
+import {
+  EditOutlined,
+  UserOutlined,
+  FieldTimeOutlined
+} from '@ant-design/icons'
 import { useSession } from 'contexts/Session/hooks'
 import { ROLES } from '~/constants'
 import { UserModalWithForm } from 'domains/User/components/combined/modals'
 import { CompanySimpleList } from 'domains/Company/components/lists'
 import { getGrid } from '~/utils'
+import moment from 'moment'
 /**
  * @info UserShow (05 Mar 2021) // CREATION DATE
  *
  * @comment UserShow - React component.
  *
- * @since 29 Mar 2021 ( v.0.1.0 ) // LAST-EDIT DATE
+ * @since 29 Mar 2021 ( v.0.1.1 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
@@ -34,6 +42,12 @@ const UserShow = () => {
   )
   const [studentData, studentLoading] = useDocumentData(
     firestore.doc(`${COLLECTIONS.STUDENTS}/${userData?.studentId}`)
+  )
+  const [plans, plansLoading] = useCollectionData(
+    studentData?.studentPlanIds &&
+      firestore
+        .collection(COLLECTIONS.PLANS)
+        .where('id', 'in', studentData.studentPlanIds)
   )
 
   // [COMPONENT_STATE_HOOKS]
@@ -95,7 +109,7 @@ const UserShow = () => {
       inlineHeader
       fullWidth>
       <Row gutter={[16, 8]}>
-        <Col {...getGrid({ xs: 24, md: 12, lg: 10, xl: 10 })}>
+        <Col {...getGrid({ xs: 24, md: 12, lg: 8 })}>
           <Card>
             <Row justifyContent="center" position="relative">
               <Col mb={2}>
@@ -147,11 +161,19 @@ const UserShow = () => {
             )}
           </Card>
         </Col>
-        <Col>
+        <Col {...getGrid({ xs: 24, md: 24, lg: 24, xl: 16 })}>
           <Card>
-            <Row justifyContent="center">
-              <Col>
-                <Title level={4}>Skills</Title>
+            <Row>
+              <Col span={24}>
+                <Title level={4}>Plans</Title>
+                {plansLoading ? (
+                  <Spinner />
+                ) : (
+                  <List
+                    dataSource={plans}
+                    renderItem={(plan) => <ListItemPlan plan={plan} />}
+                  />
+                )}
               </Col>
             </Row>
           </Card>
@@ -167,4 +189,64 @@ const UserShow = () => {
   )
 }
 
+const ListItemPlan = (props) => {
+  // [INTERFACES]
+  const { plan } = props
+
+  // [ADDITIONAL_HOOKS]
+  let [mentorData, loadingMentorData] = useCollectionData(
+    firestore
+      .collection(COLLECTIONS.USERS)
+      .where('mentorId', '==', plan.mentorId)
+  )
+  mentorData = !loadingMentorData && mentorData[0]
+
+  // [TEMPLATE]
+  console.log(plan)
+  if (loadingMentorData) return <Spinner />
+
+  return (
+    <List.Item>
+      <Card width="100%">
+        <Row justifyContent="space-between">
+          <Col>
+            <Row>
+              <Col>
+                <Space size="large" align="start">
+                  <Title level={5}>{plan.name}</Title>
+                  <Status status={plan.status} />
+                </Space>
+              </Col>
+            </Row>
+            <Row>
+              <Col>
+                <Space align="start">
+                  <FieldTimeOutlined />
+                  <Text display="inline-block">
+                    {moment(plan.deadline.toDate()).format('DD.MM.YYYY')}
+                  </Text>
+                </Space>
+              </Col>
+            </Row>
+          </Col>
+          <Col>
+            <Space size="middle">
+              <Avatar
+                size={45}
+                src={mentorData.avatarURL}
+                icon={<UserOutlined />}
+              />
+              <Box>
+                <Title level={5} mb={0}>
+                  {mentorData.firstName}
+                </Title>
+                <Text type="secondary">your mentor</Text>
+              </Box>
+            </Space>
+          </Col>
+        </Row>
+      </Card>
+    </List.Item>
+  )
+}
 export default UserShow

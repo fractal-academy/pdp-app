@@ -17,7 +17,7 @@ import { PageWrapper } from '~/components/HOC'
  *
  * @comment PlanAll - React component.
  *
- * @since 19 Mar 2021 ( v.0.0.6 ) // LAST-EDIT DATE
+ * @since 29 Mar 2021 ( v.0.0.7 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
@@ -49,7 +49,7 @@ const PlanAll = () => {
           fullWidth>
           {loading ? (
             <Spinner />
-          ) : plans ? (
+          ) : plans.length ? (
             <PlanSimpleList plans={plans} setActivePlanId={setActivePlanId} />
           ) : (
             <Title level={5}>You don`t have any plans</Title>
