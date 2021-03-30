@@ -12,7 +12,6 @@ const useCollectionArray = (collectionPath, arrayIds = []) => {
       for (const id of arrayIds) {
         try {
           const docData = await getCollectionRef(collectionPath).doc(id).get()
-          console.log(docData)
           buf.push(docData.data())
           setData(buf)
         } catch (error) {
@@ -24,7 +23,7 @@ const useCollectionArray = (collectionPath, arrayIds = []) => {
 
     arrayIds.length && fetchData()
   }, [])
-  console.log(data)
+
   return [data, loading]
 }
 
