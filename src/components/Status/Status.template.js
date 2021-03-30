@@ -6,15 +6,15 @@ import style from './Status.style'
  *
  * @comment Status - React component.
  *
- * @since 14 Mar 2021 ( v.0.0.1 ) // LAST-EDIT DATE
+ * @since 30 Mar 2021 ( v.0.0.2 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
 
 const STATUS = {
-  complete: '#f94848',
+  finished: '#f94848',
   active: '#f6dd45',
-  confirm: '#87d068'
+  confirmed: '#87d068'
 }
 
 const Status = (props) => {

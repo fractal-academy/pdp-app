@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
-import { useHistory, useParams } from 'react-router-dom'
-import { Avatar, List, Space } from 'antd'
+import { useHistory, useParams, generatePath } from 'react-router-dom'
+import { Avatar, List, Space, Button } from 'antd'
 import { Row, Col, Card, Title, Text, Box } from 'antd-styled'
 import {
   EditOutlined,
@@ -20,7 +20,7 @@ import { useSession } from 'contexts/Session/hooks'
 import firestore from '~/services/Firebase/firestore'
 import { getGrid } from '~/utils'
 import { ROLES } from '~/constants'
-import { COLLECTIONS } from 'app/constants'
+import { COLLECTIONS, ROUTE_PATHS } from 'app/constants'
 
 /**
  * @info UserShow (05 Mar 2021) // CREATION DATE
@@ -183,6 +183,7 @@ const ListItemPlan = (props) => {
   const { plan } = props
 
   // [ADDITIONAL_HOOKS]
+  const history = useHistory()
   let [mentorData, loadingMentorData] = useCollectionData(
     firestore
       .collection(COLLECTIONS.USERS)
@@ -190,8 +191,13 @@ const ListItemPlan = (props) => {
   )
   mentorData = !loadingMentorData && mentorData[0]
 
+  // [HELPER_FUNCTIONS]
+  const goToInterview = (planId) => {
+    history.push(generatePath(ROUTE_PATHS.INTERVIEW_EDIT, { id: planId }))
+  }
+  const showResults = (planId) => {}
   // [TEMPLATE]
-  console.log(plan)
+
   if (loadingMentorData) return <Spinner />
 
   return (
@@ -199,7 +205,7 @@ const ListItemPlan = (props) => {
       <Card width="100%">
         <Row justifyContent="space-between">
           <Col>
-            <Row>
+            <Row mb={2}>
               <Col>
                 <Space size="large" align="start">
                   <Title level={5}>{plan.name}</Title>
@@ -207,14 +213,29 @@ const ListItemPlan = (props) => {
                 </Space>
               </Col>
             </Row>
-            <Row>
+            <Row align="middle">
               <Col>
-                <Space align="start">
+                <Space align="center">
                   <FieldTimeOutlined />
                   <Text display="inline-block">
                     {moment(plan.deadline.toDate()).format('DD.MM.YYYY')}
                   </Text>
                 </Space>
+              </Col>
+              <Col>
+                {plan.status === 'active' ? (
+                  <Button
+                    disabled={plan.deadline.toDate() >= new Date()}
+                    onClick={() => goToInterview(plan.id)}>
+                    Go to interview
+                  </Button>
+                ) : (
+                  <Button
+                    disabled={plan.status === 'finished'}
+                    onClick={() => showResults(plan.id)}>
+                    Show results
+                  </Button>
+                )}
               </Col>
             </Row>
           </Col>
