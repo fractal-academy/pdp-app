@@ -40,7 +40,7 @@ import { ROUTE_PATHS, COLLECTIONS } from 'app/constants'
  *
  * @comment PlanCreate - React component.
  *
- * @since 30 Mar 2021 ( v.0.0.7 ) // LAST-EDIT DATE
+ * @since 30 Mar 2021 ( v.0.0.8 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
@@ -183,6 +183,7 @@ const PlanCreate = () => {
     setCreationLoading(false)
   }
   const onCheck = (item, { checkedNodes }) => {
+    //TODO save checked technologies
     const filteredTech = checkedNodes.filter(
       (technology) => !technology.hasOwnProperty('children')
     )
@@ -423,11 +424,6 @@ const ListItem = (props) => {
       setDataLoading(true)
       const currentLevel = { levelId: value[0], subLevelId: value[1] }
       setSelectedLevel(currentLevel)
-      historyState.selectedTech[index] = {
-        ...historyState.selectedTech[index],
-        selectedLevel: currentLevel,
-        tree
-      }
       let newHistoryState
 
       const technologyData = await getDocumentData(
@@ -447,6 +443,8 @@ const ListItem = (props) => {
 
       historyState.selectedTech[index] = {
         ...historyState.selectedTech[index],
+        selectedLevel: currentLevel,
+        tree,
         ...todos,
         ...questions,
         ...materials
@@ -454,9 +452,8 @@ const ListItem = (props) => {
 
       newHistoryState = {
         ...historyState,
-        selectedLevel,
+        selectedLevel: currentLevel,
         prevLocation: history.location.pathname,
-        technologyId: technology.key,
         techTemplateLoading: true,
         ...todos,
         ...questions,

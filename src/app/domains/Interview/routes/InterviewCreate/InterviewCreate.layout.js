@@ -17,7 +17,7 @@ import { COLLECTIONS } from 'app/constants'
  *
  * @comment InterviewCreate - React component.
  *
- * @since 30 Mar 2021 ( v.0.0.7 ) // LAST-EDIT DATE
+ * @since 30 Mar 2021 ( v.0.0.8 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
@@ -65,7 +65,8 @@ const InterviewCreate = () => {
         const questionData = {
           id: questionId,
           name: value,
-          createdAt: getTimestamp().now()
+          createdAt: getTimestamp().now(),
+          readOnly: true
         }
 
         await setDocument(COLLECTIONS.QUESTIONS, questionId, questionData)

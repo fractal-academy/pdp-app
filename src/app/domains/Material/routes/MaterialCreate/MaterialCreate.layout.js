@@ -19,7 +19,7 @@ import { COLLECTIONS } from 'app/constants'
  *
  * @comment MaterialCreate - React component.
  *
- * @since 30 Mar 2021 ( v.0.1.1 ) // LAST-EDIT DATE
+ * @since 30 Mar 2021 ( v.0.1.2 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
@@ -44,7 +44,7 @@ const MaterialCreate = () => {
   }
 
   // [PLAN CREATION WIZARD]
-  else if (historyState.planId) {
+  if (historyState.planId) {
     const currentTech = historyState.selectedTech.find(
       ({ key }) => key === historyState.technologyId
     )
@@ -55,7 +55,7 @@ const MaterialCreate = () => {
   }
 
   // [COMPONENT_STATE_HOOKS]
-  const [materials, setMaterials] = useState(() => currentLevelMaterials || [])
+  const [materials, setMaterials] = useState(currentLevelMaterials || [])
   const [linkLoading, setLinkLoading] = useState(false)
 
   // [HELPER_FUNCTIONS]
@@ -208,8 +208,8 @@ const MaterialCreate = () => {
 
       let data = {
         ...historyState,
-        todoIds: {
-          ...historyState?.todoIds,
+        materialIds: {
+          ...historyState?.materialIds,
           [levelId]: currentLevelMaterials
         }
       }
@@ -217,14 +217,14 @@ const MaterialCreate = () => {
         const techIndex = historyState.selectedTech.findIndex(
           ({ key }) => key === historyState.technologyId
         )
-        historyState.selectedTech[techIndex].todoIds = {
-          ...historyState?.todoIds,
+        historyState.selectedTech[techIndex].materialIds = {
+          ...historyState?.materialIds,
           [levelId]: currentLevelMaterials
         }
         data = historyState
       }
 
-      return history.push(historyState.prevLocation, data)
+      return history.replace(historyState.prevLocation, data)
     }
     // If there are no todos delete empty object from history state
     if (historyState?.materialIds) {
@@ -234,7 +234,7 @@ const MaterialCreate = () => {
         delete historyState?.materialIds[levelId]
       }
     }
-    history.push(historyState.prevLocation, historyState)
+    history.replace(historyState.prevLocation, historyState)
   }
 
   // [TEMPLATE]
