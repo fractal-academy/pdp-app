@@ -1,9 +1,10 @@
 import PropTypes from 'prop-types'
 import { useState, useRef, useEffect } from 'react'
+import { useHistory } from 'react-router-dom'
 import { List, Input, Form, Col, Tag } from 'antd'
 import { Remove, Edit, Box, Row } from 'antd-styled'
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons'
-import firestore from '~/services/Firebase/firestore'
+import { updateDocument } from '~/services/Firebase/firestore'
 import { COLLECTIONS } from 'app/constants'
 
 /**
@@ -11,7 +12,7 @@ import { COLLECTIONS } from 'app/constants'
  *
  * @comment TodoSimpleList - React component.
  *
- * @since 29 Mar 2021 ( v.0.0.6 ) // LAST-EDIT DATE
+ * @since 30 Mar 2021 ( v.0.0.7 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
@@ -21,10 +22,13 @@ const TodoSimpleList = (props) => {
   const { setTodos, todos, onDeleteTodo } = props
 
   // [ADDITIONAL_HOOKS]
-  const inputRef = useRef(null)
+  const history = useHistory()
   const [form] = Form.useForm()
 
+  const historyState = history.location.state
+
   // [COMPONENT_STATE_HOOKS]
+  const inputRef = useRef(null)
   const [editTodo, setEditTodo] = useState(false)
   const [editLoading, setEditLoading] = useState(false)
 
@@ -36,10 +40,11 @@ const TodoSimpleList = (props) => {
     newTodos[editTodoIndex] = { name: data.todo || editTodo.name, id }
 
     try {
-      await firestore
-        .collection(COLLECTIONS.TODOS)
-        .doc(id)
-        .update({ name: data.todo })
+      let collectionPath = COLLECTIONS.TODOS
+      if (historyState.planId) {
+        collectionPath = `${COLLECTIONS.PLANS}/${historyState.planId}/${COLLECTIONS.TODOS}`
+      }
+      await updateDocument(collectionPath, id, { name: data.todo })
     } catch (error) {
       console.log('todo submit', error)
     }
@@ -50,10 +55,11 @@ const TodoSimpleList = (props) => {
 
   // [USE_EFFECTS]
   useEffect(() => {
-    editTodo &&
+    if (editTodo) {
       inputRef.current.focus({
         cursor: 'end'
       })
+    }
   }, [editTodo])
 
   // [TEMPLATE]
@@ -94,16 +100,14 @@ const TodoSimpleList = (props) => {
                       name="todo"
                       noStyle
                       hasFeedback={editLoading}
+                      initialValue={editTodo.name}
+                      preserve={false}
                       validateStatus="validating">
                       <Input.TextArea
                         disabled={editLoading}
-                        onPressEnter={(e) => {
-                          e.preventDefault()
-                          form.submit()
-                        }}
+                        onPressEnter={() => form.submit()}
                         autoSize={{ minRows: 1 }}
                         ref={inputRef}
-                        defaultValue={editTodo.name}
                       />
                     </Form.Item>
                   </Form>

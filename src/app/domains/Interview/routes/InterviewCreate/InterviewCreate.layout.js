@@ -17,7 +17,7 @@ import { COLLECTIONS } from 'app/constants'
  *
  * @comment InterviewCreate - React component.
  *
- * @since 30 Mar 2021 ( v.0.0.7 ) // LAST-EDIT DATE
+ * @since 30 Mar 2021 ( v.0.0.8 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
@@ -65,7 +65,8 @@ const InterviewCreate = () => {
         const questionData = {
           id: questionId,
           name: value,
-          createdAt: getTimestamp().now()
+          createdAt: getTimestamp().now(),
+          readOnly: true
         }
 
         await setDocument(COLLECTIONS.QUESTIONS, questionId, questionData)
@@ -83,7 +84,11 @@ const InterviewCreate = () => {
   const onDeleteQuestion = async (questionId) => {
     const newQuestions = _.filter(questions, (item) => item.id !== questionId)
     try {
-      await deleteDocument(COLLECTIONS.QUESTIONS, questionId)
+      let collectionPath = COLLECTIONS.QUESTIONS
+      if (historyState.planId) {
+        collectionPath = `${COLLECTIONS.PLANS}/${historyState.planId}/${COLLECTIONS.QUESTIONS}`
+      }
+      await deleteDocument(collectionPath, questionId)
     } catch (error) {
       console.log('interview delete', error)
     }

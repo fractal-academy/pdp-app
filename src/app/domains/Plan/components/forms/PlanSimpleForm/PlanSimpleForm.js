@@ -6,14 +6,17 @@ import { DatePicker, Form, Input } from 'antd'
  *
  * @comment PlanAdvancedForm - React component.
  *
- * @since 29 Mar 2021 ( v.0.0.2 ) // LAST-EDIT DATE
+ * @since 30 Mar 2021 ( v.0.0.3 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
 
 const PlanAdvancedForm = (props) => (
   <Form size="large" requiredMark={false} {...props}>
-    <Form.Item name="name" label="Name">
+    <Form.Item
+      name="name"
+      label="Name"
+      rules={[{ required: true, message: 'Please enter plan name' }]}>
       <Input placeholder="Enter plan name" />
     </Form.Item>
     <Form.Item

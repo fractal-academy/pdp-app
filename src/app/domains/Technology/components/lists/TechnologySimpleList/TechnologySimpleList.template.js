@@ -30,11 +30,11 @@ const TechnologySimpleList = (props) => {
   const { technologies, refCollectionMaterials, extra } = props
 
   // [COMPONENT_STATE_HOOKS]
-  const [deleteLoading, setDeleteLoading] = useState(false)
+  const [deleteLoading, setDeleteLoading] = useState('')
 
   // [HELPER_FUNCTIONS]
   const deleteTechnology = async (technologyId) => {
-    setDeleteLoading(true)
+    setDeleteLoading(technologyId)
     try {
       const technology = await getDocumentData(
         COLLECTIONS.TECHNOLOGIES,
@@ -49,7 +49,7 @@ const TechnologySimpleList = (props) => {
     } catch (error) {
       console.log('delete technology', error)
     }
-    setDeleteLoading(false)
+    setDeleteLoading('')
   }
 
   // [TEMPLATE]
@@ -80,7 +80,7 @@ const TechnologySimpleList = (props) => {
                       tooltip="Remove"
                       type="text"
                       icon={<DeleteOutlined />}
-                      loading={deleteLoading}
+                      loading={technology.id === deleteLoading}
                       onSubmit={() => deleteTechnology(technology.id)}
                     />
                   </Space>

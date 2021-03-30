@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types'
 import { useState } from 'react'
+import { useHistory } from 'react-router-dom'
 import { List } from 'antd'
 import { Remove, Edit } from 'antd-styled'
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons'
@@ -12,7 +13,7 @@ import { COLLECTIONS } from 'app/constants'
  *
  * @comment InterviewSimpleList - React component.
  *
- * @since 30 Mar 2021 ( v.0.0.7 ) // LAST-EDIT DATE
+ * @since 30 Mar 2021 ( v.0.0.8 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
@@ -20,6 +21,11 @@ import { COLLECTIONS } from 'app/constants'
 const InterviewSimpleList = (props) => {
   // [INTERFACES]
   const { setQuestions, questions, onDeleteQuestion } = props
+
+  // [ADDITIONAL_HOOKS]
+  const history = useHistory()
+
+  const historyState = history.location.pathname
 
   // [COMPONENT_STATE_HOOKS]
   const [editQuestion, setEditQuestion] = useState('')
@@ -36,7 +42,11 @@ const InterviewSimpleList = (props) => {
     }
 
     try {
-      await updateDocument(COLLECTIONS.QUESTIONS, id, { name: data.question })
+      let collectionPath = COLLECTIONS.QUESTIONS
+      if (historyState.planId) {
+        collectionPath = `${COLLECTIONS.PLANS}/${historyState.planId}/${COLLECTIONS.QUESTIONS}`
+      }
+      await updateDocument(collectionPath, id, { name: data.question })
     } catch (error) {
       console.log('question submit', error)
     }

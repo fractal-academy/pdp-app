@@ -17,7 +17,7 @@ import { COLLECTIONS } from 'app/constants'
  *
  * @comment TodoCreate - React component.
  *
- * @since 25 Mar 2021 ( v.0.1.0 ) // LAST-EDIT DATE
+ * @since 30 Mar 2021 ( v.0.1.1 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
@@ -85,7 +85,11 @@ const TodoCreate = () => {
   const onDeleteTodo = async (todoId) => {
     const newTodos = _.filter(todos, (item) => item.id !== todoId)
     try {
-      await deleteDocument(COLLECTIONS.TODOS, todoId)
+      let collectionPath = COLLECTIONS.TODOS
+      if (historyState.planId) {
+        collectionPath = `${COLLECTIONS.PLANS}/${historyState.planId}/${COLLECTIONS.TODOS}`
+      }
+      await deleteDocument(collectionPath, todoId)
     } catch (error) {
       console.log('todo delete', error)
     }

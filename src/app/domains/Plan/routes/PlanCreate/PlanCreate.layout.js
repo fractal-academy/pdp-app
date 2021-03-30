@@ -40,7 +40,7 @@ import { ROUTE_PATHS, COLLECTIONS } from 'app/constants'
  *
  * @comment PlanCreate - React component.
  *
- * @since 29 Mar 2021 ( v.0.0.6 ) // LAST-EDIT DATE
+ * @since 30 Mar 2021 ( v.0.0.8 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
@@ -70,17 +70,17 @@ const PlanCreate = () => {
     setCreationLoading(true)
     try {
       for (const technology of historyState.selectedTech) {
-        const techId = getDocumentRef(COLLECTIONS.TECHNOLOGIES).id
-        const collectionPath = `${COLLECTIONS.PLANS}/${historyState.planId}`
+        const technologyId = getDocumentRef(COLLECTIONS.TECHNOLOGIES).id
+        const planDocumentPath = `${COLLECTIONS.PLANS}/${historyState.planId}`
+        const { levelId, subLevelId } = technology.selectedLevel
 
         const techData = {
-          id: techId,
+          id: technologyId,
           name: technology.title,
           levelId: technology.selectedLevel
         }
 
         if (technology.todoIds) {
-          const { levelId, subLevelId } = technology.selectedLevel
           techData.todoIds = {}
           for (const todo of technology.todoIds[levelId][subLevelId]) {
             if (todo.readOnly) {
@@ -90,41 +90,44 @@ const PlanCreate = () => {
                 id: todoId
               }
               await setDocument(
-                `${collectionPath}/${COLLECTIONS.TODOS}`,
+                `${planDocumentPath}/${COLLECTIONS.TODOS}`,
                 todoId,
                 todoData
               )
+              techData.todoIds[todoId] = true
+            } else {
+              techData.todoIds[todo.id] = true
             }
-            techData.todoIds[todo.id] = true
           }
         }
         if (technology.questionIds) {
-          const { levelId, subLevelId } = technology.selectedLevel
           techData.interviewIds = {}
           const interviewId = getDocumentRef(COLLECTIONS.INTERVIEWS).id
           const interviewData = {
             id: interviewId,
-            technologyId: techId,
+            technologyId,
             levelIds: technology.selectedLevel,
             questionIds: []
           }
           for (const question of technology.questionIds[levelId][subLevelId]) {
-            if (question.readOnly) {
+            if (question.createdAt) {
               const questionId = getDocumentRef(COLLECTIONS.QUESTIONS).id
               const questionData = {
                 ...question,
                 id: questionId
               }
               await setDocument(
-                `${collectionPath}/${COLLECTIONS.QUESTIONS}`,
+                `${planDocumentPath}/${COLLECTIONS.QUESTIONS}`,
                 questionId,
                 questionData
               )
               interviewData.questionIds.push(questionId)
+            } else {
+              interviewData.questionIds.push(question.id)
             }
           }
           await setDocument(
-            `${collectionPath}/${COLLECTIONS.INTERVIEWS}`,
+            `${planDocumentPath}/${COLLECTIONS.INTERVIEWS}`,
             interviewId,
             interviewData
           )
@@ -132,12 +135,26 @@ const PlanCreate = () => {
           techData.interviewIds[interviewId] = true
         }
         if (technology.materialIds) {
-          const { levelId, subLevelId } = technology.selectedLevel
-          techData.materialIds = technology.materialIds[levelId][subLevelId]
+          techData.materialIds = {}
+          for (const material of technology.materialIds[levelId][subLevelId]) {
+            if (material.readOnly) {
+              const materialId = getDocumentRef(COLLECTIONS.MATERIALS).id
+              delete material.uid
+              const materialData = { ...material, id: materialId }
+              await setDocument(
+                `${planDocumentPath}/${COLLECTIONS.MATERIALS}`,
+                materialId,
+                materialData
+              )
+              techData.materialIds[materialId] = true
+            } else {
+              techData.materialIds[material.id] = true
+            }
+          }
         }
         await setDocument(
-          `${collectionPath}/${COLLECTIONS.TECHNOLOGIES}`,
-          techId,
+          `${planDocumentPath}/${COLLECTIONS.TECHNOLOGIES}`,
+          technologyId,
           techData
         )
       }
@@ -166,6 +183,7 @@ const PlanCreate = () => {
     setCreationLoading(false)
   }
   const onCheck = (item, { checkedNodes }) => {
+    //TODO save checked technologies
     const filteredTech = checkedNodes.filter(
       (technology) => !technology.hasOwnProperty('children')
     )
@@ -307,13 +325,8 @@ const PlanCreate = () => {
 const loadTodos = async (technology, selectedLevel) => {
   const todos = []
 
-  const technologyData = await getDocumentData(
-    COLLECTIONS.TECHNOLOGIES,
-    technology.key
-  )
-
-  for (const todoKey of Object.keys(technologyData.todoIds)) {
-    const todo = technologyData.todoIds[todoKey]
+  for (const todoKey of Object.keys(technology.todoIds)) {
+    const todo = technology.todoIds[todoKey]
     if (
       todo.levelId === selectedLevel.levelId &&
       todo.subLevelId === selectedLevel.subLevelId
@@ -333,13 +346,9 @@ const loadTodos = async (technology, selectedLevel) => {
 
 const loadInterview = async (technology, selectedLevel) => {
   const questions = []
-  const technologyData = await getDocumentData(
-    COLLECTIONS.TECHNOLOGIES,
-    technology.key
-  )
 
-  for (const interviewKey of Object.keys(technologyData.interviewIds)) {
-    const interview = technologyData.interviewIds[interviewKey]
+  for (const interviewKey of Object.keys(technology.interviewIds)) {
+    const interview = technology.interviewIds[interviewKey]
     if (
       interview.levelId === selectedLevel.levelId &&
       interview.subLevelId === selectedLevel.subLevelId
@@ -363,6 +372,30 @@ const loadInterview = async (technology, selectedLevel) => {
     [selectedLevel.levelId]: { [selectedLevel.subLevelId]: questions }
   }
   return { questionIds }
+}
+
+const loadMaterials = async (technology, selectedLevel) => {
+  const materials = []
+
+  for (const materialKey of Object.keys(technology.materialIds)) {
+    const material = technology.materialIds[materialKey]
+    if (
+      material.levelId === selectedLevel.levelId &&
+      material.subLevelId === selectedLevel.subLevelId
+    ) {
+      const materialData = await getDocumentData(
+        COLLECTIONS.MATERIALS,
+        materialKey
+      )
+
+      materials.push({ ...materialData, uid: materialKey })
+    }
+  }
+
+  const materialIds = {
+    [selectedLevel.levelId]: { [selectedLevel.subLevelId]: materials }
+  }
+  return { materialIds }
 }
 
 const ListItem = (props) => {
@@ -391,35 +424,42 @@ const ListItem = (props) => {
       setDataLoading(true)
       const currentLevel = { levelId: value[0], subLevelId: value[1] }
       setSelectedLevel(currentLevel)
+      let newHistoryState
+
+      const technologyData = await getDocumentData(
+        COLLECTIONS.TECHNOLOGIES,
+        technology.key
+      )
+
+      const todos =
+        technologyData.todoIds &&
+        (await loadTodos(technologyData, currentLevel))
+      const questions =
+        technologyData.interviewIds &&
+        (await loadInterview(technologyData, currentLevel))
+      const materials =
+        technologyData.materialIds &&
+        (await loadMaterials(technologyData, currentLevel))
+
       historyState.selectedTech[index] = {
         ...historyState.selectedTech[index],
         selectedLevel: currentLevel,
-        tree
+        tree,
+        ...todos,
+        ...questions,
+        ...materials
       }
-      let newHistoryState
-      for (const item of DROPDOWN_MAP) {
-        const todos = await loadTodos(technology, currentLevel)
-        const questions = await loadInterview(technology, currentLevel)
 
-        historyState.selectedTech[index] = {
-          ...historyState.selectedTech[index],
-          ...todos,
-          ...questions
-        }
-
-        newHistoryState = {
-          ...historyState,
-          ...newHistoryState,
-          selectedLevel,
-          prevLocation: history.location.pathname,
-          technologyId: technology.key,
-          techTemplateLoading: true,
-          ...todos,
-          ...questions
-        }
-
-        history.replace(history.location.pathname, newHistoryState)
+      newHistoryState = {
+        ...historyState,
+        selectedLevel: currentLevel,
+        prevLocation: history.location.pathname,
+        techTemplateLoading: true,
+        ...todos,
+        ...questions,
+        ...materials
       }
+
       delete newHistoryState.techTemplateLoading
       history.replace(history.location.pathname, newHistoryState)
       setDataLoading(false)
