@@ -27,7 +27,7 @@ import { COLLECTIONS, ROUTE_PATHS } from 'app/constants'
  *
  * @comment UserShow - React component.
  *
- * @since 29 Mar 2021 ( v.0.1.1 ) // LAST-EDIT DATE
+ * @since 30 Mar 2021 ( v.0.1.2 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
@@ -183,21 +183,30 @@ const ListItemPlan = (props) => {
   const { plan } = props
 
   // [ADDITIONAL_HOOKS]
+  const { id } = useParams()
+  const session = useSession()
   const history = useHistory()
   let [mentorData, loadingMentorData] = useCollectionData(
     firestore
       .collection(COLLECTIONS.USERS)
       .where('mentorId', '==', plan.mentorId)
   )
+
+  // [COMPUTED_PROPERTIES]
   mentorData = !loadingMentorData && mentorData[0]
 
   // [HELPER_FUNCTIONS]
-  const goToInterview = (planId) => {
-    history.push(generatePath(ROUTE_PATHS.INTERVIEW_EDIT, { id: planId }))
+  const goToInterview = () => {
+    history.push(generatePath(ROUTE_PATHS.INTERVIEW_EDIT, { id: plan.id }))
   }
-  const showResults = (planId) => {}
-  // [TEMPLATE]
+  const showResults = () => {
+    /**
+     * for showing and checking results
+     */
+    history.push(generatePath(ROUTE_PATHS.INTERVIEW_SHOW, { id: plan.id }))
+  }
 
+  // [TEMPLATE]
   if (loadingMentorData) return <Spinner />
 
   return (
@@ -223,17 +232,21 @@ const ListItemPlan = (props) => {
                 </Space>
               </Col>
               <Col>
-                {plan.status === 'active' ? (
+                {session.userId === id &&
+                  (plan.status === 'active' ? (
+                    <Button onClick={goToInterview}>Go to interview</Button>
+                  ) : (
+                    <Button
+                      disabled={plan.status === 'finished'}
+                      onClick={showResults}>
+                      Show results
+                    </Button>
+                  ))}
+                {session?.mentorId === plan.mentorId && (
                   <Button
-                    disabled={plan.deadline.toDate() >= new Date()}
-                    onClick={() => goToInterview(plan.id)}>
-                    Go to interview
-                  </Button>
-                ) : (
-                  <Button
-                    disabled={plan.status === 'finished'}
-                    onClick={() => showResults(plan.id)}>
-                    Show results
+                    disabled={plan.status === 'active'}
+                    onClick={showResults}>
+                    Check results
                   </Button>
                 )}
               </Col>
