@@ -3,11 +3,15 @@ import { useHistory } from 'react-router-dom'
 import _ from 'lodash'
 import { v5 as uuidv5, v4 as uuidv4 } from 'uuid'
 import { Divider, message, Empty } from 'antd'
+import { PageWrapper } from '~/components/HOC'
 import { MaterialSimpleForm } from 'domains/Material/components/forms'
 import { MaterialSimpleUpload } from 'domains/Material/components/combined/uploads'
 import storage from '~/services/Firebase/storage'
-import firestore from '~/services/Firebase/firestore'
-import { PageWrapper } from '~/components/HOC'
+import {
+  deleteDocument,
+  getDocumentRef,
+  setDocument
+} from '~/services/Firebase/firestore'
 import { COLLECTIONS } from 'app/constants'
 
 /**
@@ -15,7 +19,7 @@ import { COLLECTIONS } from 'app/constants'
  *
  * @comment MaterialCreate - React component.
  *
- * @since 19 Mar 2021 ( v.0.0.9 ) // LAST-EDIT DATE
+ * @since 30 Mar 2021 ( v.0.1.1 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
@@ -30,6 +34,7 @@ const MaterialCreate = () => {
   const currentLevels = historyState.selectedLevel
   let currentLevelMaterials
 
+  // [TECHNOLOGY CREATION WIZARD]
   // Check if there are already exist materials for currentLevels
   if (historyState?.materialIds) {
     currentLevelMaterials =
@@ -38,8 +43,19 @@ const MaterialCreate = () => {
       ]
   }
 
+  // [PLAN CREATION WIZARD]
+  else if (historyState.planId) {
+    const currentTech = historyState.selectedTech.find(
+      ({ key }) => key === historyState.technologyId
+    )
+    currentLevelMaterials =
+      currentTech.materialIds?.[currentLevels.levelId]?.[
+        currentLevels.subLevelId
+      ]
+  }
+
   // [COMPONENT_STATE_HOOKS]
-  const [materials, setMaterials] = useState(currentLevelMaterials || [])
+  const [materials, setMaterials] = useState(() => currentLevelMaterials || [])
   const [linkLoading, setLinkLoading] = useState(false)
 
   // [HELPER_FUNCTIONS]
@@ -48,19 +64,23 @@ const MaterialCreate = () => {
     setLinkLoading(true)
 
     try {
-      const collectionRef = firestore.collection(COLLECTIONS.MATERIALS)
+      let collectionPath = COLLECTIONS.MATERIALS
+      if (historyState.planId) {
+        collectionPath = `${COLLECTIONS.PLANS}/${historyState.planId}/${COLLECTIONS.MATERIALS}`
+      }
 
-      const materialRef = await collectionRef.add({})
+      const materialId = getDocumentRef(COLLECTIONS.MATERIALS).id
 
       const link = {
         url,
         name: url,
         type: 'url',
-        id: materialRef.id,
+        id: materialId,
         levelIds: currentLevels,
         readOnly: true
       }
-      await collectionRef.doc(materialRef.id).set(link)
+
+      await setDocument(collectionPath, materialId, link)
 
       setMaterials([...materials, link])
     } catch (error) {
@@ -123,12 +143,16 @@ const MaterialCreate = () => {
       async () => {
         // Set result material data to list
         const materialURL = await uploadTask.snapshot.ref.getDownloadURL()
-        const collectionRef = firestore.collection(COLLECTIONS.MATERIALS)
 
-        const materialRef = await collectionRef.add({})
+        let collectionPath = COLLECTIONS.MATERIALS
+        if (historyState.planId) {
+          collectionPath = `${COLLECTIONS.PLANS}/${historyState.planId}/${COLLECTIONS.MATERIALS}`
+        }
+
+        const materialId = getDocumentRef(COLLECTIONS.MATERIALS).id
 
         const material = {
-          id: materialRef.id,
+          id: materialId,
           name: file.name,
           url: materialURL,
           type: file.type,
@@ -137,7 +161,7 @@ const MaterialCreate = () => {
           readOnly: true
         }
 
-        await collectionRef.doc(materialRef.id).set(material)
+        await setDocument(collectionPath, materialId, material)
 
         setMaterials([...materials, material])
       }
@@ -152,10 +176,11 @@ const MaterialCreate = () => {
       const storageRef = storage.refFromURL(removedItem.url)
       try {
         await storageRef.delete()
-        await firestore
-          .collection(COLLECTIONS.MATERIALS)
-          .doc(removedItem.id)
-          .delete()
+        let collectionPath = COLLECTIONS.MATERIALS
+        if (historyState.planId) {
+          collectionPath = `${COLLECTIONS.PLANS}/${historyState.planId}/${COLLECTIONS.MATERIALS}`
+        }
+        await deleteDocument(collectionPath, removedItem.id)
 
         setMaterials(buffer)
         message.success('Material was successfully deleted.')
@@ -166,7 +191,6 @@ const MaterialCreate = () => {
       setMaterials(buffer)
       message.success('Material was successfully deleted.')
     }
-
     return false
   }
 
@@ -182,13 +206,25 @@ const MaterialCreate = () => {
         }
       }
 
-      return history.push(historyState.prevLocation, {
+      let data = {
         ...historyState,
-        materialIds: {
-          ...historyState?.materialIds,
+        todoIds: {
+          ...historyState?.todoIds,
           [levelId]: currentLevelMaterials
         }
-      })
+      }
+      if (historyState.selectedTech) {
+        const techIndex = historyState.selectedTech.findIndex(
+          ({ key }) => key === historyState.technologyId
+        )
+        historyState.selectedTech[techIndex].todoIds = {
+          ...historyState?.todoIds,
+          [levelId]: currentLevelMaterials
+        }
+        data = historyState
+      }
+
+      return history.push(historyState.prevLocation, data)
     }
     // If there are no todos delete empty object from history state
     if (historyState?.materialIds) {
