@@ -1,6 +1,5 @@
 import PropTypes from 'prop-types'
-import { Space } from 'antd'
-import { Card } from 'antd-styled'
+import { Card, Col, Row } from 'antd-styled'
 import { useCollectionArray } from 'hooks/firebase'
 import { TechnologySimpleView } from 'domains/Technology/components/views'
 import { MaterialSimpleView } from 'domains/Material/components/views'
@@ -11,7 +10,7 @@ import { Spinner } from '~/components'
  *
  * @comment TechnologyAdvancedView - React component.
  *
- * @since 30 Mar 2021 ( v.0.0.8 ) // LAST-EDIT DATE
+ * @since 30 Mar 2021 ( v.0.0.9 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
@@ -32,11 +31,13 @@ const TechnologyAdvancedView = (props) => {
       {loading ? (
         <Spinner />
       ) : (
-        <Space size="large">
+        <Row gutter={[4, 8]}>
           {materials?.map((item) => (
-            <MaterialSimpleView {...item} />
+            <Col>
+              <MaterialSimpleView {...item} tag size="sm" />
+            </Col>
           ))}
-        </Space>
+        </Row>
       )}
     </Card>
   )
