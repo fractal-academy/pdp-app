@@ -40,7 +40,7 @@ import { ROUTE_PATHS, COLLECTIONS } from 'app/constants'
  *
  * @comment PlanCreate - React component.
  *
- * @since 29 Mar 2021 ( v.0.0.6 ) // LAST-EDIT DATE
+ * @since 30 Mar 2021 ( v.0.0.7 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
@@ -324,13 +324,8 @@ const PlanCreate = () => {
 const loadTodos = async (technology, selectedLevel) => {
   const todos = []
 
-  const technologyData = await getDocumentData(
-    COLLECTIONS.TECHNOLOGIES,
-    technology.key
-  )
-
-  for (const todoKey of Object.keys(technologyData.todoIds)) {
-    const todo = technologyData.todoIds[todoKey]
+  for (const todoKey of Object.keys(technology.todoIds)) {
+    const todo = technology.todoIds[todoKey]
     if (
       todo.levelId === selectedLevel.levelId &&
       todo.subLevelId === selectedLevel.subLevelId
@@ -350,13 +345,9 @@ const loadTodos = async (technology, selectedLevel) => {
 
 const loadInterview = async (technology, selectedLevel) => {
   const questions = []
-  const technologyData = await getDocumentData(
-    COLLECTIONS.TECHNOLOGIES,
-    technology.key
-  )
 
-  for (const interviewKey of Object.keys(technologyData.interviewIds)) {
-    const interview = technologyData.interviewIds[interviewKey]
+  for (const interviewKey of Object.keys(technology.interviewIds)) {
+    const interview = technology.interviewIds[interviewKey]
     if (
       interview.levelId === selectedLevel.levelId &&
       interview.subLevelId === selectedLevel.subLevelId
@@ -385,13 +376,8 @@ const loadInterview = async (technology, selectedLevel) => {
 const loadMaterials = async (technology, selectedLevel) => {
   const materials = []
 
-  const technologyData = await getDocumentData(
-    COLLECTIONS.TECHNOLOGIES,
-    technology.key
-  )
-
-  for (const materialKey of Object.keys(technologyData.materialIds)) {
-    const material = technologyData.materialIds[materialKey]
+  for (const materialKey of Object.keys(technology.materialIds)) {
+    const material = technology.materialIds[materialKey]
     if (
       material.levelId === selectedLevel.levelId &&
       material.subLevelId === selectedLevel.subLevelId
@@ -444,9 +430,20 @@ const ListItem = (props) => {
       }
       let newHistoryState
 
-      const todos = await loadTodos(technology, currentLevel)
-      const questions = await loadInterview(technology, currentLevel)
-      const materials = await loadMaterials(technology, currentLevel)
+      const technologyData = await getDocumentData(
+        COLLECTIONS.TECHNOLOGIES,
+        technology.key
+      )
+
+      const todos =
+        technologyData.todoIds &&
+        (await loadTodos(technologyData, currentLevel))
+      const questions =
+        technologyData.interviewIds &&
+        (await loadInterview(technologyData, currentLevel))
+      const materials =
+        technologyData.materialIds &&
+        (await loadMaterials(technologyData, currentLevel))
 
       historyState.selectedTech[index] = {
         ...historyState.selectedTech[index],

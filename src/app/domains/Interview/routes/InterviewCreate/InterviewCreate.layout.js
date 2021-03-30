@@ -83,7 +83,11 @@ const InterviewCreate = () => {
   const onDeleteQuestion = async (questionId) => {
     const newQuestions = _.filter(questions, (item) => item.id !== questionId)
     try {
-      await deleteDocument(COLLECTIONS.QUESTIONS, questionId)
+      let collectionPath = COLLECTIONS.QUESTIONS
+      if (historyState.planId) {
+        collectionPath = `${COLLECTIONS.PLANS}/${historyState.planId}/${COLLECTIONS.QUESTIONS}`
+      }
+      await deleteDocument(collectionPath, questionId)
     } catch (error) {
       console.log('interview delete', error)
     }
