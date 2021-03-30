@@ -70,12 +70,12 @@ const PlanCreate = () => {
     setCreationLoading(true)
     try {
       for (const technology of historyState.selectedTech) {
-        const techId = getDocumentRef(COLLECTIONS.TECHNOLOGIES).id
-        const collectionPath = `${COLLECTIONS.PLANS}/${historyState.planId}`
+        const technologyId = getDocumentRef(COLLECTIONS.TECHNOLOGIES).id
+        const planDocumentPath = `${COLLECTIONS.PLANS}/${historyState.planId}`
         const { levelId, subLevelId } = technology.selectedLevel
 
         const techData = {
-          id: techId,
+          id: technologyId,
           name: technology.title,
           levelId: technology.selectedLevel
         }
@@ -90,7 +90,7 @@ const PlanCreate = () => {
                 id: todoId
               }
               await setDocument(
-                `${collectionPath}/${COLLECTIONS.TODOS}`,
+                `${planDocumentPath}/${COLLECTIONS.TODOS}`,
                 todoId,
                 todoData
               )
@@ -105,7 +105,7 @@ const PlanCreate = () => {
           const interviewId = getDocumentRef(COLLECTIONS.INTERVIEWS).id
           const interviewData = {
             id: interviewId,
-            technologyId: techId,
+            technologyId,
             levelIds: technology.selectedLevel,
             questionIds: []
           }
@@ -117,7 +117,7 @@ const PlanCreate = () => {
                 id: questionId
               }
               await setDocument(
-                `${collectionPath}/${COLLECTIONS.QUESTIONS}`,
+                `${planDocumentPath}/${COLLECTIONS.QUESTIONS}`,
                 questionId,
                 questionData
               )
@@ -127,7 +127,7 @@ const PlanCreate = () => {
             }
           }
           await setDocument(
-            `${collectionPath}/${COLLECTIONS.INTERVIEWS}`,
+            `${planDocumentPath}/${COLLECTIONS.INTERVIEWS}`,
             interviewId,
             interviewData
           )
@@ -142,7 +142,7 @@ const PlanCreate = () => {
               delete material.uid
               const materialData = { ...material, id: materialId }
               await setDocument(
-                `${collectionPath}/${COLLECTIONS.MATERIALS}`,
+                `${planDocumentPath}/${COLLECTIONS.MATERIALS}`,
                 materialId,
                 materialData
               )
@@ -153,8 +153,8 @@ const PlanCreate = () => {
           }
         }
         await setDocument(
-          `${collectionPath}/${COLLECTIONS.TECHNOLOGIES}`,
-          techId,
+          `${planDocumentPath}/${COLLECTIONS.TECHNOLOGIES}`,
+          technologyId,
           techData
         )
       }
