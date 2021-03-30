@@ -12,7 +12,7 @@ import { COLLECTIONS } from 'app/constants'
  *
  * @comment InterviewSimpleList - React component.
  *
- * @since 19 Mar 2021 ( v.0.0.6 ) // LAST-EDIT DATE
+ * @since 30 Mar 2021 ( v.0.0.7 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
@@ -51,22 +51,24 @@ const InterviewSimpleList = (props) => {
       dataSource={questions}
       renderItem={(question) => (
         <List.Item
-          actions={[
-            <Edit
-              shape="default"
-              tooltip="Edit"
-              type="text"
-              icon={<EditOutlined />}
-              onClick={() => setEditQuestion(question.id)}
-            />,
-            <Remove
-              shape="default"
-              tooltip="Remove"
-              type="text"
-              icon={<DeleteOutlined />}
-              onSubmit={() => onDeleteQuestion(question.id)}
-            />
-          ]}>
+          actions={
+            !question.readOnly && [
+              <Edit
+                shape="default"
+                tooltip="Edit"
+                type="text"
+                icon={<EditOutlined />}
+                onClick={() => setEditQuestion(question.id)}
+              />,
+              <Remove
+                shape="default"
+                tooltip="Remove"
+                type="text"
+                icon={<DeleteOutlined />}
+                onSubmit={() => onDeleteQuestion(question.id)}
+              />
+            ]
+          }>
           <QuestionViewWithForm
             question={question}
             isEdit={question.id === editQuestion}

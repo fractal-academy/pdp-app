@@ -122,7 +122,6 @@ const useAuthListener = () => {
       localStorage.removeItem('isNewUser')
       localStorage.setItem('editProfile', true)
     }
-    !session && history.push(ROUTE_PATHS.SESSION_LOGIN)
   }, [session])
   return { loading }
 }

@@ -17,7 +17,7 @@ import { COLLECTIONS } from 'app/constants'
  *
  * @comment InterviewCreate - React component.
  *
- * @since 18 Mar 2021 ( v.0.0.5 ) // LAST-EDIT DATE
+ * @since 30 Mar 2021 ( v.0.0.7 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
@@ -30,10 +30,22 @@ const InterviewCreate = () => {
   const currentLevels = historyState.selectedLevel
   let currentLevelQuestions
 
+  // [TECHNOLOGY CREATION WIZARD]
   // Check if there are already exist todos for currentLevels
   if (historyState?.questionIds) {
     currentLevelQuestions =
       historyState.questionIds?.[currentLevels.levelId]?.[
+        currentLevels.subLevelId
+      ]
+  }
+
+  // [PLAN CREATION WIZARD]
+  if (historyState.planId) {
+    const currentTech = historyState.selectedTech.find(
+      ({ key }) => key === historyState.technologyId
+    )
+    currentLevelQuestions =
+      currentTech.questionIds?.[currentLevels.levelId]?.[
         currentLevels.subLevelId
       ]
   }
@@ -89,14 +101,24 @@ const InterviewCreate = () => {
           [subLevelId]: questions
         }
       }
-
-      return history.push(historyState.prevLocation, {
+      let data = {
         ...historyState,
         questionIds: {
           ...historyState?.questionIds,
           [levelId]: currentLevelTodos
         }
-      })
+      }
+      if (historyState.selectedTech) {
+        const techIndex = historyState.selectedTech.findIndex(
+          ({ key }) => key === historyState.technologyId
+        )
+        historyState.selectedTech[techIndex].questionIds = {
+          ...historyState?.questionIds,
+          [levelId]: currentLevelTodos
+        }
+        data = historyState
+      }
+      return history.replace(historyState.prevLocation, data)
     }
     // If there are no interviews delete empty object from history state
     if (historyState?.questionIds) {
@@ -106,7 +128,7 @@ const InterviewCreate = () => {
         delete historyState?.questionIds[levelId]
       }
     }
-    history.push(historyState.prevLocation, historyState)
+    history.replace(historyState.prevLocation, historyState)
   }
   // ----------------------------------
 

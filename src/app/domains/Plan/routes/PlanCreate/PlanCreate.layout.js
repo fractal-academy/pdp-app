@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useHistory } from 'react-router-dom'
-import { Tree, List, Dropdown, Menu } from 'antd'
+import { Tree, List, Dropdown, Menu, Form } from 'antd'
 import {
   Content,
   Paragraph,
@@ -16,11 +16,11 @@ import {
   EllipsisOutlined,
   FileDoneOutlined,
   FileTextOutlined,
-  FolderViewOutlined,
-  LoadingOutlined
+  FolderViewOutlined
 } from '@ant-design/icons'
 import { Spinner } from '~/components'
 import { PageWrapper } from '~/components/HOC'
+import { PlanSimpleForm } from 'domains/Plan/components/forms'
 import { LevelSimpleCascader } from 'domains/Level/components/combined/cascaders'
 import { useSession } from 'contexts/Session/hooks'
 import {
@@ -29,6 +29,7 @@ import {
   getCollectionRef,
   getDocumentData,
   getDocumentRef,
+  getTimestamp,
   setDocument,
   updateDocument
 } from '~/services/Firebase/firestore'
@@ -48,6 +49,7 @@ const PlanCreate = () => {
   // [ADDITIONAL_HOOKS]
   const history = useHistory()
   const session = useSession()
+  const [planForm] = Form.useForm()
   const historyState = history.location.state
 
   // [COMPONENT_STATE_HOOKS]
@@ -64,7 +66,7 @@ const PlanCreate = () => {
   )
 
   // [HELPER_FUNCTIONS]
-  const onAssign = async () => {
+  const onSubmit = async (formData) => {
     setCreationLoading(true)
     try {
       for (const technology of historyState.selectedTech) {
@@ -96,6 +98,39 @@ const PlanCreate = () => {
             techData.todoIds[todo.id] = true
           }
         }
+        if (technology.questionIds) {
+          const { levelId, subLevelId } = technology.selectedLevel
+          techData.interviewIds = {}
+          const interviewId = getDocumentRef(COLLECTIONS.INTERVIEWS).id
+          const interviewData = {
+            id: interviewId,
+            technologyId: techId,
+            levelIds: technology.selectedLevel,
+            questionIds: []
+          }
+          for (const question of technology.questionIds[levelId][subLevelId]) {
+            if (question.readOnly) {
+              const questionId = getDocumentRef(COLLECTIONS.QUESTIONS).id
+              const questionData = {
+                ...question,
+                id: questionId
+              }
+              await setDocument(
+                `${collectionPath}/${COLLECTIONS.QUESTIONS}`,
+                questionId,
+                questionData
+              )
+              interviewData.questionIds.push(questionId)
+            }
+          }
+          await setDocument(
+            `${collectionPath}/${COLLECTIONS.INTERVIEWS}`,
+            interviewId,
+            interviewData
+          )
+
+          techData.interviewIds[interviewId] = true
+        }
         if (technology.materialIds) {
           const { levelId, subLevelId } = technology.selectedLevel
           techData.materialIds = technology.materialIds[levelId][subLevelId]
@@ -110,7 +145,9 @@ const PlanCreate = () => {
       const planData = {
         id: historyState.planId,
         status: 'active',
-        mentorId: session.userId
+        mentorId: session.mentorId,
+        name: formData.name ?? '',
+        deadline: getTimestamp().fromDate(formData.deadline.toDate())
       }
       await setDocument(COLLECTIONS.PLANS, planData.id, planData)
 
@@ -187,10 +224,13 @@ const PlanCreate = () => {
     }
   }, [technologies])
 
+  console.log(historyState)
+
   // [TEMPLATE]
   if (pageLoading) {
     return <Spinner />
   }
+
   return (
     <>
       {!isOverview ? (
@@ -237,17 +277,20 @@ const PlanCreate = () => {
             title={pageTitle}
             titleProps={{ textAlign: 'left' }}
             onBack={changeOverview}
-            onNext={onAssign}
+            onNext={() => planForm.submit()}
             nextBtnProps={{
               text: 'Assign',
               disabled:
                 _.dropRightWhile(selectedTech, (o) => !o.selectedLevel)
-                  .length !== selectedTech.length,
+                  .length !== selectedTech.length ||
+                historyState.techTemplateLoading,
               loading: creationLoading
             }}
             backBtnLeft
             inlineHeader>
-            <HeadingPrimary title="Overview" titleSize={3} />
+            <HeadingPrimary title="Plan information" titleSize={3} />
+            <PlanSimpleForm form={planForm} onFinish={onSubmit} />
+            <HeadingPrimary title="Technologies" titleSize={3} />
             <List
               dataSource={selectedTech}
               renderItem={(technology, index) => (
@@ -287,9 +330,40 @@ const loadTodos = async (technology, selectedLevel) => {
   }
   return { todoIds }
 }
-const loadMaterials = async (technology, selectedLevel) => {}
 
-const loadQuestions = async (technology, selectedLevel) => {}
+const loadInterview = async (technology, selectedLevel) => {
+  const questions = []
+  const technologyData = await getDocumentData(
+    COLLECTIONS.TECHNOLOGIES,
+    technology.key
+  )
+
+  for (const interviewKey of Object.keys(technologyData.interviewIds)) {
+    const interview = technologyData.interviewIds[interviewKey]
+    if (
+      interview.levelId === selectedLevel.levelId &&
+      interview.subLevelId === selectedLevel.subLevelId
+    ) {
+      const interviewData = await getDocumentData(
+        COLLECTIONS.INTERVIEWS,
+        interviewKey
+      )
+
+      for (const questionKey of interviewData.questionIds) {
+        const questionData = await getDocumentData(
+          COLLECTIONS.QUESTIONS,
+          questionKey
+        )
+        questions.push(questionData)
+      }
+    }
+  }
+
+  const questionIds = {
+    [selectedLevel.levelId]: { [selectedLevel.subLevelId]: questions }
+  }
+  return { questionIds }
+}
 
 const ListItem = (props) => {
   // [INTERFACES]
@@ -305,11 +379,16 @@ const ListItem = (props) => {
   const [selectedLevel, setSelectedLevel] = useState(
     currentTech?.selectedLevel ?? null
   )
-  const [loading, setLoading] = useState('')
+  const [dataLoading, setDataLoading] = useState(false)
 
   // [HELPER_FUNCTIONS]
-  const onLevelSelect = (value, tree) => {
+  const onLevelSelect = async (value, tree) => {
     if (value.length) {
+      history.replace(history.location.pathname, {
+        ...historyState,
+        techTemplateLoading: true
+      })
+      setDataLoading(true)
       const currentLevel = { levelId: value[0], subLevelId: value[1] }
       setSelectedLevel(currentLevel)
       historyState.selectedTech[index] = {
@@ -317,27 +396,39 @@ const ListItem = (props) => {
         selectedLevel: currentLevel,
         tree
       }
-      history.replace(history.location.pathname, historyState)
+      let newHistoryState
+      for (const item of DROPDOWN_MAP) {
+        const todos = await loadTodos(technology, currentLevel)
+        const questions = await loadInterview(technology, currentLevel)
+
+        historyState.selectedTech[index] = {
+          ...historyState.selectedTech[index],
+          ...todos,
+          ...questions
+        }
+
+        newHistoryState = {
+          ...historyState,
+          ...newHistoryState,
+          selectedLevel,
+          prevLocation: history.location.pathname,
+          technologyId: technology.key,
+          techTemplateLoading: true,
+          ...todos,
+          ...questions
+        }
+
+        history.replace(history.location.pathname, newHistoryState)
+      }
+      delete newHistoryState.techTemplateLoading
+      history.replace(history.location.pathname, newHistoryState)
+      setDataLoading(false)
     } else {
       setSelectedLevel(null)
+      setDataLoading(false)
       currentTech.selectedLevel = null
       history.replace(history.location.pathname, historyState)
     }
-  }
-
-  const loadData = async (name, route, callback) => {
-    setLoading(name)
-
-    const data = await callback(technology, selectedLevel)
-
-    history.replace(route, {
-      ...historyState,
-      selectedLevel,
-      prevLocation: history.location.pathname,
-      technologyId: technology.key,
-      ...data
-    })
-    setLoading('')
   }
 
   // [COMPUTED_PROPERTIES]
@@ -345,20 +436,17 @@ const ListItem = (props) => {
     {
       name: 'Todos',
       route: ROUTE_PATHS.TODO_CREATE,
-      icon: <FileTextOutlined />,
-      func: (name, route) => loadData(name, route, loadTodos)
+      icon: <FileTextOutlined />
     },
     {
       name: 'Materials',
       route: ROUTE_PATHS.MATERIAL_CREATE,
-      icon: <FolderViewOutlined />,
-      func: (name, route) => loadData(name, route, loadMaterials)
+      icon: <FolderViewOutlined />
     },
     {
       name: 'Interviews',
       route: ROUTE_PATHS.INTERVIEW_CREATE,
-      icon: <FileDoneOutlined />,
-      func: (name, route) => loadData(name, route, loadQuestions)
+      icon: <FileDoneOutlined />
     }
   ]
 
@@ -366,10 +454,15 @@ const ListItem = (props) => {
     <Menu>
       {DROPDOWN_MAP.map((item) => (
         <Menu.Item
-          icon={loading === item.name ? <LoadingOutlined /> : item.icon}
-          onClick={async () => {
-            await item.func?.(item.name, item.route)
-          }}>
+          icon={item.icon}
+          onClick={() =>
+            history.replace(item.route, {
+              ...historyState,
+              selectedLevel,
+              prevLocation: history.location.pathname,
+              technologyId: technology.key
+            })
+          }>
           <Text>{item.name}</Text>
         </Menu.Item>
       ))}
@@ -391,7 +484,7 @@ const ListItem = (props) => {
         />,
 
         <Dropdown overlay={menu} disabled={!selectedLevel}>
-          <Edit type="text" icon={<EllipsisOutlined />} />
+          <Edit type="text" loading={dataLoading} icon={<EllipsisOutlined />} />
         </Dropdown>
       ]}>
       <Text>{technology.title}</Text>
