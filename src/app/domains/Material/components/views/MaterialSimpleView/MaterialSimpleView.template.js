@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types'
-import { Box, Text, Link } from 'antd-styled'
+import { Tooltip } from 'antd'
+import { Link } from 'antd-styled'
 import Icon, {
   FileImageOutlined,
   LinkOutlined,
@@ -14,7 +15,7 @@ import { Image, Space } from 'antd'
  *
  * @comment MaterialSimpleView - React component.
  *
- * @since 10 Mar 2021 ( v.0.0.2 ) // LAST-EDIT DATE
+ * @since 30 Mar 2021 ( v.0.0.3 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
@@ -35,27 +36,30 @@ const SIZE_MAP = {
 const MaterialSimpleView = (props) => {
   // [INTERFACES]
   const { type, size, name, url } = props
+
   // [TEMPLATE]
   return (
     <Space>
-      {type === 'image' ? (
-        <Image
-          width={SIZE_MAP[size]}
-          height={SIZE_MAP[size]}
-          style={{ borderRadius: '4px' }}
-          src={url}
-        />
-      ) : (
-        <Icon
-          component={FILE_TYPE_MAP[type] ?? PaperClipOutlined}
-          style={{ fontSize: SIZE_MAP[size] }}
-        />
-      )}
-      {(type === 'url' && (
-        <Link href={url} target="_blank">
-          {name}
-        </Link>
-      )) || <Text>{name}</Text>}
+      <Tooltip title={name}>
+        {type === 'image' ? (
+          <Image
+            width={SIZE_MAP[size]}
+            height={SIZE_MAP[size]}
+            style={{ borderRadius: '4px' }}
+            src={url}
+          />
+        ) : (
+          <Icon
+            component={FILE_TYPE_MAP[type] ?? PaperClipOutlined}
+            style={{ fontSize: SIZE_MAP[size] }}
+          />
+        )}
+        {type === 'url' && (
+          <Link href={url} target="_blank">
+            {name}
+          </Link>
+        )}
+      </Tooltip>
     </Space>
   )
 }
