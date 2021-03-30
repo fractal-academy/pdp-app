@@ -161,16 +161,16 @@ const ROUTES = {
     ),
     path: ROUTE_PATHS.INTERVIEW_CREATE
   },
-  INTERVIEW_SHOW: {
-    component: InterviewShow,
-    path: ROUTE_PATHS.INTERVIEW_SHOW
-  },
   INTERVIEW_EDIT: {
     component: withContent(
       withProtect({ roles: [ROLES.ADMIN, ROLES.MENTOR] })(InterviewEdit)
     ),
     path: ROUTE_PATHS.INTERVIEW_EDIT,
     exact: true
+  },
+  INTERVIEW_SHOW: {
+    component: InterviewShow,
+    path: ROUTE_PATHS.INTERVIEW_SHOW
   },
   NOTIFICATIONS_ALL: {
     component: NotificationAll,
