@@ -12,7 +12,7 @@ import { getGrid } from '~/utils'
  *
  * @comment SessionLogin - React component.
  *
- * @since 23 Mar 2021 ( v.0.0.2 ) // LAST-EDIT DATE
+ * @since 30 Mar 2021 ( v.0.0.3 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
@@ -31,7 +31,7 @@ const SessionLogin = () => {
 
   // [TEMPLATE]
   return (
-    <Row gutter={[8, 16]} justify="center">
+    <Row gutter={[8, 16]} justify="center" height="100vh" alignItems="center">
       <Col {...getGrid({ xs: 16, sm: 14, md: 10, lg: 9, xl: 7 })}>
         <Box display="flex" justifyContent="center" flexDirection="column">
           <Box mb={3}>

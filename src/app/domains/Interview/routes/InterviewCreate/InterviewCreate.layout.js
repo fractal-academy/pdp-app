@@ -17,7 +17,7 @@ import { COLLECTIONS } from 'app/constants'
  *
  * @comment InterviewCreate - React component.
  *
- * @since 30 Mar 2021 ( v.0.0.8 ) // LAST-EDIT DATE
+ * @since 30 Mar 2021 ( v.0.0.9 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
@@ -60,7 +60,11 @@ const InterviewCreate = () => {
       setQuestionAddLoading(true)
 
       try {
-        const questionId = getDocumentRef(COLLECTIONS.QUESTIONS).id
+        let collectionPath = COLLECTIONS.QUESTIONS
+        if (historyState.planId) {
+          collectionPath = `${COLLECTIONS.PLANS}/${historyState.planId}/${COLLECTIONS.QUESTIONS}`
+        }
+        const questionId = getDocumentRef(collectionPath).id
 
         const questionData = {
           id: questionId,
@@ -69,7 +73,7 @@ const InterviewCreate = () => {
           readOnly: true
         }
 
-        await setDocument(COLLECTIONS.QUESTIONS, questionId, questionData)
+        await setDocument(collectionPath, questionId, questionData)
         setQuestions([
           ...questions,
           { name: questionData.name, id: questionId }

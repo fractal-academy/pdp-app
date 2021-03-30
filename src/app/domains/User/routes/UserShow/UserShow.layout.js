@@ -81,7 +81,7 @@ const UserShow = () => {
     if (!userLoading && !studentLoading) {
       setFullUserData({ ...studentData, ...userData })
       setLoading(false)
-      if (!!localStorage.getItem('editProfile')) {
+      if (JSON.parse(localStorage.getItem('editProfile'))) {
         setIsModalVisible(true)
       }
     }
@@ -97,7 +97,7 @@ const UserShow = () => {
       backBtnLeft
       inlineHeader
       fullWidth>
-      <Row gutter={[16, 8]}>
+      <Row gutter={[32, 16]}>
         <Col {...getGrid({ xs: 24, md: 12, lg: 8 })}>
           <Card>
             <Row justifyContent="center" position="relative">
@@ -151,21 +151,20 @@ const UserShow = () => {
           </Card>
         </Col>
         <Col {...getGrid({ xs: 24, md: 24, lg: 24, xl: 16 })}>
-          <Card>
-            <Row>
-              <Col span={24}>
-                <Title level={4}>Plans</Title>
-                {plansLoading ? (
-                  <Spinner />
-                ) : (
-                  <List
-                    dataSource={plans}
-                    renderItem={(plan) => <ListItemPlan plan={plan} />}
-                  />
-                )}
-              </Col>
-            </Row>
-          </Card>
+          <Row>
+            <Col span={24}>
+              <Title level={4}>Plans</Title>
+              {plansLoading ? (
+                <Spinner />
+              ) : (
+                <List
+                  split={false}
+                  dataSource={plans}
+                  renderItem={(plan) => <ListItemPlan plan={plan} />}
+                />
+              )}
+            </Col>
+          </Row>
         </Col>
       </Row>
       <UserModalWithForm

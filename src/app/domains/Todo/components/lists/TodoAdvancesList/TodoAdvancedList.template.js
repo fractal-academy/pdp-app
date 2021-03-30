@@ -1,9 +1,10 @@
 import PropTypes from 'prop-types'
 import { useState } from 'react'
 import { Input } from 'antd'
-import { Title, Box, Text } from 'antd-styled'
+import { Title, Box } from 'antd-styled'
 import { TodoViewWIthActions } from 'domains/Todo/components/combined/views'
 import firestore from '~/services/Firebase/firestore/index'
+import { useCollectionArray } from 'hooks/firebase'
 import { useCollectionData } from 'react-firebase-hooks/firestore'
 import { COLLECTIONS } from 'app/constants'
 import { Spinner } from '~/components'
@@ -13,7 +14,7 @@ import { Spinner } from '~/components'
  *
  * @comment TodoAdvancedList - React component.
  *
- * @since 17 Mar 2021 ( v.0.0.5) // LAST-EDIT DATE
+ * @since 30 Mar 2021 ( v.0.0.6) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
@@ -50,7 +51,7 @@ const TodoAdvancedList = (props) => {
   // [TEMPLATE]
   return (
     <>
-      <Title level={4} style={{ color: 'white' }}>
+      <Title level={3} style={{ color: 'white' }}>
         {plan.name}
       </Title>
       {loading ? (
@@ -69,11 +70,6 @@ const TodoAdvancedList = (props) => {
                   todoIds={Object.keys(technology.todoIds)}
                   ownTodos
                 />
-                {activePlanId && (
-                  <Text color="#ffffff" display="flex" justifyContent="center">
-                    Your todos
-                  </Text>
-                )}
                 <TodoList
                   technologyId={technology.id}
                   planId={plan.id}
@@ -104,15 +100,13 @@ const TodoList = (props) => {
   const refDocumentTechnology = `${COLLECTIONS.PLANS}/${planId}/${COLLECTIONS.TECHNOLOGIES}/${technologyId}`
 
   // [ADDITIONAL_HOOKS]
-  const [todos, loading] = useCollectionData(
-    firestore.collection(refCollectionTodos).where('id', 'in', todoIds)
-  )
+  const [todos, loading] = useCollectionArray(refCollectionTodos, todoIds)
 
   // [TEMPLATE]
   return (
     <>
       {!loading ? (
-        <Box px={4}>
+        <Box px={4} mb={3}>
           {ownTodos
             ? todos.map(
                 (todo) =>

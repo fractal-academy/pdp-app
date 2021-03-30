@@ -115,10 +115,12 @@ const UserModalWithForm = (props) => {
       visible={isModalVisible}
       onOk={form.submit}
       okButtonProps={{ loading, disabled: loadingAvatar }}
-      onCancel={!!!localStorage.getItem('editProfile') && onCancel}
-      cancelButtonProps={{ disabled: !!localStorage.getItem('editProfile') }}
+      onCancel={!JSON.parse(localStorage.getItem('editProfile')) && onCancel}
+      cancelButtonProps={{
+        disabled: JSON.parse(localStorage.getItem('editProfile'))
+      }}
       destroyOnClose
-      closable={!!!localStorage.getItem('editProfile')}>
+      closable={!JSON.parse(localStorage.getItem('editProfile'))}>
       <UserSimpleForm
         form={form}
         companyIds={companyIds}
