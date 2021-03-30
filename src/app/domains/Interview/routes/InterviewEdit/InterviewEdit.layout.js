@@ -8,6 +8,7 @@ import {
   useCollectionData,
   useDocumentData
 } from 'react-firebase-hooks/firestore'
+import { useCollectionArray } from 'hooks/firebase'
 import firestore from '~/services/Firebase/firestore'
 import { COLLECTIONS } from 'app/constants'
 import { Spinner } from '~/components'
@@ -18,7 +19,7 @@ const { Title } = Typography
  *
  * @comment InterviewEdit - React component.
  *
- * @since 30 Mar 2021 ( v.0.0.3) // LAST-EDIT DATE
+ * @since 30 Mar 2021 ( v.0.0.4) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
@@ -65,7 +66,7 @@ const InterviewEdit = () => {
     <PageWrapper
       title="My interview"
       onNext={form.submit}
-      nextBtnProps={{ loading }}>
+      nextBtnProps={{ loading, text: 'Send' }}>
       <Form form={form} name="answers" onFinish={sendAnswers}>
         {interviews.map((interview) => (
           <ListItemQuestions {...interview} planId={id} key={interview.id} />
@@ -85,10 +86,9 @@ const ListItemQuestions = (props) => {
       `${COLLECTIONS.PLANS}/${planId}/${COLLECTIONS.TECHNOLOGIES}/${technologyId}`
     )
   )
-  const [questions, loadingQuestions] = useCollectionData(
-    firestore
-      .collection(`${COLLECTIONS.PLANS}/${planId}/${COLLECTIONS.QUESTIONS}`)
-      .where('id', 'in', questionIds)
+  const [questions, loadingQuestions] = useCollectionArray(
+    `${COLLECTIONS.PLANS}/${planId}/${COLLECTIONS.QUESTIONS}`,
+    questionIds
   )
 
   // [TEMPLATE]
