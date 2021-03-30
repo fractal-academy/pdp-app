@@ -1,9 +1,8 @@
 import PropTypes from 'prop-types'
 import { List, Typography, Space } from 'antd'
-import { useCollectionData } from 'react-firebase-hooks/firestore'
-import firestore from '~/services/Firebase/firestore'
 import { COLLECTIONS } from 'app/constants'
 import { CompanySimpleView } from 'domains/Company/components/views'
+import { useCollectionArray } from 'hooks/firebase'
 const { Text } = Typography
 
 /**
@@ -11,7 +10,7 @@ const { Text } = Typography
  *
  * @comment CompanySimpleList - React component.
  *
- * @since 24 Mar 2021 ( v.0.0.2 ) // LAST-EDIT DATE
+ * @since 24 Mar 2021 ( v.0.0.3 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
@@ -21,8 +20,9 @@ const CompanySimpleList = (props) => {
   const { companyIds } = props
 
   // [ADDITIONAL_HOOKS]
-  const [companies, loading] = useCollectionData(
-    firestore.collection(COLLECTIONS.COMPANIES).where('id', 'in', companyIds)
+  const [companies, loading] = useCollectionArray(
+    COLLECTIONS.COMPANIES,
+    companyIds
   )
 
   // [TEMPLATE]
