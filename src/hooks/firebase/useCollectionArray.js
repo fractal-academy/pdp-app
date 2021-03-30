@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { getCollectionRef } from '~/services/Firebase/firestore'
 
 const useCollectionArray = (collectionPath, arrayIds = []) => {
-  const [loading, setLoading] = useState(arrayIds.length ? true : false)
+  const [loading, setLoading] = useState(arrayIds.length)
   const [data, setData] = useState([])
 
   useEffect(() => {
@@ -22,7 +22,7 @@ const useCollectionArray = (collectionPath, arrayIds = []) => {
     }
 
     arrayIds.length && fetchData()
-  }, [])
+  }, [collectionPath, arrayIds])
 
   return [data, loading]
 }
