@@ -40,7 +40,7 @@ import { ROUTE_PATHS, COLLECTIONS } from 'app/constants'
  *
  * @comment PlanCreate - React component.
  *
- * @since 30 Mar 2021 ( v.0.0.8 ) // LAST-EDIT DATE
+ * @since 31 Mar 2021 ( v.0.0.9 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
@@ -242,13 +242,6 @@ const PlanCreate = () => {
     }
   }, [technologies])
 
-  console.log(historyState)
-
-  // [TEMPLATE]
-  if (pageLoading) {
-    return <Spinner />
-  }
-
   return (
     <>
       {!isOverview ? (
@@ -269,12 +262,16 @@ const PlanCreate = () => {
               backBtnLeft
               inlineHeader
               fullWidth>
-              <Tree
-                checkable
-                treeData={historyState.technologies}
-                checkedKeys={selectedTech.map(({ key }) => key)}
-                onCheck={onCheck}
-              />
+              {pageLoading ? (
+                <Spinner />
+              ) : (
+                <Tree
+                  checkable
+                  treeData={historyState.technologies}
+                  checkedKeys={selectedTech.map(({ key }) => key)}
+                  onCheck={onCheck}
+                />
+              )}
             </PageWrapper>
           </Content>
           <Sider width="fit-content" paddingTop={4} paddingX={4}>
