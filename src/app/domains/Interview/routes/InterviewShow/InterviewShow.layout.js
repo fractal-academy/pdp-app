@@ -1,50 +1,150 @@
-import PropTypes from 'prop-types'
+import { useState } from 'react'
+import { useHistory, useParams } from 'react-router-dom'
+import {
+  useCollectionData,
+  useDocumentData
+} from 'react-firebase-hooks/firestore'
+import { PageWrapper } from '~/components/HOC'
+import firestore, { updateDocument } from '~/services/Firebase/firestore'
+import { COLLECTIONS } from 'app/constants'
+import { Spinner } from '~/components'
+import { Checkbox, List, Space } from 'antd'
+import { Col, Row, Text, Title } from 'antd-styled'
+import { QuestionSimpleView } from 'domains/Question/components/views'
 
 /**
  * @info InterviewShow (05 Mar 2021) // CREATION DATE
  *
  * @comment InterviewShow - React component.
  *
- * @since 05 Mar 2021 ( v.0.0.1 ) // LAST-EDIT DATE
+ * @since 30 Mar 2021 ( v.0.0.3 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
 
-const InterviewShow = (props) => {
-  // [INTERFACES]
-  /*
-  code sample: 
-  const { data } = props
-  */
-
+const InterviewShow = () => {
   // [ADDITIONAL_HOOKS]
-  /*
-  code sample: 
-  const firestore = useFirestore()
-  */
+  const { id } = useParams()
+  const history = useHistory()
+  const [interviews, loadingInterviews] = useCollectionData(
+    firestore.collection(`${COLLECTIONS.PLANS}/${id}/${COLLECTIONS.INTERVIEWS}`)
+  )
 
   // [COMPONENT_STATE_HOOKS]
-  /*
-  code sample:
-  const singleton = useRef(true) // references also put here
-  const [state, setState] = useState({})
-  */
+  const [answers, setAnswers] = useState({})
+  const [submitLoading, setSubmitLoading] = useState(false)
 
   // [HELPER_FUNCTIONS]
+  const onSubmit = async () => {
+    //TODO assign technologies for student
+    setSubmitLoading(true)
+    const collectionPath = `${COLLECTIONS.PLANS}/${id}/${COLLECTIONS.INTERVIEWS}`
 
-  // [COMPUTED_PROPERTIES]
-  /* 
-    code sample: 
-    const userDisplayName = user.firstName + user.lastName
-  */
+    for (const interview of interviews) {
+      let mark = 0
+      if (answers[interview.id]) {
+        const questionsCount =
+          answers[interview.id].wrong + answers[interview.id].right
+        mark = (answers[interview.id].right / questionsCount) * 100
+      }
 
-  // [USE_EFFECTS]
+      await updateDocument(collectionPath, interview.id, { mark })
+      //TODO move status to constants
+      await updateDocument(COLLECTIONS.PLANS, id, { status: 'confirmed' })
+    }
+    history.goBack()
+    setSubmitLoading(false)
+  }
 
   // [TEMPLATE]
-  return <div>InterviewShow</div>
+  if (loadingInterviews) return <Spinner />
+  return (
+    <PageWrapper
+      title="Interview review"
+      onNext={onSubmit}
+      nextBtnProps={{ text: 'Submit', loading: submitLoading }}
+      inlineHeader>
+      {interviews.map((interview) => (
+        <ListItemQuestions
+          {...interview}
+          planId={id}
+          key={interview.id}
+          setAnswers={setAnswers}
+        />
+      ))}
+    </PageWrapper>
+  )
 }
 
-// [PROPTYPES]
-InterviewShow.propTypes = {}
+const ListItemQuestions = (props) => {
+  // [INTERFACES]
+  const { planId, technologyId, questionIds, setAnswers } = props
+
+  // [ADDITIONAL_HOOKS]
+  const [technology, loadingTechnology] = useDocumentData(
+    firestore.doc(
+      `${COLLECTIONS.PLANS}/${planId}/${COLLECTIONS.TECHNOLOGIES}/${technologyId}`
+    )
+  )
+  const [questions, loadingQuestions] = useCollectionData(
+    firestore
+      .collection(`${COLLECTIONS.PLANS}/${planId}/${COLLECTIONS.QUESTIONS}`)
+      .where('id', 'in', questionIds)
+  )
+
+  // [HELPER_FUNCTIONS]
+  const checkAnswer = (e) => {
+    setAnswers((prev) => {
+      let answer = { ...prev }
+      answer[props.id] = {}
+      if (e.target.checked) {
+        answer[props.id].right = prev?.[props.id]?.right
+          ? ++prev[props.id].right
+          : 1
+      } else {
+        answer[props.id].right = prev?.[props.id]?.right
+          ? --prev[props.id].right
+          : 0
+      }
+      answer[props.id].wrong = questions.length - answer[props.id].right
+      return answer
+    })
+  }
+
+  // [TEMPLATE]
+  if (loadingTechnology || loadingQuestions) return <Spinner />
+  return (
+    <>
+      <Title level={4}>{technology.name}</Title>
+      <List
+        grid={{ column: 1 }}
+        dataSource={questions}
+        renderItem={(question) => (
+          <List.Item>
+            <Row>
+              <Col
+                span={24}
+                mb={2}
+                display="flex"
+                justifyContent="space-between">
+                <Space>
+                  <Text strong>Question:</Text>
+                  <QuestionSimpleView text={question.name} />
+                </Space>
+                <Checkbox onChange={checkAnswer}>Correct</Checkbox>
+              </Col>
+              <Col span={24}>
+                <Space>
+                  <Text strong>Answer:</Text>
+                  <Text>{question.answer}</Text>
+                </Space>
+              </Col>
+            </Row>
+          </List.Item>
+        )}
+      />
+    </>
+  )
+}
 
 export default InterviewShow

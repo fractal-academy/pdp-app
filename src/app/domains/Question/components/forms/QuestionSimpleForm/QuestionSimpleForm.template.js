@@ -47,6 +47,7 @@ const QuestionSimpleForm = (props) => {
         style={{ flex: 1, marginBottom: 0 }}
         name="question"
         hasFeedback={editLoading}
+        preserve={false}
         validateStatus="validating">
         <Input.TextArea
           disabled={editLoading}

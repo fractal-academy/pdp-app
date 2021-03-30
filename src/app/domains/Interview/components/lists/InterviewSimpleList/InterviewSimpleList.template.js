@@ -13,7 +13,7 @@ import { COLLECTIONS } from 'app/constants'
  *
  * @comment InterviewSimpleList - React component.
  *
- * @since 30 Mar 2021 ( v.0.0.8 ) // LAST-EDIT DATE
+ * @since 30 Mar 2021 ( v.0.0.9 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
@@ -25,7 +25,7 @@ const InterviewSimpleList = (props) => {
   // [ADDITIONAL_HOOKS]
   const history = useHistory()
 
-  const historyState = history.location.pathname
+  const historyState = history.location.state
 
   // [COMPONENT_STATE_HOOKS]
   const [editQuestion, setEditQuestion] = useState('')

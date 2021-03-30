@@ -169,7 +169,9 @@ const ROUTES = {
     exact: true
   },
   INTERVIEW_SHOW: {
-    component: InterviewShow,
+    component: withContent(
+      withProtect({ roles: [ROLES.MENTOR] })(InterviewShow)
+    ),
     path: ROUTE_PATHS.INTERVIEW_SHOW
   },
   NOTIFICATIONS_ALL: {
