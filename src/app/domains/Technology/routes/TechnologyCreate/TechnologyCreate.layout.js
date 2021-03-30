@@ -320,44 +320,44 @@ const TechnologyCreate = () => {
                           </Space>
                         </Box>
                       </Col>
-                      <Col span={24}>
-                        <Space
-                          direction="vertical"
-                          align="center"
-                          style={{ width: '100%' }}>
-                          <Text>Required technologies: </Text>
-                          <Form.List
-                            name="requiredTechnologies"
-                            style={{ flex: 1 }}>
-                            {(fields, { add, remove }) => (
-                              <Space direction="vertical">
-                                {fields.map((field) => (
-                                  <Box
-                                    key={field.key}
-                                    display="flex"
-                                    justifyContent="center">
-                                    <Space align="baseline">
-                                      <TechnologyAdvancedCascader />
-                                      <MinusCircleOutlined
-                                        onClick={() => remove(field.name)}
-                                      />
-                                    </Space>
-                                  </Box>
-                                ))}
-                                <Form.Item>
-                                  <Button
-                                    type="dashed"
-                                    onClick={add}
-                                    block
-                                    icon={<PlusOutlined />}>
-                                    Add field
-                                  </Button>
-                                </Form.Item>
-                              </Space>
-                            )}
-                          </Form.List>
-                        </Space>
-                      </Col>
+                      {/*<Col span={24}>*/}
+                      {/*  <Space*/}
+                      {/*    direction="vertical"*/}
+                      {/*    align="center"*/}
+                      {/*    style={{ width: '100%' }}>*/}
+                      {/*    <Text>Required technologies: </Text>*/}
+                      {/*    <Form.List*/}
+                      {/*      name="requiredTechnologies"*/}
+                      {/*      style={{ flex: 1 }}>*/}
+                      {/*      {(fields, { add, remove }) => (*/}
+                      {/*        <Space direction="vertical">*/}
+                      {/*          {fields.map((field) => (*/}
+                      {/*            <Box*/}
+                      {/*              key={field.key}*/}
+                      {/*              display="flex"*/}
+                      {/*              justifyContent="center">*/}
+                      {/*              <Space align="baseline">*/}
+                      {/*                <TechnologyAdvancedCascader />*/}
+                      {/*                <MinusCircleOutlined*/}
+                      {/*                  onClick={() => remove(field.name)}*/}
+                      {/*                />*/}
+                      {/*              </Space>*/}
+                      {/*            </Box>*/}
+                      {/*          ))}*/}
+                      {/*          <Form.Item>*/}
+                      {/*            <Button*/}
+                      {/*              type="dashed"*/}
+                      {/*              onClick={add}*/}
+                      {/*              block*/}
+                      {/*              icon={<PlusOutlined />}>*/}
+                      {/*              Add field*/}
+                      {/*            </Button>*/}
+                      {/*          </Form.Item>*/}
+                      {/*        </Space>*/}
+                      {/*      )}*/}
+                      {/*    </Form.List>*/}
+                      {/*  </Space>*/}
+                      {/*</Col>*/}
                     </>
                   )}
                 </Row>
