@@ -1,15 +1,18 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import {
   useCollectionData,
   useDocumentData
 } from 'react-firebase-hooks/firestore'
 import { PageWrapper } from '~/components/HOC'
-import firestore, { updateDocument } from '~/services/Firebase/firestore'
+import firestore, {
+  getDocumentData,
+  updateDocument
+} from '~/services/Firebase/firestore'
 import { COLLECTIONS } from 'app/constants'
 import { Spinner } from '~/components'
 import { Checkbox, List, Space } from 'antd'
-import { Col, Row, Text, Title } from 'antd-styled'
+import { Box, Col, Row, Text, Title } from 'antd-styled'
 import { QuestionSimpleView } from 'domains/Question/components/views'
 
 /**
@@ -33,7 +36,8 @@ const InterviewShow = () => {
   // [COMPONENT_STATE_HOOKS]
   const [answers, setAnswers] = useState({})
   const [submitLoading, setSubmitLoading] = useState(false)
-
+  const [isConfirmed, setIsConfirmed] = useState(false)
+  const [loading, setLoadign] = useState(false)
   // [HELPER_FUNCTIONS]
   const onSubmit = async () => {
     //TODO assign technologies for student
@@ -56,23 +60,103 @@ const InterviewShow = () => {
     setSubmitLoading(false)
   }
 
+  // [USE_EFFECTS]
+  useEffect(() => {
+    const fetchPlan = async () => {
+      setLoadign(true)
+      const plan = await getDocumentData(COLLECTIONS.PLANS, id)
+      if (plan.status === 'confirmed') {
+        setIsConfirmed(true)
+      }
+      setLoadign(false)
+    }
+    fetchPlan()
+  }, [])
+
   // [TEMPLATE]
   if (loadingInterviews) return <Spinner />
   return (
-    <PageWrapper
-      title="Interview review"
-      onNext={onSubmit}
-      nextBtnProps={{ text: 'Submit', loading: submitLoading }}
-      inlineHeader>
-      {interviews.map((interview) => (
-        <ListItemQuestions
-          {...interview}
-          planId={id}
-          key={interview.id}
-          setAnswers={setAnswers}
-        />
-      ))}
-    </PageWrapper>
+    <>
+      {!isConfirmed ? (
+        <PageWrapper
+          title="Interview review"
+          onNext={onSubmit}
+          nextBtnProps={{ text: 'Submit', loading: submitLoading }}
+          inlineHeader>
+          {interviews.map((interview) => (
+            <ListItemQuestions
+              {...interview}
+              planId={id}
+              key={interview.id}
+              setAnswers={setAnswers}
+            />
+          ))}
+        </PageWrapper>
+      ) : (
+        <PageWrapper
+          title="Interview review"
+          onBack={() => history.goBack()}
+          backBtnLeft
+          inlineHeader>
+          {interviews.map((interview) => (
+            <ListItemResult {...interview} planId={id} key={interview.id} />
+          ))}
+        </PageWrapper>
+      )}
+    </>
+  )
+}
+
+const ListItemResult = (props) => {
+  // [INTERFACES]
+  const { planId, technologyId, questionIds, mark } = props
+
+  // [ADDITIONAL_HOOKS]
+  const [technology, loadingTechnology] = useDocumentData(
+    firestore.doc(
+      `${COLLECTIONS.PLANS}/${planId}/${COLLECTIONS.TECHNOLOGIES}/${technologyId}`
+    )
+  )
+  const [questions, loadingQuestions] = useCollectionData(
+    firestore
+      .collection(`${COLLECTIONS.PLANS}/${planId}/${COLLECTIONS.QUESTIONS}`)
+      .where('id', 'in', questionIds)
+  )
+  // [TEMPLATE]
+  if (loadingTechnology || loadingQuestions) return <Spinner />
+  return (
+    <>
+      <Box display="flex" justifyContent="space-between">
+        <Title level={4}>{technology.name} </Title>
+        <Text>{mark} % - right answers.</Text>
+      </Box>
+      <List
+        grid={{ column: 1 }}
+        dataSource={questions}
+        renderItem={(question) => (
+          <List.Item>
+            <Row>
+              <Col
+                span={24}
+                mb={2}
+                display="flex"
+                justifyContent="space-between">
+                <Space>
+                  <Text strong>Question:</Text>
+                  <QuestionSimpleView text={question.name} />
+                </Space>
+              </Col>
+              <Col span={24}>
+                <Space>
+                  <Text strong>Answer:</Text>
+                  <Text>{question.answer}</Text>
+                </Space>
+              </Col>
+            </Row>
+          </List.Item>
+        )}
+      />
+    </>
   )
 }
 
