@@ -14,6 +14,7 @@ import { Spinner } from '~/components'
 import { Checkbox, List, Space } from 'antd'
 import { Box, Col, Row, Text, Title } from 'antd-styled'
 import { QuestionSimpleView } from 'domains/Question/components/views'
+import { useCollectionArray } from '~/hooks/firebase'
 
 /**
  * @info InterviewShow (05 Mar 2021) // CREATION DATE
@@ -117,10 +118,9 @@ const ListItemResult = (props) => {
       `${COLLECTIONS.PLANS}/${planId}/${COLLECTIONS.TECHNOLOGIES}/${technologyId}`
     )
   )
-  const [questions, loadingQuestions] = useCollectionData(
-    firestore
-      .collection(`${COLLECTIONS.PLANS}/${planId}/${COLLECTIONS.QUESTIONS}`)
-      .where('id', 'in', questionIds)
+  const [questions, loadingQuestions] = useCollectionArray(
+    `${COLLECTIONS.PLANS}/${planId}/${COLLECTIONS.QUESTIONS}`,
+    questionIds
   )
   // [TEMPLATE]
   if (loadingTechnology || loadingQuestions) return <Spinner />
@@ -170,10 +170,9 @@ const ListItemQuestions = (props) => {
       `${COLLECTIONS.PLANS}/${planId}/${COLLECTIONS.TECHNOLOGIES}/${technologyId}`
     )
   )
-  const [questions, loadingQuestions] = useCollectionData(
-    firestore
-      .collection(`${COLLECTIONS.PLANS}/${planId}/${COLLECTIONS.QUESTIONS}`)
-      .where('id', 'in', questionIds)
+  const [questions, loadingQuestions] = useCollectionArray(
+    `${COLLECTIONS.PLANS}/${planId}/${COLLECTIONS.QUESTIONS}`,
+    questionIds
   )
 
   // [HELPER_FUNCTIONS]
