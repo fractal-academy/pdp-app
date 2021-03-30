@@ -1,27 +1,27 @@
 import { useState, useEffect } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
-import { Space, Button, Avatar, List } from 'antd'
+import { Avatar, List, Space } from 'antd'
 import { Row, Col, Card, Title, Text, Box } from 'antd-styled'
-import { PageWrapper } from '~/components/HOC'
-import { ROUTE_PATHS } from 'app/constants'
-import {
-  useCollectionData,
-  useDocumentData
-} from 'react-firebase-hooks/firestore'
-import firestore from '~/services/Firebase/firestore'
-import { COLLECTIONS } from 'app/constants'
-import { Spinner, NotFoundPath, Status } from '~/components'
 import {
   EditOutlined,
   UserOutlined,
   FieldTimeOutlined
 } from '@ant-design/icons'
-import { useSession } from 'contexts/Session/hooks'
-import { ROLES } from '~/constants'
+import {
+  useCollectionData,
+  useDocumentData
+} from 'react-firebase-hooks/firestore'
+import moment from 'moment'
+import { Spinner, NotFoundPath, Status } from '~/components'
+import { PageWrapper } from '~/components/HOC'
 import { UserModalWithForm } from 'domains/User/components/combined/modals'
 import { CompanySimpleList } from 'domains/Company/components/lists'
+import { useSession } from 'contexts/Session/hooks'
+import firestore from '~/services/Firebase/firestore'
 import { getGrid } from '~/utils'
-import moment from 'moment'
+import { ROLES } from '~/constants'
+import { COLLECTIONS } from 'app/constants'
+
 /**
  * @info UserShow (05 Mar 2021) // CREATION DATE
  *
@@ -59,16 +59,6 @@ const UserShow = () => {
   const showModal = () => {
     setIsModalVisible(true)
   }
-  const action = (
-    <Space>
-      <Button
-        type="primary"
-        size="large"
-        onClick={() => history.push(ROUTE_PATHS.PLAN_CREATE)}>
-        Create plan
-      </Button>
-    </Space>
-  )
 
   // [COMPUTED_PROPERTIES]
   const userDisplayName =
@@ -103,7 +93,6 @@ const UserShow = () => {
   return (
     <PageWrapper
       title={title}
-      action={action}
       onBack={() => history.goBack()}
       backBtnLeft
       inlineHeader
