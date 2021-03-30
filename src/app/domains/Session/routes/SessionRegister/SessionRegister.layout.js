@@ -31,7 +31,7 @@ const SessionRegister = () => {
 
   // [TEMPLATE]
   return (
-    <Row gutter={[8, 16]} justify="center" height="100vh" alignItems="center">
+    <Row gutter={[8, 16]} justify="center" height="100%" alignItems="center">
       <Col {...getGrid({ xs: 16, sm: 14, md: 10, lg: 9, xl: 7 })}>
         <Box display="flex" justifyContent="center" flexDirection="column">
           <Box mb={3}>
