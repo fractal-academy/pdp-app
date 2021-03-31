@@ -163,14 +163,17 @@ const ROUTES = {
   },
   INTERVIEW_EDIT: {
     component: withContent(
-      withProtect({ roles: [ROLES.ADMIN, ROLES.MENTOR] })(InterviewEdit)
+      withProtect({ roles: [ROLES.ADMIN, ROLES.MENTOR, ROLES.STUDENT] })(
+        InterviewEdit
+      )
     ),
     path: ROUTE_PATHS.INTERVIEW_EDIT,
     exact: true
   },
+
   INTERVIEW_SHOW: {
     component: withContent(
-      withProtect({ roles: [ROLES.MENTOR] })(InterviewShow)
+      withProtect({ roles: [ROLES.MENTOR, ROLES.STUDENT] })(InterviewShow)
     ),
     path: ROUTE_PATHS.INTERVIEW_SHOW
   },
