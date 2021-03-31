@@ -14,7 +14,7 @@ import { COLLECTIONS } from 'app/constants'
  *
  * @comment LevelModalWithForm - React component.
  *
- * @since 31 Mar 2021 ( v.0.0.6 ) // LAST-EDIT DATE
+ * @since 31 Mar 2021 ( v.0.0.7 ) // LAST-EDIT DATE
  *
  * @return {React.FC}
  */
@@ -198,8 +198,7 @@ const LevelModalWithForm = (props) => {
     `${actionName} a new level preset`
   )
   const actionButtons = (
-    <>
-      <Button onClick={onCancel}>Cancel</Button>
+    <Box display="flex" justifyContent="space-between">
       {edit && (
         <Remove
           text="Delete"
@@ -217,19 +216,22 @@ const LevelModalWithForm = (props) => {
           loading={deleteLoading}
         />
       )}
+      <Box>
+        <Button onClick={onCancel}>Cancel</Button>
 
-      <Button
-        onClick={() => {
-          levelTree.length
-            ? form.submit()
-            : message.error('Create at least one level')
-        }}
-        type="primary"
-        loading={createLoading}
-        disabled={deleteLoading}>
-        {actionName}
-      </Button>
-    </>
+        <Button
+          onClick={() => {
+            levelTree.length
+              ? form.submit()
+              : message.error('Create at least one level')
+          }}
+          type="primary"
+          loading={createLoading}
+          disabled={deleteLoading}>
+          {edit ? 'Save' : 'Create'}
+        </Button>
+      </Box>
+    </Box>
   )
   // [TEMPLATE]
   return (
