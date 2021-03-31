@@ -69,12 +69,12 @@ const TechnologySimpleList = (props) => {
               extra={
                 extra && (
                   <Space>
-                    <Edit
-                      shape="default"
-                      tooltip="Edit"
-                      type="text"
-                      icon={<EditOutlined />}
-                    />
+                    {/*<Edit*/}
+                    {/*  shape="default"*/}
+                    {/*  tooltip="Edit"*/}
+                    {/*  type="text"*/}
+                    {/*  icon={<EditOutlined />}*/}
+                    {/*/>*/}
                     <Remove
                       shape="default"
                       tooltip="Remove"
