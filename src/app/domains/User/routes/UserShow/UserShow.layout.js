@@ -98,15 +98,27 @@ const UserShow = () => {
       inlineHeader
       fullWidth>
       <Row gutter={[32, 16]}>
-        <Col {...getGrid({ xs: 24, md: 12, lg: 8 })}>
+        <Col {...getGrid({ xs: 24, md: 12, lg: 7 })}>
           <Card>
-            <Row justifyContent="center" position="relative">
+            <Row position="relative" mb={3}>
               <Col mb={2}>
                 <Avatar
-                  size={96}
+                  size={80}
                   src={fullUserData.avatarURL}
                   icon={<UserOutlined />}
                 />
+              </Col>
+              <Col>
+                <Row justifyContent="center">
+                  <Col>
+                    <Title level={4}>{userDisplayName}</Title>
+                  </Col>
+                </Row>
+                <Row>
+                  <Col>
+                    <Text type="secondary">{fullUserData.role}</Text>
+                  </Col>
+                </Row>
               </Col>
               {(id === session.userId || session.role === ROLES.ADMIN) && (
                 <Col position="absolute" right="0">
@@ -114,35 +126,26 @@ const UserShow = () => {
                 </Col>
               )}
             </Row>
-            <Row justifyContent="center">
-              <Col>
-                <Title level={4}>{userDisplayName}</Title>
-              </Col>
-            </Row>
-            <Row justifyContent="center" mb={3}>
-              <Col>
-                <Text type="secondary">{fullUserData.role}</Text>
-              </Col>
-            </Row>
-            <Row justifyContent="center">
+
+            <Row>
               <Col>
                 <Title level={5}>Personal info</Title>
               </Col>
             </Row>
             {fullUserData?.companyIds?.length && (
-              <Row justifyContent="center" mb={2}>
+              <Row mb={2}>
                 <Col>
                   <CompanySimpleList companyIds={fullUserData.companyIds} />
                 </Col>
               </Row>
             )}
-            <Row justifyContent="center" mb={2}>
+            <Row mb={2}>
               <Col>
                 <Text type="secondary">{fullUserData.email}</Text>
               </Col>
             </Row>
             {fullUserData?.phone && (
-              <Row justifyContent="center">
+              <Row>
                 <Col>
                   <Text type="secondary">{fullUserData.phone}</Text>
                 </Col>
