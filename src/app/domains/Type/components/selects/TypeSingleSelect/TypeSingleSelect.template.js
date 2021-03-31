@@ -19,14 +19,20 @@ const TypeSingleSelect = (props) => {
 
   // [USE_EFFECTS]
   useEffect(() => {
-    rest.onChange?.(type || rest.value || TYPES.HARD)
+    rest.onChange?.(type || rest.value)
   }, [])
 
   // [TEMPLATE]
   return (
-    <Select defaultValue={type || rest.value || TYPES.HARD} {...rest}>
+    <Select
+      style={{ textTransform: 'capitalize' }}
+      defaultValue={type || rest.value}
+      {...rest}>
       {TYPES_VALUES.map((skill) => (
-        <Select.Option value={skill} key={skill}>
+        <Select.Option
+          style={{ textTransform: 'capitalize' }}
+          value={skill}
+          key={skill}>
           {skill}
         </Select.Option>
       ))}
