@@ -19,7 +19,7 @@ import { COLLECTIONS } from 'app/constants'
  *
  * @comment MaterialCreate - React component.
  *
- * @since 30 Mar 2021 ( v.0.1.2 ) // LAST-EDIT DATE
+ * @since 30 Mar 2021 ( v.0.1.3 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
@@ -241,8 +241,7 @@ const MaterialCreate = () => {
   return (
     <PageWrapper
       title="Add useful materials"
-      nextBtnProps={{ text: 'Save' }}
-      onNext={onSave}
+      backBtnProps={{ text: 'Save' }}
       onBack={onSave}>
       <MaterialSimpleForm onFinish={onLinkAdd} loading={linkLoading} />
       <Divider>Or</Divider>
