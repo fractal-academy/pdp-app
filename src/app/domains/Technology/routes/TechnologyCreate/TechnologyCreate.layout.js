@@ -18,7 +18,7 @@ import * as ROUTE_PATHS from 'app/constants/routePaths'
  *
  * @comment TechnologyCreate - React component.
  *
- * @since 25 Mar 2021 ( v.0.1.0 ) // LAST-EDIT DATE
+ * @since 31 Mar 2021 ( v.0.1.1 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
@@ -271,7 +271,7 @@ const TechnologyCreate = () => {
           <TechnologyAdvancedForm
             onSubmit={onSubmit}
             form={mainForm}
-            defaultValues={history.location.state?.formData}
+            defaultValues={historyState?.formData}
             resetLevel={resetLevel}
             onPresetSelect={onPresetSelect}
           />

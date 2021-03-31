@@ -17,7 +17,7 @@ import { COLLECTIONS } from 'app/constants'
  *
  * @comment InterviewCreate - React component.
  *
- * @since 30 Mar 2021 ( v.0.0.9 ) // LAST-EDIT DATE
+ * @since 30 Mar 2021 ( v.0.1.0 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
@@ -145,8 +145,7 @@ const InterviewCreate = () => {
   return (
     <PageWrapper
       title="Create questions for interview"
-      nextBtnProps={{ text: 'Save' }}
-      onNext={onSave}
+      backBtnProps={{ text: 'Save' }}
       onBack={onSave}>
       <InterviewSimpleForm onSubmit={onSubmit} loading={questionAddLoading} />
       <InterviewSimpleList

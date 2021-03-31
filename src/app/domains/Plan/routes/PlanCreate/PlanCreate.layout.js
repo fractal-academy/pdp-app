@@ -40,7 +40,7 @@ import { ROUTE_PATHS, COLLECTIONS } from 'app/constants'
  *
  * @comment PlanCreate - React component.
  *
- * @since 31 Mar 2021 ( v.0.0.9 ) // LAST-EDIT DATE
+ * @since 31 Mar 2021 ( v.0.1.0 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
@@ -163,6 +163,7 @@ const PlanCreate = () => {
         id: historyState.planId,
         status: 'active',
         mentorId: session.mentorId,
+        studentId: historyState.student.studentId,
         name: formData.name ?? '',
         deadline: getTimestamp().fromDate(formData.deadline.toDate())
       }

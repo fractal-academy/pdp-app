@@ -10,7 +10,7 @@ import { TYPES_VALUES } from '~/constants'
  *
  * @comment TechnologyAdvancedForm - React component.
  *
- * @since 19 Mar 2021 ( v.0.0.8 ) // LAST-EDIT DATE
+ * @since 31 Mar 2021 ( v.0.0.9 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
@@ -57,6 +57,7 @@ const TechnologyAdvancedForm = (props) => {
             if (type) {
               setSelectedType(type)
               resetLevel()
+              setPrevPreset('')
               form.setFieldsValue({ type })
               form.resetFields(['levelPresetId'])
             }
