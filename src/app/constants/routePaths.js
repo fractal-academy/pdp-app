@@ -50,6 +50,7 @@ export const MATERIAL_CREATE = '/material/create' // technology creation flow
 export const TODO_CREATE = '/todo/create' // technology creation flow
 
 // Interview route path
+export const INTERVIEWS_ALL = '/interviews/:role'
 export const INTERVIEW_SHOW = '/interview/:id'
 export const INTERVIEW_EDIT = '/interview/:id/edit'
 export const INTERVIEW_CREATE = '/interview/create' // technology creation flow

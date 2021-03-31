@@ -78,7 +78,9 @@ const MentorSimpleTable = () => {
     <Table
       onRow={(record) => ({
         onClick: () =>
-          history.push(generatePath(ROUTE_PATHS.USER_SHOW, { id: record.id })),
+          history.push(
+            generatePath(ROUTE_PATHS.USER_SHOW, { id: record.userId })
+          ),
         onMouseEnter: (e) => {
           e.target.style.cursor = 'pointer'
         }
