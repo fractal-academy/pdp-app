@@ -29,7 +29,7 @@ import { NotificationAll } from 'domains/Notification/routes'
 
 import ChatModuleRoutes from 'chat-module'
 
-import { NotFoundPath } from '~/components'
+import { NotFoundPath } from '~/components/NotFoundPath'
 import { withProtect, withContent } from '~/components/HOC'
 
 import { ROLES } from '~/constants'
@@ -179,7 +179,7 @@ const ROUTES = {
     path: ROUTE_PATHS.NOTIFICATIONS_ALL
   },
   NOT_FOUND_PATH: {
-    component: NotFoundPath,
+    component: withContent(NotFoundPath),
     path: ROUTE_PATHS.NOT_FOUND_PATH
   },
   CHAT_MODULE: {
