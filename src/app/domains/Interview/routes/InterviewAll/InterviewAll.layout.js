@@ -1,11 +1,11 @@
-import { useHistory } from 'react-router-dom'
-import { Table, Typography } from 'antd'
+import { useHistory, generatePath } from 'react-router-dom'
+import { Table, Typography, Button } from 'antd'
 import { useRole } from 'contexts/Role/hooks'
 import { useSession } from 'contexts/Session/hooks'
 import { ROLES } from '~/constants'
 import { PageWrapper } from '~/components/HOC'
 import firestore from '~/services/Firebase/firestore/index'
-import { COLLECTIONS } from 'app/constants'
+import { COLLECTIONS, ROUTE_PATHS } from 'app/constants'
 import { useCollectionData } from 'react-firebase-hooks/firestore'
 import { Spinner, Status } from '~/components'
 const { Text } = Typography
@@ -35,6 +35,17 @@ const InterviewAll = () => {
           .where('mentorId', '==', session.mentorId)
   )
 
+  // [HELPER_FUNCTIONS]
+  const goBack = () => {
+    history.goBack()
+  }
+  const showResults = (planId) => {
+    /**
+     * for showing and checking results
+     */
+    history.push(generatePath(ROUTE_PATHS.INTERVIEW_SHOW, { id: planId }))
+  }
+
   const columns = [
     {
       title: 'Plan name',
@@ -62,14 +73,12 @@ const InterviewAll = () => {
       title: 'Mark',
       key: 'mark',
       render: (text, data) =>
-        data.status === 'confirmed' && <MarkSimpleView planId={data.id} />
+        (data.status === 'confirmed' && <MarkSimpleView planId={data.id} />) ||
+        (data.status === 'finished' && role.role === 'mentor' && (
+          <Button onClick={() => showResults(data.id)}>Check results</Button>
+        ))
     }
   ]
-
-  // [HELPER_FUNCTIONS]
-  const goBack = () => {
-    history.goBack()
-  }
 
   // [TEMPLATE]
   if (loading) return <Spinner />
