@@ -1,17 +1,20 @@
 import PropTypes from 'prop-types'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Form, Modal, Space, Tree, Empty, message, Button } from 'antd'
-import { Remove, Text, Row, Col } from 'antd-styled'
+import { Remove, Text, Row, Col, Box } from 'antd-styled'
 import { DeleteOutlined } from '@ant-design/icons'
 import { LevelSimpleForm } from 'domains/Level/components/forms'
 import _ from 'lodash'
+import { Spinner } from '~/components'
+import { getDocumentData } from '~/services/Firebase/firestore'
+import { COLLECTIONS } from 'app/constants'
 
 /**
  * @info LevelModalWithForm (15 Mar 2021) // CREATION DATE
  *
  * @comment LevelModalWithForm - React component.
  *
- * @since 22 Mar 2021 ( v.0.0.5 ) // LAST-EDIT DATE
+ * @since 31 Mar 2021 ( v.0.0.6 ) // LAST-EDIT DATE
  *
  * @return {React.FC}
  */
@@ -33,9 +36,11 @@ const LevelModalWithForm = (props) => {
 
   // [COMPONENT_STATE_HOOKS]
   const [createLoading, setCreateLoading] = useState(false)
+  const [dataLoading, setDataLoading] = useState(false)
+  const [deleteLoading, setDeleteLoading] = useState(false)
   const [levelTree, setLevelTree] = useState([])
   const [expandedKeys, setExpandedKeys] = useState([])
-  const [deleteLoading, setDeleteLoading] = useState(false)
+
   // [HELPER_FUNCTIONS]
   const onFinishCreate = async (data, levelIds) => {
     setCreateLoading(true)
@@ -108,11 +113,90 @@ const LevelModalWithForm = (props) => {
     setLevelTree(tree)
   }
 
+  // [USE_EFFECTS]
+  useEffect(() => {
+    if (edit) {
+      const fetchData = async () => {
+        setDataLoading(true)
+
+        const levelPresetData = await getDocumentData(
+          COLLECTIONS.LEVEL_PRESETS,
+          edit
+        )
+        const tree = []
+
+        const expandedKeys = []
+        for (const levelKey of Object.keys(levelPresetData.levelIds)) {
+          const levelData = await getDocumentData(COLLECTIONS.LEVELS, levelKey)
+
+          expandedKeys.push(levelKey)
+
+          const subLevelsItem = []
+          for (const subLevelKey of levelPresetData.levelIds[levelKey]) {
+            const subLevelData = await getDocumentData(
+              COLLECTIONS.SUB_LEVELS,
+              subLevelKey
+            )
+
+            const deleteSubLevel = () => {
+              console.log('del')
+            }
+
+            const TreeElement = (
+              <Space align="baseline">
+                <Text>{subLevelData.name}</Text>
+                <Remove
+                  shape="default"
+                  tooltip="Remove"
+                  type="text"
+                  size="small"
+                  disabled={createLoading || deleteLoading}
+                  icon={<DeleteOutlined />}
+                  onSubmit={deleteSubLevel}
+                />
+              </Space>
+            )
+
+            subLevelsItem.push({ title: TreeElement, key: subLevelData.id })
+          }
+
+          tree.push({
+            title: levelData.name,
+            key: levelData.id,
+            children: subLevelsItem
+          })
+        }
+        setExpandedKeys(expandedKeys)
+        setLevelTree(tree)
+        form.setFieldsValue({
+          name: levelPresetData.name,
+          type: levelPresetData.type
+        })
+
+        setDataLoading(false)
+      }
+      fetchData()
+    }
+  }, [edit])
+
+  useEffect(() => {
+    if (!visible) {
+      setLevelTree([])
+    }
+  }, [visible])
+
   // [COMPUTED_PROPERTIES]
   const actionName = edit ? 'Edit' : 'Create'
-  const modalTitle = edit
-    ? `${actionName} a level preset`
-    : `${actionName} a new level preset`
+  const modalTitle = edit ? (
+    <Row>
+      <Col>
+        <Text>{actionName} a level preset</Text>
+      </Col>
+      <Col> {dataLoading && <Spinner size={18} />}</Col>
+    </Row>
+  ) : (
+    `${actionName} a new level preset`
+  )
   const actionButtons = (
     <>
       <Button onClick={onCancel}>Cancel</Button>
@@ -163,7 +247,7 @@ const LevelModalWithForm = (props) => {
             onFinish={onFinishCreate}
             onLevelAdd={onLevelAdd}
             initialValues={defaultValues}
-            disable={createLoading || deleteLoading}
+            disable={createLoading || deleteLoading || dataLoading}
           />
         </Col>
 
@@ -172,7 +256,6 @@ const LevelModalWithForm = (props) => {
             <Tree
               expandedKeys={expandedKeys}
               treeData={levelTree}
-              defaultExpandAll
               autoExpandParent
               selectable={false}
             />
