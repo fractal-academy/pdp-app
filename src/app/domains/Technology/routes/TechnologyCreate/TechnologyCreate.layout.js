@@ -18,7 +18,7 @@ import * as ROUTE_PATHS from 'app/constants/routePaths'
  *
  * @comment TechnologyCreate - React component.
  *
- * @since 31 Mar 2021 ( v.0.1.1 ) // LAST-EDIT DATE
+ * @since 31 Mar 2021 ( v.0.1.2 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
@@ -234,7 +234,7 @@ const TechnologyCreate = () => {
   const resetLevel = useCallback(() => {
     setSelectedLevel(null)
     setLevelTree([])
-    mainForm.resetFields()
+    mainForm.resetFields(['levelPresetId'])
   }, [])
 
   // [USE_EFFECTS]
@@ -264,6 +264,7 @@ const TechnologyCreate = () => {
       title="Create technology"
       nextBtnProps={{ text: 'Create', loading: creationLoading }}
       backBtnProps={{ text: 'Cancel' }}
+      contentColProps={{ xxl: 11 }}
       onNext={onNext}
       onBack={onCancel}>
       <Row gutter={[16]}>

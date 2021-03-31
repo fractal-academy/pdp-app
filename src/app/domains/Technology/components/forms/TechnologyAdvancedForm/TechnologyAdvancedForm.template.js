@@ -1,16 +1,16 @@
 import PropTypes from 'prop-types'
-import { memo, useState } from 'react'
+import { useState } from 'react'
 import { Input, Form } from 'antd'
 import { LevelSelectWithCreate } from 'domains/Level/components/combined/selects'
 import { TypeSingleSelect } from 'domains/Type/components/selects'
-// import { TYPES_VALUES } from '~/constants'
+import { TYPES_VALUES } from '~/constants'
 
 /**
  * @info TechnologyAdvancedForm (05 Mar 2021) // CREATION DATE
  *
  * @comment TechnologyAdvancedForm - React component.
  *
- * @since 31 Mar 2021 ( v.0.0.9 ) // LAST-EDIT DATE
+ * @since 31 Mar 2021 ( v.0.1.0 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
@@ -29,7 +29,7 @@ const TechnologyAdvancedForm = (props) => {
   // [COMPONENT_STATE_HOOKS]
   const [prevPreset, setPrevPreset] = useState('')
   const [selectedType, setSelectedType] = useState(
-    defaultValues?.type || form.getFieldValue('type')
+    defaultValues?.type || form.getFieldValue('type') || TYPES_VALUES[0]
   )
 
   // [TEMPLATE]
@@ -52,28 +52,21 @@ const TechnologyAdvancedForm = (props) => {
         ]}>
         <Input placeholder="Enter name of technology" />
       </Form.Item>
-      <Form.Item
-        name="type"
-
-        // initialValue={selectedType}
-        // label="Type"
-      >
+      <Form.Item name="type">
         <TypeSingleSelect
-          placeholder="Enter type of technology"
+          placeholder="Select type of technology"
           onSelect={(type) => {
             if (type) {
               setSelectedType(type)
               resetLevel()
               setPrevPreset('')
               form.setFieldsValue({ type })
-              form.resetFields(['levelPresetId'])
             }
           }}
         />
       </Form.Item>
       <Form.Item
         name="levelPresetId"
-        // label="Level preset"
         rules={[{ required: true, message: 'Select levels preset' }]}>
         <LevelSelectWithCreate
           levelType={selectedType}
