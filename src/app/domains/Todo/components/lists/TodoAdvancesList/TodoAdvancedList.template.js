@@ -5,7 +5,7 @@ import { Title, Box } from 'antd-styled'
 import { useCollectionData } from 'react-firebase-hooks/firestore'
 import { Spinner } from '~/components'
 import { TodoViewWIthActions } from 'domains/Todo/components/combined/views'
-import { useCollectionArray } from 'hooks/firebase'
+import firestore from '~/services/Firebase/firestore/index'
 import {
   getCollectionRef,
   getDocumentRef,
@@ -19,7 +19,7 @@ import { COLLECTIONS } from 'app/constants'
  *
  * @comment TodoAdvancedList - React component.
  *
- * @since 31 Mar 2021 ( v.0.0.7 ) // LAST-EDIT DATE
+ * @since 31 Mar 2021 ( v.0.0.8 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
@@ -136,7 +136,10 @@ const TodoList = (props) => {
   const refDocumentTechnology = `${COLLECTIONS.PLANS}/${planId}/${COLLECTIONS.TECHNOLOGIES}/${technologyId}`
 
   // [ADDITIONAL_HOOKS]
-  const [todos, loading] = useCollectionArray(refCollectionTodos, todoIds)
+  const [todos, loading] = useCollectionData(
+    todoIds?.length < 10 &&
+      firestore.collection(refCollectionTodos).where('id', 'in', todoIds)
+  )
 
   // [TEMPLATE]
   return (
