@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useHistory } from 'react-router-dom'
-import { Tree, List, Dropdown, Menu, Form } from 'antd'
+import { Tree, List, Dropdown, Menu, Form, message } from 'antd'
 import {
   Content,
   Paragraph,
@@ -172,9 +172,15 @@ const PlanCreate = () => {
 
       studentPlanIds.push(planData.id)
 
-      await updateDocument(COLLECTIONS.STUDENTS, historyState.student.id, {
-        studentPlanIds
-      })
+      await updateDocument(
+        COLLECTIONS.STUDENTS,
+        historyState.student.studentId,
+        {
+          studentPlanIds
+        }
+      )
+
+      message.success(`Plan was assigned to ${historyState.student.firstName}`)
 
       history.replace(ROUTE_PATHS.STUDENTS_ALL)
     } catch (error) {

@@ -1,10 +1,8 @@
 import { useState, useCallback, useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
-import { Form, Spin, Button, Space } from 'antd'
-import { Col, Row, Text, Box, Paragraph } from 'antd-styled'
-import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons'
+import { Form, Spin, Button, Space, message } from 'antd'
+import { Col, Row, Box, Paragraph } from 'antd-styled'
 import { TechnologyAdvancedForm } from 'domains/Technology/components/forms'
-import { TechnologyAdvancedCascader } from 'domains/Technology/components/combined/cascader'
 import { LevelSimpleCascader } from 'domains/Level/components/combined/cascaders'
 import { PageWrapper } from '~/components/HOC'
 import {
@@ -142,6 +140,8 @@ const TechnologyCreate = () => {
         historyState.technologyId,
         technology
       )
+
+      message.success(`The ${technology} was successfully created.`)
 
       history.replace(ROUTE_PATHS.TECHNOLOGIES_ALL, undefined)
     } catch (error) {
