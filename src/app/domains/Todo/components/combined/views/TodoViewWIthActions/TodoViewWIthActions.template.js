@@ -71,7 +71,7 @@ const TodoViewWIthActions = (props) => {
               onClick={() => !todo.readOnly && setIsEdit(true)}
               editable={{
                 icon: <></>,
-                editing: isEdit ? true : false,
+                editing: isEdit,
                 onChange: onEditTodo
               }}>
               {todo.name}
@@ -95,7 +95,6 @@ const TodoViewWIthActions = (props) => {
 // [PROPTYPES]
 TodoViewWIthActions.propTypes = {
   todo: PropTypes.string.isRequired,
-  technology: PropTypes.string.isRequired,
   refDocumentTodo: PropTypes.string.isRequired
 }
 

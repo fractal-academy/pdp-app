@@ -29,10 +29,10 @@ const MENU_ITEMS = {
       title: 'Users',
       route: ROUTE_PATHS.START_PAGE_MAP[ROLES.ADMIN]
     },
-    COMPETENCES: {
-      title: 'Competences',
-      route: ROUTE_PATHS.COMPETENCES_ALL
-    },
+    // COMPETENCES: {
+    //   title: 'Competences',
+    //   route: ROUTE_PATHS.COMPETENCES_ALL
+    // },
     TECHNOLOGIES: {
       title: 'Technologies',
       route: ROUTE_PATHS.TECHNOLOGIES_ALL
@@ -42,21 +42,21 @@ const MENU_ITEMS = {
     STUDENTS: {
       title: 'Students',
       route: ROUTE_PATHS.START_PAGE_MAP[ROLES.MENTOR]
-    },
-    CHATS: {
-      title: 'Chats',
-      route: generatePath(CHAT_ROUTE_PATHS.CHATS_ALL, { role: ROLES.MENTOR })
     }
+    // CHATS: {
+    //   title: 'Chats',
+    //   route: generatePath(CHAT_ROUTE_PATHS.CHATS_ALL, { role: ROLES.MENTOR })
+    // }
   },
   [ROLES.STUDENT]: {
     MY_PLANS: {
       title: 'My Plans',
       route: ROUTE_PATHS.START_PAGE_MAP[ROLES.STUDENT]
-    },
-    CHATS: {
-      title: 'Chats',
-      route: generatePath(CHAT_ROUTE_PATHS.CHATS_ALL, { role: ROLES.STUDENT })
     }
+    // CHATS: {
+    //   title: 'Chats',
+    //   route: generatePath(CHAT_ROUTE_PATHS.CHATS_ALL, { role: ROLES.STUDENT })
+    // }
   }
 }
 

@@ -2,19 +2,24 @@ import PropTypes from 'prop-types'
 import { useState } from 'react'
 import { Input } from 'antd'
 import { Title, Box } from 'antd-styled'
-import { TodoViewWIthActions } from 'domains/Todo/components/combined/views'
-import firestore from '~/services/Firebase/firestore/index'
-import { useCollectionArray } from 'hooks/firebase'
 import { useCollectionData } from 'react-firebase-hooks/firestore'
-import { COLLECTIONS } from 'app/constants'
 import { Spinner } from '~/components'
+import { TodoViewWIthActions } from 'domains/Todo/components/combined/views'
+import { useCollectionArray } from 'hooks/firebase'
+import {
+  getCollectionRef,
+  getDocumentRef,
+  setDocument,
+  updateDocument
+} from '~/services/Firebase/firestore/index'
+import { COLLECTIONS } from 'app/constants'
 
 /**
  * @info TodoAdvancedList (14 Mar 2021) // CREATION DATE
  *
  * @comment TodoAdvancedList - React component.
  *
- * @since 30 Mar 2021 ( v.0.0.6) // LAST-EDIT DATE
+ * @since 31 Mar 2021 ( v.0.0.7 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
@@ -22,31 +27,13 @@ import { Spinner } from '~/components'
 const TodoAdvancedList = (props) => {
   // [INTERFACES]
   const { plan, activePlanId } = props
-  // [COMPUTED_PROPERTIES]
-  const refCollectionTechnologies = `${COLLECTIONS.PLANS}/${plan.id}/${COLLECTIONS.TECHNOLOGIES}`
 
   // [ADDITIONAL_HOOKS]
   const [technologies, loading] = useCollectionData(
-    firestore.collection(refCollectionTechnologies)
+    getCollectionRef(
+      `${COLLECTIONS.PLANS}/${plan.id}/${COLLECTIONS.TECHNOLOGIES}`
+    )
   )
-
-  // [COMPONENT_STATE_HOOKS]
-  const [newTodo, setNewTodo] = useState('')
-
-  // [HELPER_FUNCTIONS]
-  const addTodo = async (value, technology) => {
-    const refDocumentPlan = firestore.collection(COLLECTIONS.PLANS).doc(plan.id)
-    const id = await refDocumentPlan.collection(COLLECTIONS.TODOS).doc().id
-    await refDocumentPlan
-      .collection(COLLECTIONS.TODOS)
-      .doc(id)
-      .set({ name: value.target.value, id: id, readOnly: false, isDone: false })
-    refDocumentPlan
-      .collection(COLLECTIONS.TECHNOLOGIES)
-      .doc(technology.id)
-      .set({ todoIds: { ...technology.todoIds, [id]: true } }, { merge: true })
-    setNewTodo('')
-  }
 
   // [TEMPLATE]
   return (
@@ -60,40 +47,86 @@ const TodoAdvancedList = (props) => {
         technologies?.map(
           (technology) =>
             technology?.todoIds && (
-              <Box py={2} key={technology.id}>
-                <Title level={5} style={{ color: 'white' }}>
-                  {technology.name}
-                </Title>
-                {!!Object.keys(technology?.todoIds).length && (
-                  <>
-                    <TodoList
-                      technologyId={technology.id}
-                      planId={plan.id}
-                      todoIds={Object.keys(technology.todoIds)}
-                      ownTodos
-                    />
-                    <TodoList
-                      technologyId={technology.id}
-                      planId={plan.id}
-                      todoIds={Object.keys(technology.todoIds)}
-                    />
-                    {activePlanId && (
-                      <Input
-                        placeholder="Enter your todo"
-                        value={newTodo}
-                        onChange={(e) => setNewTodo(e.target.value)}
-                        onPressEnter={(value) => addTodo(value, technology)}
-                      />
-                    )}
-                  </>
-                )}
-              </Box>
+              <TodoListMapItem
+                technology={technology}
+                plan={plan}
+                activePlanId={activePlanId}
+              />
             )
         )
       )}
     </>
   )
 }
+
+const TodoListMapItem = (props) => {
+  const { technology, plan, activePlanId } = props
+  // [COMPONENT_STATE_HOOKS]
+  const [newTodo, setNewTodo] = useState('')
+
+  // [HELPER_FUNCTIONS]
+  const addTodo = async (value, technology) => {
+    const collectionPath = `${COLLECTIONS.PLANS}/${plan.id}`
+
+    const todoId = getDocumentRef(COLLECTIONS.TODOS).id
+    const todoData = {
+      name: value.target.value,
+      id: todoId,
+      readOnly: false,
+      isDone: false
+    }
+    try {
+      await setDocument(
+        `${collectionPath}/${COLLECTIONS.TODOS}`,
+        todoId,
+        todoData
+      )
+
+      await updateDocument(
+        `${collectionPath}/${COLLECTIONS.TECHNOLOGIES}`,
+        technology.id,
+        { todoIds: { ...technology.todoIds, [todoId]: true } },
+        { merge: true }
+      )
+    } catch (error) {
+      console.log('adding Todo', error)
+    }
+
+    setNewTodo('')
+  }
+
+  return (
+    <Box py={2} key={technology.id}>
+      <Title level={5} style={{ color: 'white' }}>
+        {technology.name}
+      </Title>
+      {!!Object.keys(technology?.todoIds).length && (
+        <>
+          <TodoList
+            technologyId={technology.id}
+            planId={plan.id}
+            todoIds={Object.keys(technology.todoIds)}
+            ownTodos
+          />
+          <TodoList
+            technologyId={technology.id}
+            planId={plan.id}
+            todoIds={Object.keys(technology.todoIds)}
+          />
+          {activePlanId && (
+            <Input
+              placeholder="Enter your todo"
+              value={newTodo}
+              onChange={(e) => setNewTodo(e.target.value)}
+              onPressEnter={(value) => addTodo(value, technology)}
+            />
+          )}
+        </>
+      )}
+    </Box>
+  )
+}
+
 const TodoList = (props) => {
   // [INTERFACES]
   const { planId, todoIds, ownTodos, technologyId } = props
