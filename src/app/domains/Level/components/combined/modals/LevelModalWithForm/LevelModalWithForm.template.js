@@ -14,7 +14,7 @@ import { COLLECTIONS } from 'app/constants'
  *
  * @comment LevelModalWithForm - React component.
  *
- * @since 31 Mar 2021 ( v.0.0.7 ) // LAST-EDIT DATE
+ * @since 31 Mar 2021 ( v.0.0.8 ) // LAST-EDIT DATE
  *
  * @return {React.FC}
  */
@@ -198,7 +198,7 @@ const LevelModalWithForm = (props) => {
     `${actionName} a new level preset`
   )
   const actionButtons = (
-    <Box display="flex" justifyContent="space-between">
+    <Box display="flex" justifyContent={edit ? 'space-between' : 'flex-end'}>
       {edit && (
         <Remove
           text="Delete"
