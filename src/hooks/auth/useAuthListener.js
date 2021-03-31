@@ -107,7 +107,7 @@ const useAuthListener = () => {
 
     if (!user) {
       sessionDispatch({ type: TYPES.SIGN_OUT })
-      history.push(ROUTE_PATHS.SESSION_LOGIN)
+      !userLoading && history.push(ROUTE_PATHS.SESSION_LOGIN)
       setLoading(userLoading)
     }
     user && !userLoading && fetchUser()
@@ -122,9 +122,6 @@ const useAuthListener = () => {
         history.push(generatePath(ROUTE_PATHS.USER_SHOW, { id: session.id }))
         localStorage.removeItem('isNewUser')
         localStorage.setItem('editProfile', true)
-      } else {
-        history.push(ROUTE_PATHS.SESSION_LOGIN)
-        sessionDispatch({ type: TYPES.SIGN_OUT })
       }
     }
   }, [session])

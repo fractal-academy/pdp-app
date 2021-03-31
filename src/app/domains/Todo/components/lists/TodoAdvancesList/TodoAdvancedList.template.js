@@ -57,36 +57,39 @@ const TodoAdvancedList = (props) => {
       {loading ? (
         <Spinner />
       ) : (
-        technologies.map((technology) => (
-          <Box py={2}>
-            <Title level={5} style={{ color: 'white' }}>
-              {technology.name}
-            </Title>
-            {!!Object.keys(technology?.todoIds).length && (
-              <>
-                <TodoList
-                  technologyId={technology.id}
-                  planId={plan.id}
-                  todoIds={Object.keys(technology.todoIds)}
-                  ownTodos
-                />
-                <TodoList
-                  technologyId={technology.id}
-                  planId={plan.id}
-                  todoIds={Object.keys(technology.todoIds)}
-                />
-                {activePlanId && (
-                  <Input
-                    placeholder="Enter your todo"
-                    value={newTodo}
-                    onChange={(e) => setNewTodo(e.target.value)}
-                    onPressEnter={(value) => addTodo(value, technology)}
-                  />
+        technologies?.map(
+          (technology) =>
+            technology?.todoIds && (
+              <Box py={2} key={technology.id}>
+                <Title level={5} style={{ color: 'white' }}>
+                  {technology.name}
+                </Title>
+                {!!Object.keys(technology?.todoIds).length && (
+                  <>
+                    <TodoList
+                      technologyId={technology.id}
+                      planId={plan.id}
+                      todoIds={Object.keys(technology.todoIds)}
+                      ownTodos
+                    />
+                    <TodoList
+                      technologyId={technology.id}
+                      planId={plan.id}
+                      todoIds={Object.keys(technology.todoIds)}
+                    />
+                    {activePlanId && (
+                      <Input
+                        placeholder="Enter your todo"
+                        value={newTodo}
+                        onChange={(e) => setNewTodo(e.target.value)}
+                        onPressEnter={(value) => addTodo(value, technology)}
+                      />
+                    )}
+                  </>
                 )}
-              </>
-            )}
-          </Box>
-        ))
+              </Box>
+            )
+        )
       )}
     </>
   )

@@ -6,7 +6,7 @@ import { LoadingOutlined } from '@ant-design/icons'
  *
  * @comment Spinner - React component.
  *
- * @since 29 Mar 2021 ( v.0.0.3 ) // LAST-EDIT DATE
+ * @since 29 Mar 2021 ( v.0.0.4 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
@@ -14,12 +14,7 @@ import { LoadingOutlined } from '@ant-design/icons'
 const Spinner = () => {
   // [TEMPLATE]
   return (
-    <Box
-      display="flex"
-      justifyContent="center"
-      height="100%"
-      flex={1}
-      alignItems="center">
+    <Box display="flex" justifyContent="center" flex={1} alignItems="center">
       <Spin indicator={<LoadingOutlined style={{ fontSize: 24 }} spin />} />
     </Box>
   )
