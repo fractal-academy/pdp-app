@@ -17,7 +17,7 @@ import { COLLECTIONS } from 'app/constants'
  *
  * @comment TodoCreate - React component.
  *
- * @since 30 Mar 2021 ( v.0.1.1 ) // LAST-EDIT DATE
+ * @since 30 Mar 2021 ( v.0.1.2 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
@@ -143,8 +143,7 @@ const TodoCreate = () => {
   return (
     <PageWrapper
       title="Create ToDo"
-      nextBtnProps={{ text: 'Save' }}
-      onNext={onSave}
+      backBtnProps={{ text: 'Save' }}
       onBack={onSave}>
       <TodoSimpleForm
         onSubmit={onSubmit}
