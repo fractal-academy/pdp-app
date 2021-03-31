@@ -1,7 +1,7 @@
 import { useState, useCallback, useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
 import { Form, Spin, Button, Space, message } from 'antd'
-import { Col, Row, Box, Paragraph } from 'antd-styled'
+import { Col, Row, Box } from 'antd-styled'
 import { TechnologyAdvancedForm } from 'domains/Technology/components/forms'
 import { LevelSimpleCascader } from 'domains/Level/components/combined/cascaders'
 import { PageWrapper } from '~/components/HOC'
@@ -18,7 +18,7 @@ import * as ROUTE_PATHS from 'app/constants/routePaths'
  *
  * @comment TechnologyCreate - React component.
  *
- * @since 31 Mar 2021 ( v.0.1.1 ) // LAST-EDIT DATE
+ * @since 31 Mar 2021 ( v.0.1.2 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
@@ -231,11 +231,11 @@ const TechnologyCreate = () => {
     })
   }
 
-  const resetLevel = () => {
+  const resetLevel = useCallback(() => {
     setSelectedLevel(null)
     setLevelTree([])
-    mainForm.resetFields()
-  }
+    mainForm.resetFields(['levelPresetId'])
+  }, [])
 
   // [USE_EFFECTS]
   useEffect(() => {
@@ -264,10 +264,11 @@ const TechnologyCreate = () => {
       title="Create technology"
       nextBtnProps={{ text: 'Create', loading: creationLoading }}
       backBtnProps={{ text: 'Cancel' }}
+      contentColProps={{ xxl: 11 }}
       onNext={onNext}
       onBack={onCancel}>
-      <Row gutter={[8, 16]}>
-        <Col span={24}>
+      <Row gutter={[16]}>
+        <Col span={24} mt={24}>
           <TechnologyAdvancedForm
             onSubmit={onSubmit}
             form={mainForm}
@@ -284,15 +285,15 @@ const TechnologyCreate = () => {
             </Box>
           )}
           {!!levelTree.length && (
-            <Space direction="vertical">
-              <Paragraph>
+            <>
+              {/* <Paragraph style={{ textAlign: 'center' }}>
                 Here you can configure technologies levels. Add materials or
                 todos which helps students in learning. Set required
                 technologies.
-              </Paragraph>
+              </Paragraph> */}
               <Form>
-                <Row gutter={[8, 16]}>
-                  <Col span={24} display="flex" justifyContent="center">
+                <Row>
+                  <Col flex="auto">
                     <LevelSimpleCascader
                       onLevelSelect={onLevelSelect}
                       levelTree={levelTree}
@@ -304,9 +305,23 @@ const TechnologyCreate = () => {
                       }
                     />
                   </Col>
+                  <Col flex="none">
+                    {selectedLevel && (
+                      <Space>
+                        {ACTION_BUTTONS_MAP.map((data) => (
+                          <Button
+                            key={data.path}
+                            size="large"
+                            onClick={() => savePageData(data.path)}>
+                            {data.text}
+                          </Button>
+                        ))}
+                      </Space>
+                    )}
+                  </Col>
                   {selectedLevel && (
                     <>
-                      <Col span={24} display="flex" justifyContent="center">
+                      {/* <Col span={24} display="flex" justifyContent="center">
                         <Box display="flex" justifyContent="flex-end">
                           <Space>
                             {ACTION_BUTTONS_MAP.map((data) => (
@@ -319,7 +334,7 @@ const TechnologyCreate = () => {
                             ))}
                           </Space>
                         </Box>
-                      </Col>
+                      </Col> */}
                       {/*<Col span={24}>*/}
                       {/*  <Space*/}
                       {/*    direction="vertical"*/}
@@ -362,7 +377,7 @@ const TechnologyCreate = () => {
                   )}
                 </Row>
               </Form>
-            </Space>
+            </>
           )}
         </Col>
       </Row>
