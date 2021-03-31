@@ -266,19 +266,21 @@ const ListItemPlan = (props) => {
             </Row>
           </Col>
           <Col>
-            <Space size="middle">
-              <Avatar
-                size={45}
-                src={mentorData.avatarURL}
-                icon={<UserOutlined />}
-              />
-              <Box>
-                <Title level={5} mb={0}>
+            <Row gutter={[12, 4]}>
+              <Col>
+                <Avatar
+                  size={45}
+                  src={mentorData.avatarURL}
+                  icon={<UserOutlined />}
+                />
+              </Col>
+              <Col>
+                <Title level={5} style={{ marginBottom: 0 }}>
                   {mentorData.firstName}
                 </Title>
                 <Text type="secondary">your mentor</Text>
-              </Box>
-            </Space>
+              </Col>
+            </Row>
           </Col>
         </Row>
       </Card>
