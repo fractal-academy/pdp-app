@@ -28,8 +28,8 @@ const PlanSimpleList = (props) => {
   return (
     <Collapse
       expandIconPosition="right"
-      ghost
       accordion
+      ghost
       onChange={onPlanChange}>
       {plans?.map((plan) => (
         <Panel header={<PlanAdvancedView plan={plan} />} key={plan.id}>
