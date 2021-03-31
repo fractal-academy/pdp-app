@@ -42,6 +42,10 @@ const MENU_ITEMS = {
     STUDENTS: {
       title: 'Students',
       route: ROUTE_PATHS.START_PAGE_MAP[ROLES.MENTOR]
+    },
+    INTERVIEWS: {
+      title: 'Interviews',
+      route: generatePath(ROUTE_PATHS.INTERVIEWS_ALL, { role: ROLES.MENTOR })
     }
     // CHATS: {
     //   title: 'Chats',
@@ -52,6 +56,10 @@ const MENU_ITEMS = {
     MY_PLANS: {
       title: 'My Plans',
       route: ROUTE_PATHS.START_PAGE_MAP[ROLES.STUDENT]
+    },
+    INTERVIEWS: {
+      title: 'Interviews',
+      route: generatePath(ROUTE_PATHS.INTERVIEWS_ALL, { role: ROLES.STUDENT })
     }
     // CHATS: {
     //   title: 'Chats',
