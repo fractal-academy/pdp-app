@@ -5,7 +5,10 @@ import { Row, Col, Card, Title, Text, Box } from 'antd-styled'
 import {
   EditOutlined,
   UserOutlined,
-  FieldTimeOutlined
+  FieldTimeOutlined,
+  TeamOutlined,
+  PhoneOutlined,
+  MailOutlined
 } from '@ant-design/icons'
 import {
   useCollectionData,
@@ -126,7 +129,6 @@ const UserShow = () => {
                 </Col>
               )}
             </Row>
-
             <Row>
               <Col>
                 <Title level={5}>Personal info</Title>
@@ -135,19 +137,28 @@ const UserShow = () => {
             {fullUserData?.companyIds?.length && (
               <Row mb={2}>
                 <Col>
-                  <CompanySimpleList companyIds={fullUserData.companyIds} />
+                  <Space>
+                    <TeamOutlined />
+                    <CompanySimpleList companyIds={fullUserData.companyIds} />
+                  </Space>
                 </Col>
               </Row>
             )}
             <Row mb={2}>
               <Col>
-                <Text type="secondary">{fullUserData.email}</Text>
+                <Space>
+                  <MailOutlined />
+                  <Text type="secondary">{fullUserData.email}</Text>
+                </Space>
               </Col>
             </Row>
             {fullUserData?.phone && (
               <Row>
                 <Col>
-                  <Text type="secondary">{fullUserData.phone}</Text>
+                  <Space>
+                    <PhoneOutlined style={{ color: 'secondary' }} />
+                    <Text type="secondary">{fullUserData.phone}</Text>
+                  </Space>
                 </Col>
               </Row>
             )}
