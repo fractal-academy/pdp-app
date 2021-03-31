@@ -92,7 +92,11 @@ const UserModalWithForm = (props) => {
           .doc(restUserData.studentId)
           .update({ companyIds: fullUserData.companyIds }))
 
-      message.success('User was edited successful')
+      message.success(
+        `Profile was ${
+          JSON.parse(localStorage.getItem('editProfile')) ? 'created' : 'edited'
+        } successful`
+      )
     } catch (error) {
       message.error(error.message)
     }

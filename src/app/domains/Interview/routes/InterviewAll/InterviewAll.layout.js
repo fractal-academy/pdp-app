@@ -132,7 +132,7 @@ const MarkSimpleView = (props) => {
     for (const interview of interviews) {
       mark += interview.mark
     }
-    mark = mark / interviews.length
+    mark = Math.floor(mark / interviews.length)
   }
 
   // [TEMPLATE]
