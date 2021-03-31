@@ -20,6 +20,7 @@ import { PlanShow, PlanEdit, PlanCreate, PlanAll } from 'domains/Plan/routes'
 import { MaterialCreate } from 'domains/Material/routes'
 import { TodoCreate } from 'domains/Todo/routes'
 import {
+  InterviewAll,
   InterviewShow,
   InterviewEdit,
   InterviewCreate
@@ -154,6 +155,13 @@ const ROUTES = {
   TODO_CREATE: {
     component: withContent(withProtect({ roles: [ROLES.ADMIN] })(TodoCreate)),
     path: ROUTE_PATHS.TODO_CREATE
+  },
+  INTERVIEWS_ALL: {
+    component: withContent(
+      withProtect({ roles: [ROLES.MENTOR, ROLES.STUDENT] })(InterviewAll)
+    ),
+    path: ROUTE_PATHS.INTERVIEWS_ALL,
+    exact: true
   },
   INTERVIEW_CREATE: {
     component: withContent(
