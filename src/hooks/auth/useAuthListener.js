@@ -32,8 +32,8 @@ const useAuthListener = () => {
     const getMentorData = (mentorId) =>
       getCollectionRef(COLLECTIONS.MENTORS)
         .doc(mentorId)
-        .onSnapshot((studentData) =>
-          sessionDispatch({ type: TYPES.SET_USER, payload: studentData.data() })
+        .onSnapshot((mentorData) =>
+          sessionDispatch({ type: TYPES.SET_USER, payload: mentorData.data() })
         )
 
     const getStudentData = (studentId) =>
