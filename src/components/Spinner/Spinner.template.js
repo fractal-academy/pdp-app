@@ -11,11 +11,15 @@ import { LoadingOutlined } from '@ant-design/icons'
  * @return {ReactComponent}
  */
 
-const Spinner = () => {
+const Spinner = (props) => {
   // [TEMPLATE]
   return (
     <Box display="flex" justifyContent="center" flex={1} alignItems="center">
-      <Spin indicator={<LoadingOutlined style={{ fontSize: 24 }} spin />} />
+      <Spin
+        indicator={
+          <LoadingOutlined style={{ fontSize: props.size ?? 24 }} spin />
+        }
+      />
     </Box>
   )
 }

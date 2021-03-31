@@ -9,17 +9,18 @@ import { LevelModalWithForm } from 'domains/Level/components/combined/modals'
 import firestore, {
   deleteDocument,
   getDocumentRef,
-  setDocument
+  setDocument,
+  updateDocument
 } from '~/services/Firebase/firestore'
-import { COLLECTIONS } from 'app/constants'
 import { TYPES_VALUES } from '~/constants'
+import { COLLECTIONS } from 'app/constants'
 
 /**
  * @info LevelSelectWithCreate (15 Mar 2021) // CREATION DATE
  *
  * @comment LevelSelectWithCreate - React component.
  *
- * @since 22 Mar 2021 ( v.0.0.5 ) // LAST-EDIT DATE
+ * @since 31 Mar 2021 ( v.0.0.6 ) // LAST-EDIT DATE
  *
  * @return {React.FC}
  */
@@ -77,7 +78,7 @@ const LevelSelectWithCreate = (props) => {
     try {
       const fbLevelIds = await createLevels(levelIds)
 
-      const levelPresetId = await getDocumentRef(COLLECTIONS.LEVEL_PRESETS).id
+      const levelPresetId = getDocumentRef(COLLECTIONS.LEVEL_PRESETS).id
       const data = {
         levelIds: fbLevelIds,
         name,
@@ -89,6 +90,21 @@ const LevelSelectWithCreate = (props) => {
       setEditItem('')
     } catch (error) {
       console.log('level preset create', error)
+    }
+  }
+
+  const onEdit = async (data) => {
+    const { name, type } = data
+    try {
+      const data = {
+        name,
+        type
+      }
+      await updateDocument(COLLECTIONS.LEVEL_PRESETS, editItem, data)
+      setVisible(false)
+      setEditItem('')
+    } catch (error) {
+      console.log('level preset edit', error)
     }
   }
 
@@ -146,9 +162,10 @@ const LevelSelectWithCreate = (props) => {
                 type="text"
                 size="small"
                 icon={<EditOutlined />}
-                onClick={() => {
+                onClick={(e) => {
                   setEditItem(levelPreset.id)
                   setVisible(true)
+                  e.stopPropagation()
                 }}
               />
             </Box>
@@ -158,6 +175,7 @@ const LevelSelectWithCreate = (props) => {
       <LevelModalWithForm
         visible={visible}
         onCreate={onLevelCreate}
+        onEdit={onEdit}
         edit={editItem}
         onDelete={onLevelDelete}
         onCancel={() => {
