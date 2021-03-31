@@ -113,15 +113,15 @@ const TodoListMapItem = (props) => {
             planId={plan.id}
             todoIds={Object.keys(technology.todoIds)}
           />
-          {activePlanId && (
-            <Input
-              placeholder="Enter your todo"
-              value={newTodo}
-              onChange={(e) => setNewTodo(e.target.value)}
-              onPressEnter={(value) => addTodo(value, technology)}
-            />
-          )}
         </>
+      )}
+      {activePlanId && (
+        <Input
+          placeholder="Enter your todo"
+          value={newTodo}
+          onChange={(e) => setNewTodo(e.target.value)}
+          onPressEnter={(value) => addTodo(value, technology)}
+        />
       )}
     </Box>
   )

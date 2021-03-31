@@ -59,7 +59,11 @@ const InterviewAll = () => {
           : `${ROLES.MENTOR[0].toUpperCase()}${ROLES.MENTOR.slice(1)}`,
       key: role.role,
       render: (text, data) => (
-        <FirstName studentId={data.studentId} mentorId={data?.mentorId} />
+        <FirstName
+          studentId={data.studentId}
+          mentorId={data?.mentorId}
+          role={role.role}
+        />
       )
     },
     {
@@ -96,10 +100,10 @@ const InterviewAll = () => {
 }
 
 const FirstName = (props) => {
-  const { studentId, mentorId } = props
+  const { role, studentId, mentorId } = props
   console.log(props)
   const [user, loading] = useCollectionData(
-    mentorId
+    role === 'student'
       ? firestore
           .collection(COLLECTIONS.USERS)
           .where('mentorId', '==', mentorId)
@@ -116,7 +120,6 @@ const MarkSimpleView = (props) => {
   // [INTERFACES]
   const { planId } = props
 
-  // const [mark, setMark] = useState(0)
   // [ADDITIONAL_HOOKS]
   const [interviews, loading] = useCollectionData(
     firestore

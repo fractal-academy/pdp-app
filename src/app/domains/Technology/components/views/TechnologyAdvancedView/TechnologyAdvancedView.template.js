@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types'
 import { Card, Col, Row } from 'antd-styled'
-import { useCollectionArray } from 'hooks/firebase'
+import { useCollectionData } from 'react-firebase-hooks/firestore'
+import firestore from '~/services/Firebase/firestore/index'
 import { TechnologySimpleView } from 'domains/Technology/components/views'
 import { MaterialSimpleView } from 'domains/Material/components/views'
 import { Spinner } from '~/components'
@@ -20,9 +21,11 @@ const TechnologyAdvancedView = (props) => {
   const { extra, name, materialIds = [], refCollectionMaterials } = props
 
   // [ADDITIONAL_HOOKS]
-  const [materials, loading] = useCollectionArray(
-    refCollectionMaterials,
-    materialIds
+  const [materials, loading] = useCollectionData(
+    materialIds.length &&
+      firestore
+        .collection(refCollectionMaterials)
+        .where('id', 'in', materialIds)
   )
 
   // [TEMPLATE]
