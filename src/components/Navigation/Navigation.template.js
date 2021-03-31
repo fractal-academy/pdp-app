@@ -112,7 +112,8 @@ const Navigation = () => {
       height="100vh"
       width="fit-content"
       bg="#EFF4F8"
-      paddingTop={4}>
+      pt={4}
+      pb={3}>
       <Box display="flex" flexDirection="column" height="100%">
         <Box paddingX={4} marginBottom={4}>
           <UserAdvancedView
