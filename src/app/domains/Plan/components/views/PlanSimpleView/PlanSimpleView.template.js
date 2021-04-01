@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types'
-import { Box } from 'antd-styled'
+import { Box, Col, Row } from 'antd-styled'
 import { Typography, Space } from 'antd'
 import { Status } from '~/components'
 import { FieldTimeOutlined } from '@ant-design/icons'
@@ -22,12 +22,17 @@ const PlanSimpleView = (props) => {
   // [TEMPLATE]
   return (
     <Box display="flex" justifyContent="space-between">
-      <Space size="large" align="start">
-        <Title display="inline-block" level={3}>
-          {name}
-        </Title>
-        <Status status={status} />
-      </Space>
+      <Row alignItems="center">
+        <Col>
+          <Title style={{ margin: 0 }} level={3}>
+            {name}
+          </Title>
+        </Col>
+        <Col>
+          <Status status={status} />
+        </Col>
+      </Row>
+
       <Space align="start">
         <FieldTimeOutlined />
         <Text display="inline-block">

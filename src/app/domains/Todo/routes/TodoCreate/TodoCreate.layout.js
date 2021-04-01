@@ -11,6 +11,7 @@ import {
   setDocument
 } from '~/services/Firebase/firestore'
 import { COLLECTIONS } from 'app/constants'
+import { Box } from 'antd-styled'
 
 /**
  * @info TodoCreate (05 Mar 2021) // CREATION DATE
@@ -150,6 +151,8 @@ const TodoCreate = () => {
         editTodo={editTodo}
         loading={todoAddLoading}
       />
+      <Box mb={4} />
+
       <TodoSimpleList
         setTodos={setTodos}
         todos={_.sortBy(todos, 'createdAt')}
