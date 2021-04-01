@@ -1,24 +1,27 @@
 import { useEffect, useState } from 'react'
-import { Table } from 'antd'
+import { Space, Table } from 'antd'
 import { useHistory, generatePath } from 'react-router-dom'
+import { useCollectionData } from 'react-firebase-hooks/firestore'
+import { Spinner } from '~/components'
 import { UserSimpleView } from 'domains/User/components/views'
 import { CompanySimpleView } from 'domains/Company/components/views'
 import { CompetenceSimpleView } from 'domains/Competence/components/views'
-import { useCollectionData } from 'react-firebase-hooks/firestore'
 import firestore from '~/services/Firebase/firestore'
-import { Spinner } from '~/components'
+import { mergeUserData } from '~/utils'
 import { ROLES } from '~/constants'
 import { COLLECTIONS, ROUTE_PATHS } from 'app/constants'
-import { mergeUserData } from '~/utils'
+import { useSession } from 'contexts/Session/hooks'
+
 /**
  * @info MentorSimpleTable (22 Mar 2021) // CREATION DATE
  *
  * @comment MentorSimpleTable - React component.
  *
- * @since 23 Mar 2021 ( v.0.0.5 ) // LAST-EDIT DATE
+ * @since 31 Mar 2021 ( v.0.0.6 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
+
 let columns = [
   {
     title: 'User',
@@ -31,12 +34,18 @@ let columns = [
     key: 'email',
     render: (text, data) => <UserSimpleView withEmail id={data.userId} />
   },
-  {
-    title: 'Company',
-    dataIndex: 'company',
-    key: 'company',
-    render: (text, data) => <CompanySimpleView companyId={data?.companyId} />
-  },
+  // {
+  //   title: 'Company',
+  //   dataIndex: 'company',
+  //   key: 'company',
+  //   render: (text, data) => (
+  //     <Space>
+  //       {data?.companyIds?.map((companyId) => (
+  //         <CompanySimpleView companyId={companyId} />
+  //       ))}
+  //     </Space>
+  //   )
+  // },
   {
     title: 'Competence',
     dataIndex: 'competence',
@@ -50,8 +59,12 @@ let columns = [
 const MentorSimpleTable = () => {
   // [ADDITIONAL_HOOKS]
   const history = useHistory()
+  const session = useSession()
+
   const [mentorsData] = useCollectionData(
-    firestore.collection(COLLECTIONS.MENTORS)
+    firestore
+      .collection(COLLECTIONS.MENTORS)
+      .where('userId', '!=', session.userId)
   )
 
   // [COMPONENT_STATE_HOOKS]
@@ -73,6 +86,8 @@ const MentorSimpleTable = () => {
 
   // [TEMPLATE]
   if (usersLoading) return <Spinner />
+
+  console.log(userData)
 
   return (
     <Table

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Button, Table } from 'antd'
+import { Button, Space, Table } from 'antd'
 import { useHistory } from 'react-router-dom'
 import { useCollectionData } from 'react-firebase-hooks/firestore'
 import { UserSimpleView } from 'domains/User/components/views'
@@ -16,7 +16,7 @@ import { ROLES } from '~/constants'
  *
  * @comment StudentSimpleTable - React component.
  *
- * @since 28 Mar 2021 ( v.0.1.0 ) // LAST-EDIT DATE
+ * @since 01 Apr 2021 ( v.0.1.1 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
@@ -37,7 +37,13 @@ let columns = [
     title: 'Company',
     dataIndex: 'companyId',
     key: 'company',
-    render: (text, data) => <CompanySimpleView companyId={data?.companyId} />
+    render: (text, data) => (
+      <Space>
+        {data.companyIds.map((companyId) => (
+          <CompanySimpleView companyId={companyId} />
+        ))}
+      </Space>
+    )
   },
   {
     title: 'Action',
