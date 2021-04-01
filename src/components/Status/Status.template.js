@@ -12,7 +12,7 @@ import style from './Status.style'
  */
 
 const STATUS = {
-  finished: '#f94848',
+  finished: '#ff8c19',
   active: '#f6dd45',
   confirmed: '#87d068'
 }

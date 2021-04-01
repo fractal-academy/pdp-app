@@ -63,9 +63,10 @@ const LevelSelectWithCreate = (props) => {
 
   // [ADDITIONAL_HOOKS]
   const [presets, loading] = useCollectionData(
-    firestore
-      .collection(COLLECTIONS.LEVEL_PRESETS)
-      .where('type', '==', levelType)
+    levelType &&
+      firestore
+        .collection(COLLECTIONS.LEVEL_PRESETS)
+        .where('type', '==', levelType)
   )
 
   // [COMPONENT_STATE_HOOKS]

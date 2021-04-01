@@ -1,11 +1,14 @@
 import { useState, useEffect } from 'react'
 import { useHistory, useParams, generatePath } from 'react-router-dom'
 import { Avatar, List, Space, Button } from 'antd'
-import { Row, Col, Card, Title, Text, Box } from 'antd-styled'
+import { Row, Col, Card, Title, Text } from 'antd-styled'
 import {
   EditOutlined,
   UserOutlined,
-  FieldTimeOutlined
+  FieldTimeOutlined,
+  TeamOutlined,
+  PhoneOutlined,
+  MailOutlined
 } from '@ant-design/icons'
 import {
   useCollectionData,
@@ -27,7 +30,7 @@ import { COLLECTIONS, ROUTE_PATHS } from 'app/constants'
  *
  * @comment UserShow - React component.
  *
- * @since 30 Mar 2021 ( v.0.1.3 ) // LAST-EDIT DATE
+ * @since 31 Mar 2021 ( v.0.1.4 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
@@ -93,20 +96,32 @@ const UserShow = () => {
   return (
     <PageWrapper
       title={title}
-      onBack={() => history.goBack()}
-      backBtnLeft
+      onBack={id !== session.userId && (() => history.goBack())}
+      backBtnLeft={id !== session.userId}
       inlineHeader
       fullWidth>
       <Row gutter={[32, 16]}>
-        <Col {...getGrid({ xs: 24, md: 12, lg: 8 })}>
+        <Col {...getGrid({ xs: 24, md: 12, lg: 7 })}>
           <Card>
-            <Row justifyContent="center" position="relative">
+            <Row position="relative" mb={3}>
               <Col mb={2}>
                 <Avatar
-                  size={96}
+                  size={80}
                   src={fullUserData.avatarURL}
                   icon={<UserOutlined />}
                 />
+              </Col>
+              <Col>
+                <Row justifyContent="center">
+                  <Col>
+                    <Title level={4}>{userDisplayName}</Title>
+                  </Col>
+                </Row>
+                <Row>
+                  <Col>
+                    <Text type="secondary">{fullUserData.role}</Text>
+                  </Col>
+                </Row>
               </Col>
               {(id === session.userId || session.role === ROLES.ADMIN) && (
                 <Col position="absolute" right="0">
@@ -114,37 +129,36 @@ const UserShow = () => {
                 </Col>
               )}
             </Row>
-            <Row justifyContent="center">
-              <Col>
-                <Title level={4}>{userDisplayName}</Title>
-              </Col>
-            </Row>
-            <Row justifyContent="center" mb={3}>
-              <Col>
-                <Text type="secondary">{fullUserData.role}</Text>
-              </Col>
-            </Row>
-            <Row justifyContent="center">
+            <Row>
               <Col>
                 <Title level={5}>Personal info</Title>
               </Col>
             </Row>
             {fullUserData?.companyIds?.length && (
-              <Row justifyContent="center" mb={2}>
+              <Row mb={2}>
                 <Col>
-                  <CompanySimpleList companyIds={fullUserData.companyIds} />
+                  <Space>
+                    <TeamOutlined />
+                    <CompanySimpleList companyIds={fullUserData.companyIds} />
+                  </Space>
                 </Col>
               </Row>
             )}
-            <Row justifyContent="center" mb={2}>
+            <Row mb={2}>
               <Col>
-                <Text type="secondary">{fullUserData.email}</Text>
+                <Space>
+                  <MailOutlined />
+                  <Text type="secondary">{fullUserData.email}</Text>
+                </Space>
               </Col>
             </Row>
             {fullUserData?.phone && (
-              <Row justifyContent="center">
+              <Row>
                 <Col>
-                  <Text type="secondary">{fullUserData.phone}</Text>
+                  <Space>
+                    <PhoneOutlined style={{ color: 'secondary' }} />
+                    <Text type="secondary">{fullUserData.phone}</Text>
+                  </Space>
                 </Col>
               </Row>
             )}
@@ -252,19 +266,21 @@ const ListItemPlan = (props) => {
             </Row>
           </Col>
           <Col>
-            <Space size="middle">
-              <Avatar
-                size={45}
-                src={mentorData.avatarURL}
-                icon={<UserOutlined />}
-              />
-              <Box>
-                <Title level={5} mb={0}>
+            <Row gutter={[12, 4]}>
+              <Col>
+                <Avatar
+                  size={45}
+                  src={mentorData.avatarURL}
+                  icon={<UserOutlined />}
+                />
+              </Col>
+              <Col>
+                <Title level={5} style={{ marginBottom: 0 }}>
                   {mentorData.firstName}
                 </Title>
                 <Text type="secondary">your mentor</Text>
-              </Box>
-            </Space>
+              </Col>
+            </Row>
           </Col>
         </Row>
       </Card>

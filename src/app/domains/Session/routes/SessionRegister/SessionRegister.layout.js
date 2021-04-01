@@ -12,7 +12,7 @@ import { getGrid } from '~/utils'
  *
  * @comment SessionRegister - React component.
  *
- * @since 30 Mar 2021 ( v.0.0.3 ) // LAST-EDIT DATE
+ * @since 31 Mar 2021 ( v.0.0.4 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
@@ -36,7 +36,7 @@ const SessionRegister = () => {
         <Box display="flex" justifyContent="center" flexDirection="column">
           <Box mb={3}>
             <Title level={3} display="flex" justifyContent="center">
-              Sign in
+              Sign up
             </Title>
           </Box>
           <SessionSimpleForm register />

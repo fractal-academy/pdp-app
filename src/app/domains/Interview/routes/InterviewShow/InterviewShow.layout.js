@@ -38,7 +38,7 @@ const InterviewShow = () => {
   const [answers, setAnswers] = useState({})
   const [submitLoading, setSubmitLoading] = useState(false)
   const [isConfirmed, setIsConfirmed] = useState(false)
-  const [loading, setLoadign] = useState(false)
+
   // [HELPER_FUNCTIONS]
   const onSubmit = async () => {
     //TODO assign technologies for student
@@ -64,12 +64,10 @@ const InterviewShow = () => {
   // [USE_EFFECTS]
   useEffect(() => {
     const fetchPlan = async () => {
-      setLoadign(true)
       const plan = await getDocumentData(COLLECTIONS.PLANS, id)
       if (plan.status === 'confirmed') {
         setIsConfirmed(true)
       }
-      setLoadign(false)
     }
     fetchPlan()
   }, [])
@@ -128,7 +126,7 @@ const ListItemResult = (props) => {
     <>
       <Box display="flex" justifyContent="space-between">
         <Title level={4}>{technology.name} </Title>
-        <Text>{mark} % - right answers.</Text>
+        <Text>{Math.floor(mark)}% - right answers</Text>
       </Box>
       <List
         grid={{ column: 1 }}

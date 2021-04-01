@@ -15,7 +15,7 @@ const { Text } = Typography
  *
  * @comment InterviewAll - React component.
  *
- * @since 30 Mar 2021 ( v.0.0.1 ) // LAST-EDIT DATE
+ * @since 31 Mar 2021 ( v.0.0.2 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
@@ -36,9 +36,6 @@ const InterviewAll = () => {
   )
 
   // [HELPER_FUNCTIONS]
-  const goBack = () => {
-    history.goBack()
-  }
   const showResults = (planId) => {
     /**
      * for showing and checking results
@@ -59,7 +56,11 @@ const InterviewAll = () => {
           : `${ROLES.MENTOR[0].toUpperCase()}${ROLES.MENTOR.slice(1)}`,
       key: role.role,
       render: (text, data) => (
-        <FirstName studentId={data.studentId} mentorId={data?.mentorId} />
+        <FirstName
+          studentId={data.studentId}
+          mentorId={data?.mentorId}
+          role={role.role}
+        />
       )
     },
     {
@@ -83,23 +84,17 @@ const InterviewAll = () => {
   // [TEMPLATE]
   if (loading) return <Spinner />
   return (
-    <PageWrapper
-      title="Interviews"
-      onBack={goBack}
-      backBtnLeft
-      inlineHeader
-      fullWidth
-      pagination={false}>
+    <PageWrapper title="Interviews" inlineHeader fullWidth pagination={false}>
       <Table dataSource={interviews} columns={columns} pagination={false} />
     </PageWrapper>
   )
 }
 
 const FirstName = (props) => {
-  const { studentId, mentorId } = props
+  const { role, studentId, mentorId } = props
   console.log(props)
   const [user, loading] = useCollectionData(
-    mentorId
+    role === 'student'
       ? firestore
           .collection(COLLECTIONS.USERS)
           .where('mentorId', '==', mentorId)
@@ -116,7 +111,6 @@ const MarkSimpleView = (props) => {
   // [INTERFACES]
   const { planId } = props
 
-  // const [mark, setMark] = useState(0)
   // [ADDITIONAL_HOOKS]
   const [interviews, loading] = useCollectionData(
     firestore
@@ -132,7 +126,7 @@ const MarkSimpleView = (props) => {
     for (const interview of interviews) {
       mark += interview.mark
     }
-    mark = mark / interviews.length
+    mark = Math.floor(mark / interviews.length)
   }
 
   // [TEMPLATE]
