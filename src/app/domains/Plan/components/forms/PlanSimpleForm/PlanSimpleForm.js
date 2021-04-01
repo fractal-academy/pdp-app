@@ -55,7 +55,14 @@ const PlanAdvancedForm = (props) => {
             rules={[
               { required: true, message: 'Please select deadline date' }
             ]}>
-            <DatePicker style={{ display: 'flex' }} placeholder="Deadline" />
+            <DatePicker
+              style={{ display: 'flex' }}
+              placeholder="Deadline"
+              disabledDate={(currentDate) => {
+                const date = new Date()
+                return currentDate.toDate() < date.setDate(date.getDate() - 1)
+              }}
+            />
           </Form.Item>
         </Col>
       </Row>
