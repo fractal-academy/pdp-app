@@ -15,7 +15,7 @@ const { Text } = Typography
  *
  * @comment InterviewAll - React component.
  *
- * @since 30 Mar 2021 ( v.0.0.1 ) // LAST-EDIT DATE
+ * @since 31 Mar 2021 ( v.0.0.2 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
@@ -36,9 +36,6 @@ const InterviewAll = () => {
   )
 
   // [HELPER_FUNCTIONS]
-  const goBack = () => {
-    history.goBack()
-  }
   const showResults = (planId) => {
     /**
      * for showing and checking results
@@ -87,13 +84,7 @@ const InterviewAll = () => {
   // [TEMPLATE]
   if (loading) return <Spinner />
   return (
-    <PageWrapper
-      title="Interviews"
-      onBack={goBack}
-      backBtnLeft
-      inlineHeader
-      fullWidth
-      pagination={false}>
+    <PageWrapper title="Interviews" inlineHeader fullWidth pagination={false}>
       <Table dataSource={interviews} columns={columns} pagination={false} />
     </PageWrapper>
   )

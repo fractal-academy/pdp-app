@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useHistory, useParams, generatePath } from 'react-router-dom'
 import { Avatar, List, Space, Button } from 'antd'
-import { Row, Col, Card, Title, Text, Box } from 'antd-styled'
+import { Row, Col, Card, Title, Text } from 'antd-styled'
 import {
   EditOutlined,
   UserOutlined,
@@ -30,7 +30,7 @@ import { COLLECTIONS, ROUTE_PATHS } from 'app/constants'
  *
  * @comment UserShow - React component.
  *
- * @since 30 Mar 2021 ( v.0.1.3 ) // LAST-EDIT DATE
+ * @since 31 Mar 2021 ( v.0.1.4 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
@@ -96,8 +96,8 @@ const UserShow = () => {
   return (
     <PageWrapper
       title={title}
-      onBack={() => history.goBack()}
-      backBtnLeft
+      onBack={id !== session.userId && (() => history.goBack())}
+      backBtnLeft={id !== session.userId}
       inlineHeader
       fullWidth>
       <Row gutter={[32, 16]}>
