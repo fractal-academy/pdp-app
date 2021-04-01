@@ -293,7 +293,7 @@ const TechnologyCreate = () => {
               </Paragraph> */}
               <Form>
                 <Row>
-                  <Col flex="auto">
+                  <Col flex="auto" mb={4}>
                     <LevelSimpleCascader
                       onLevelSelect={onLevelSelect}
                       levelTree={levelTree}

@@ -1,7 +1,8 @@
 import PropTypes from 'prop-types'
 import { useHistory } from 'react-router-dom'
 import moment from 'moment'
-import { DatePicker, Form, Input } from 'antd'
+import { DatePicker, Form, Input, Typography } from 'antd'
+import { Col, Row } from 'antd-styled'
 
 /**
  * @info PlanAdvancedForm (29 Mar 2021) // CREATION DATE
@@ -41,17 +42,23 @@ const PlanAdvancedForm = (props) => {
       {...props}>
       <Form.Item
         name="name"
-        label="Name"
+        // label="Name"
         rules={[{ required: true, message: 'Please enter plan name' }]}>
         <Input placeholder="Enter plan name" />
       </Form.Item>
-      <Form.Item
-        name="deadline"
-        label="Deadline"
-        style={{ flex: 1 }}
-        rules={[{ required: true, message: 'Please select deadline date' }]}>
-        <DatePicker style={{ display: 'flex' }} />
-      </Form.Item>
+      <Row alignItems="center" justifyContent="flex-end" mb={24}>
+        <Col>
+          <Form.Item
+            name="deadline"
+            label="Deadline"
+            style={{ flex: 1, marginBottom: '0px' }}
+            rules={[
+              { required: true, message: 'Please select deadline date' }
+            ]}>
+            <DatePicker style={{ display: 'flex' }} placeholder="Deadline" />
+          </Form.Item>
+        </Col>
+      </Row>
     </Form>
   )
 }
