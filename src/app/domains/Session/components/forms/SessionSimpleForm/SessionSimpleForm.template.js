@@ -1,18 +1,18 @@
 import PropTypes from 'prop-types'
+import { useHistory } from 'react-router-dom'
 import { Form, Input, Button, Space, message } from 'antd'
 import { Box } from 'antd-styled'
-import TYPES from '~/app/contexts/Session/types'
-import { useHistory } from 'react-router-dom'
+import { useSessionDispatch } from 'contexts/Session/hooks'
+import TYPES from 'contexts/Session/types'
 import auth from '~/services/Firebase/auth'
 import { ROUTE_PATHS } from 'app/constants'
-import { useSessionDispatch } from 'contexts/Session/hooks'
 
 /**
  * @info SessionSimpleForm (05 Mar 2021) // CREATION DATE
  *
  * @comment SessionSimpleForm - React component.
  *
- * @since 19 Mar 2021 ( v.0.0.3 ) // LAST-EDIT DATE
+ * @since 31 Mar 2021 ( v.0.0.4 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
@@ -95,7 +95,7 @@ const SessionSimpleForm = (props) => {
         <Box display="flex" justifyContent="center">
           <Space size="large">
             <Button type="primary" htmlType="submit">
-              {register ? 'Sign in' : 'Log in'}
+              {register ? 'Sign up' : 'Log in'}
             </Button>
             <Button htmlType="button" onClick={onReset}>
               Reset

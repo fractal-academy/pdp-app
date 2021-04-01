@@ -10,7 +10,7 @@ const { Text } = Typography
  *
  * @comment CompanySimpleList - React component.
  *
- * @since 24 Mar 2021 ( v.0.0.3 ) // LAST-EDIT DATE
+ * @since 01 Apr 2021 ( v.0.0.4 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
@@ -32,7 +32,7 @@ const CompanySimpleList = (props) => {
     <List dataSource={companies}>
       <Space>
         {companies.map((company) => (
-          <CompanySimpleView name={company.name} />
+          <CompanySimpleView name={company?.name} />
         ))}
       </Space>
     </List>

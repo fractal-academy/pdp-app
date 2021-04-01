@@ -1,14 +1,14 @@
 import PropTypes from 'prop-types'
 import { useEffect } from 'react'
 import { Select } from 'antd'
-import { TYPES, TYPES_VALUES } from '~/constants'
+import { TYPES_VALUES } from '~/constants'
 
 /**
  * @info TypeSingleSelect (15 Mar 2021) // CREATION DATE
  *
  * @comment TypeSingleSelect - React component.
  *
- * @since 31 Mar 2021 ( v.0.0.7 ) // LAST-EDIT DATE
+ * @since 31 Mar 2021 ( v.0.0.8 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
@@ -19,14 +19,20 @@ const TypeSingleSelect = (props) => {
 
   // [USE_EFFECTS]
   useEffect(() => {
-    rest.onChange?.(type || rest.value || TYPES.HARD)
+    rest.onChange?.(type || rest.value)
   }, [])
 
   // [TEMPLATE]
   return (
-    <Select defaultValue={type || rest.value || TYPES.HARD} {...rest}>
+    <Select
+      style={{ textTransform: (type || rest.value) && 'capitalize' }}
+      defaultValue={type || rest.value}
+      {...rest}>
       {TYPES_VALUES.map((skill) => (
-        <Select.Option value={skill} key={skill}>
+        <Select.Option
+          style={{ textTransform: 'capitalize' }}
+          value={skill}
+          key={skill}>
           {skill}
         </Select.Option>
       ))}

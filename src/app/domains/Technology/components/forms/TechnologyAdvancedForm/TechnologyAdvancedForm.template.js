@@ -10,7 +10,7 @@ import { TYPES_VALUES } from '~/constants'
  *
  * @comment TechnologyAdvancedForm - React component.
  *
- * @since 31 Mar 2021 ( v.0.0.9 ) // LAST-EDIT DATE
+ * @since 31 Mar 2021 ( v.0.1.0 ) // LAST-EDIT DATE
  *
  * @return {ReactComponent}
  */
@@ -35,6 +35,7 @@ const TechnologyAdvancedForm = (props) => {
   // [TEMPLATE]
   return (
     <Form
+      // labelCol={{ span: 4 }}
       form={form}
       onFinish={onSubmit}
       size="large"
@@ -42,7 +43,7 @@ const TechnologyAdvancedForm = (props) => {
       {...rest}>
       <Form.Item
         name="name"
-        label="Name"
+        // label="Name"
         rules={[
           {
             required: true,
@@ -51,25 +52,25 @@ const TechnologyAdvancedForm = (props) => {
         ]}>
         <Input placeholder="Enter name of technology" />
       </Form.Item>
-      <Form.Item name="type" initialValue={selectedType} label="Type">
+      <Form.Item name="type">
         <TypeSingleSelect
+          placeholder="Select type of technology"
           onSelect={(type) => {
             if (type) {
               setSelectedType(type)
               resetLevel()
               setPrevPreset('')
               form.setFieldsValue({ type })
-              form.resetFields(['levelPresetId'])
             }
           }}
         />
       </Form.Item>
       <Form.Item
         name="levelPresetId"
-        label="Level preset"
         rules={[{ required: true, message: 'Select levels preset' }]}>
         <LevelSelectWithCreate
           levelType={selectedType}
+          disabled={!selectedType}
           onSelect={(presetId) => {
             if (presetId && presetId !== prevPreset) {
               setPrevPreset(presetId)
