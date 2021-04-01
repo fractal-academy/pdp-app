@@ -143,10 +143,7 @@ const InterviewCreate = () => {
 
   // [TEMPLATE]
   return (
-    <PageWrapper
-      title="Create questions for interview"
-      backBtnProps={{ text: 'Save' }}
-      onBack={onSave}>
+    <PageWrapper title="Create questions for interview" onBack={onSave}>
       <InterviewSimpleForm onSubmit={onSubmit} loading={questionAddLoading} />
       <InterviewSimpleList
         setQuestions={setQuestions}

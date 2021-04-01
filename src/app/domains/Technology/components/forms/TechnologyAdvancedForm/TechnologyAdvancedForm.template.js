@@ -29,7 +29,7 @@ const TechnologyAdvancedForm = (props) => {
   // [COMPONENT_STATE_HOOKS]
   const [prevPreset, setPrevPreset] = useState('')
   const [selectedType, setSelectedType] = useState(
-    defaultValues?.type || form.getFieldValue('type') || TYPES_VALUES[0]
+    defaultValues?.type || form.getFieldValue('type')
   )
 
   // [TEMPLATE]

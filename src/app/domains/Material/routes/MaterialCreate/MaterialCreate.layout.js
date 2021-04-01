@@ -236,13 +236,9 @@ const MaterialCreate = () => {
     }
     history.replace(historyState.prevLocation, historyState)
   }
-
   // [TEMPLATE]
   return (
-    <PageWrapper
-      title="Add useful materials"
-      backBtnProps={{ text: 'Save' }}
-      onBack={onSave}>
+    <PageWrapper title="Add useful materials" onBack={onSave}>
       <MaterialSimpleForm onFinish={onLinkAdd} loading={linkLoading} />
       <Divider>Or</Divider>
       <MaterialSimpleUpload

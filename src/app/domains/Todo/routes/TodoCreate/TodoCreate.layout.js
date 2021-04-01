@@ -142,10 +142,7 @@ const TodoCreate = () => {
 
   // [TEMPLATE]
   return (
-    <PageWrapper
-      title="Create ToDo"
-      backBtnProps={{ text: 'Save' }}
-      onBack={onSave}>
+    <PageWrapper title="Create ToDo" onBack={onSave}>
       <TodoSimpleForm
         onSubmit={onSubmit}
         editTodo={editTodo}
