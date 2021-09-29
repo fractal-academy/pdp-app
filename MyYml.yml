@@ -1,17 +1,17 @@
 version: "3.1"
 services:
   testproject-agent:
-  image: testproject/agent:latest
-  container_name: testproject-agent
-  depends_on:
-    - chrome
-    - firefox
-  environment:
-    TP_API_KEY: "OWWOQDXLx06TVKT7fhlp069TrOKjlTe7WnIQVx2XVy01"
-    TP_J0B_ID: "gZVG_8YCK02kWlAGOSxCdQ"
-    TP_JOB_PARAMS: '"jobParameters" : { "browsers" : ["FireFox:]}'
-    CHROME: "chrome:4444" 
-    FIREFOX: "firefox:4444"
+    image: testproject/agent:latest
+    container_name: testproject-agent
+    depends_on:
+      - chrome
+      - firefox
+    environment:
+      TP_API_KEY: "OWWOQDXLx06TVKT7fhlp069TrOKjlTe7WnIQVx2XVy01"
+      TP_J0B_ID: "gZVG_8YCK02kWlAGOSxCdQ"
+      TP_JOB_PARAMS: '"jobParameters" : { "browsers" : ["FireFox:]}'
+      CHROME: "chrome:4444" 
+      FIREFOX: "firefox:4444"
   chrome:
     image: selenium/standalone-chrome
     volumes:
