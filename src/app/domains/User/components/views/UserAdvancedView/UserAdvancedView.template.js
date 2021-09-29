@@ -40,7 +40,7 @@ const UserAdvancedView = (props) => {
   const userDisplayName =
     firstName || secondName ? `${firstName ?? ''} ${secondName ?? ''}` : email
 
-  console.log(';;')
+  console.log(';fff;')
   // [TEMPLATE]
   return (
     <Row
