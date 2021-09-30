@@ -8,24 +8,15 @@ services:
       - firefox
     environment:
       TP_API_KEY: "OWWOQDXLx06TVKT7fhlp069TrOKjlTe7WnIQVx2XVy01"
-      TP_AGENT_TEMP: "true"
-      TP_SDK_PORT: "8686"
-      CHROME: "chrome:4444"
-      CHROME_EXT: "localhost:5555"
+      TP_J0B_ID: "uuPMm35vg0OSGMuOrkxlIg"
+      TP_JOB_PARAMS: '"jobParameters" : { "browsers" : ["FireFox:]}'
+      CHROME: "chrome:4444" 
       FIREFOX: "firefox:4444"
-      FIREFOX_EXT: "localhost:6666"
-    ports:
-    - "8585:8585"
-    - "8686:8686"
   chrome:
-    image: selenium/standalone-chrome:91.0
+    image: selenium/standalone-chrome
     volumes:
       - /dev/shm:/dev/shm
-    ports:
-    - "5555:4444"
   firefox:
-    image: selenium/standalone-firefox:92.0
+    image: selenium/standalone-firefox
     volumes:
       - /dev/shm:/dev/shm
-    ports:
-    - "6666:4444"
